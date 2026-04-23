@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Carousel Generator — 2:3 Vertical</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&family=Roboto+Condensed:wght@700;900&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- html2canvas — renders DOM to canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- JSZip — builds zip in memory -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+/* ══════════════════════════════════════════════════════════
+   CANVAS: 1080 × 1620 px (2:3)  |  Preview: 320 × 480 px
+   Scale factor = 320/1080 = 0.29629...
+══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --app-bg:       #0f1117;
+  --panel-bg:     #181b24;
+  --panel-border: #252836;
+  --input-bg:     #0d0f16;
+  --accent:       #3A7FC1;
+  --accent-yel:   #F5C518;
+  --accent-hov:   #4d93d6;
+  --text:         #e2e4ed;
+  --muted:        #6b7280;
+  --success:      #4fc3a1;
+  --danger:       #f06060;
+  --warning:      #f5a623;
+  --sl-bg:        #E8E8E8;
+  --sl-blue:      #3A7FC1;
+  --sl-yellow:    #F5C518;
+  --sl-dark:      #1A1A1A;
+  --sl-grey:      #555555;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: var(--app-bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOPBAR ───────────────────────────────────────── */
+.topbar {
+  height: 50px;
+  background: var(--panel-bg);
+  border-bottom: 1px solid var(--panel-border);
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 12px; flex-shrink: 0;
+}
+.tb-logo { font-family:'Roboto Condensed',sans-serif; font-weight:900; font-size:17px; letter-spacing:.04em; text-transform:uppercase; }
+.tb-logo span { color: var(--accent-yel); }
+.tb-sep  { width:1px; height:22px; background:var(--panel-border); }
+.tb-info { font-size:11.5px; color:var(--muted); }
+.tb-right{ margin-left:auto; font-size:11.5px; color:var(--muted); }
+
+/* ── LAYOUT ───────────────────────────────────────── */
+.app-body {
+  display: grid;
+  grid-template-columns: 300px 1fr 240px;
+  flex: 1; overflow: hidden;
+}
+
+/* ── PANELS ───────────────────────────────────────── */
+.panel { background:var(--panel-bg); display:flex; flex-direction:column; overflow:hidden; }
+.panel.left  { border-right:1px solid var(--panel-border); }
+.panel.right { border-left: 1px solid var(--panel-border); }
+
+.ph { padding:12px 14px 10px; border-bottom:1px solid var(--panel-border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.ph-title { font-size:10.5px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); }
+
+.pb { flex:1; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:10px; }
+.pb::-webkit-scrollbar { width:3px; }
+.pb::-webkit-scrollbar-thumb { background:var(--panel-border); border-radius:2px; }
+
+/* ── JSON TEXTAREA ─────────────────────────────────── */
+.jtx {
+  width:100%; min-height:300px;
+  background:var(--input-bg); border:1.5px solid var(--panel-border);
+  border-radius:7px; color:#98c89a;
+  font-family:'Roboto Mono',monospace; font-size:10.5px; line-height:1.65;
+  padding:11px; resize:vertical; outline:none; transition:border-color .2s;
+}
+.jtx:focus   { border-color:var(--accent); }
+.jtx.valid   { border-color:var(--success); }
+.jtx.invalid { border-color:var(--danger);  }
+
+/* ── STATUS ────────────────────────────────────────── */
+.jst { font-size:11px; padding:5px 9px; border-radius:5px; display:none; }
+.jst.show { display:block; }
+.jst.ok   { background:rgba(79,195,161,.1);  color:var(--success); border:1px solid rgba(79,195,161,.25); }
+.jst.err  { background:rgba(240,96,96,.1);   color:var(--danger);  border:1px solid rgba(240,96,96,.25);  }
+.jst.warn { background:rgba(245,166,35,.1);  color:var(--warning); border:1px solid rgba(245,166,35,.25); }
+
+/* ── BUTTONS ───────────────────────────────────────── */
+.btn {
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  padding:9px 12px; border-radius:6px;
+  font-family:'Roboto',sans-serif; font-size:12.5px; font-weight:700;
+  cursor:pointer; border:none; transition:all .15s; width:100%;
+  text-align: center;
+}
+.btn:disabled { opacity:.45; cursor:not-allowed; }
+.btn-primary { background:var(--accent); color:white; }
+.btn-primary:hover:not(:disabled) { background:var(--accent-hov); }
+.btn-outline { background:transparent; border:1.5px solid var(--panel-border); color:var(--muted); }
+.btn-outline:hover { border-color:var(--accent); color:var(--text); }
+.btn-success { background:rgba(79,195,161,.12); border:1.5px solid rgba(79,195,161,.3); color:var(--success); }
+.btn-success:hover:not(:disabled) { background:rgba(79,195,161,.22); }
+.btn-yellow  { background:rgba(245,197,24,.12);  border:1.5px solid rgba(245,197,24,.3);  color:var(--accent-yel); }
+.btn-yellow:hover:not(:disabled)  { background:rgba(245,197,24,.22); }
+.btn-danger  { background:rgba(240,96,96,.12);   border:1.5px solid rgba(240,96,96,.3);   color:var(--danger); }
+
+.divider { height:1px; background:var(--panel-border); }
+
+/* ── LOGO UPLOAD ───────────────────────────────────── */
+.lu-zone {
+  border:1.5px dashed var(--panel-border); border-radius:7px; padding:12px;
+  text-align:center; cursor:pointer; transition:all .15s; position:relative;
+}
+.lu-zone:hover { border-color:var(--accent); background:rgba(58,127,193,.05); }
+.lu-zone input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+.lu-img  { max-height:38px; max-width:100%; object-fit:contain; display:none; }
+.lu-ph   { font-size:11.5px; color:var(--muted); }
+.lu-label{ font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+
+/* ── WARNINGS ──────────────────────────────────────── */
+.warn-list { display:flex; flex-direction:column; gap:4px; }
+.warn-item { font-size:10.5px; padding:4px 8px; border-radius:4px; background:rgba(245,166,35,.08); color:var(--warning); border-left:2px solid var(--warning); }
+
+/* ── CENTER ────────────────────────────────────────── */
+.center {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:#090b10; position:relative; overflow:hidden; gap:14px; padding:16px;
+}
+.center::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 40%, rgba(58,127,193,.07) 0%, transparent 65%);
+  pointer-events:none;
+}
+
+/* ── EMPTY STATE ────────────────────────────────────── */
+.empty { display:flex; flex-direction:column; align-items:center; gap:14px; color:var(--muted); text-align:center; padding:30px; }
+.empty-ico { font-size:44px; opacity:.35; }
+.empty h3  { font-size:15px; font-weight:600; color:var(--text); opacity:.45; }
+.empty p   { font-size:12.5px; max-width:260px; line-height:1.6; }
+
+/* ── PREVIEW VIEWPORT ── 320×480 — scale=0.2963 ────── */
+.pv-wrap { display:flex; flex-direction:column; align-items:center; gap:14px; position:relative; z-index:1; }
+.pv-port {
+  width:320px; height:480px; overflow:hidden; border-radius:5px;
+  box-shadow:0 16px 50px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.06);
+  position:relative; flex-shrink:0;
+}
+.pv-scaler {
+  width:1080px; height:1620px;
+  transform:scale(0.29629); transform-origin:top left;
+  position:absolute; top:0; left:0;
+}
+
+/* ── NAV ─────────────────────────────────────────────── */
+.nav-row { display:flex; align-items:center; gap:14px; }
+.nav-btn {
+  width:34px; height:34px; border-radius:50%;
+  border:1.5px solid var(--panel-border); background:var(--panel-bg); color:var(--text);
+  font-size:17px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s;
+}
+.nav-btn:hover    { border-color:var(--accent); color:var(--accent); }
+.nav-btn:disabled { opacity:.3; cursor:not-allowed; }
+.dots-row { display:flex; gap:5px; align-items:center; flex-wrap:wrap; max-width:180px; }
+.dot { width:6px; height:6px; border-radius:50%; background:var(--panel-border); cursor:pointer; transition:all .2s; }
+.dot.active { background:var(--accent-yel); transform:scale(1.35); }
+.dot:hover  { background:var(--accent); }
+.slide-lbl  { font-family:'Roboto Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; }
+
+/* ── RIGHT PANEL ─────────────────────────────────────── */
+.slides-list { flex:1; overflow-y:auto; padding:8px 10px; display:flex; flex-direction:column; gap:3px; }
+.slides-list::-webkit-scrollbar { width:3px; }
+.slides-list::-webkit-scrollbar-thumb { background:var(--panel-border); }
+.sli { display:flex; align-items:center; gap:7px; padding:7px 9px; border-radius:5px; cursor:pointer; border:1px solid transparent; transition:all .15s; font-size:12px; }
+.sli:hover  { background:rgba(58,127,193,.07); border-color:rgba(58,127,193,.18); }
+.sli.active { background:rgba(58,127,193,.14); border-color:rgba(58,127,193,.38); color:var(--accent); }
+.sli-n { width:18px; height:18px; border-radius:3px; background:var(--panel-border); font-size:9.5px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'Roboto Mono',monospace; }
+.sli.active .sli-n { background:var(--accent); color:white; }
+
+.exp-sec { padding:10px; border-top:1px solid var(--panel-border); display:flex; flex-direction:column; gap:7px; flex-shrink:0; }
+
+/* ── PROGRESS BAR ─────────────────────────────────────── */
+.prog-wrap { display:none; flex-direction:column; gap:5px; }
+.prog-wrap.show { display:flex; }
+.prog-bar  { height:5px; background:var(--input-bg); border-radius:3px; overflow:hidden; }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-yel)); border-radius:3px; transition:width .25s; width:0%; }
+.prog-txt  { font-size:10.5px; color:var(--muted); text-align:center; font-family:'Roboto Mono',monospace; }
+
+/* ── EXPORT OVERLAY ───────────────────────────────────── */
+.ov { position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; }
+.ov.show { display:flex; }
+.ov-box { background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:12px; padding:32px 44px; text-align:center; min-width:300px; }
+.ov-icon  { font-size:36px; margin-bottom:12px; }
+.ov-title { font-size:17px; font-weight:700; margin-bottom:6px; }
+.ov-sub   { font-size:12px; color:var(--muted); margin-bottom:18px; }
+.ov-bar   { background:var(--input-bg); border-radius:5px; height:8px; overflow:hidden; }
+.ov-fill  { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-yel)); border-radius:5px; transition:width .3s; width:0%; }
+.ov-cancel { margin-top:14px; font-size:11px; color:var(--muted); cursor:pointer; text-decoration:underline; }
+.ov-cancel:hover { color:var(--danger); }
+
+/* ═════════════════════════════════════════════════════════
+   CAPTURE STAGE — slides rendered here for html2canvas
+   Capture stage: holds source slides as a DOM store only.
+   We never pass these directly to html2canvas — instead
+   captureSlide() clones each slide into a fresh scratch div.
+═════════════════════════════════════════════════════════ */
+#capture-stage {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 1080px;
+  pointer-events: none;
+  z-index: -1;
+  visibility: hidden;
+}
+
+/* ══════════════════════════════════════════════════════
+   SLIDE BASE STYLES  (1080 × 1620)
+══════════════════════════════════════════════════════ */
+.slide {
+  width: 1080px;
+  height: 1620px;
+  overflow: hidden;
+  background: var(--sl-bg);
+  position: relative;
+  font-family: 'Roboto', sans-serif;
+  color: var(--sl-dark);
+  flex-shrink: 0;
+}
+
+/* Left sidebar */
+.s-bar    { position:absolute; left:0; top:0; bottom:0; width:90px; background:var(--sl-blue); z-index:2; }
+.s-stripe { position:absolute; left:90px; top:0; bottom:0; width:14px; background:var(--sl-yellow); z-index:2; }
+
+/* Rotated text in sidebar */
+.s-bar-label { position:absolute; left:0; top:0; bottom:0; width:90px; display:flex; align-items:center; justify-content:center; z-index:3; }
+.s-bar-label span { font-family:'Roboto Condensed',sans-serif; font-weight:900; font-size:56px; color:white; letter-spacing:.05em; white-space:nowrap; transform:rotate(-90deg); text-transform:uppercase; }
+
+/* Content areas */
+.s-body { position:absolute; right:60px; overflow:hidden; }
+.s-body.sidebar { left:132px; top:70px; bottom:90px; }
+.s-body.full    { left:60px;  top:70px; bottom:90px; }
+
+/* Page number */
+.s-pgnum { position:absolute; bottom:0; right:0; width:60px; height:60px; background:var(--sl-blue); display:flex; align-items:center; justify-content:center; font-family:'Roboto',sans-serif; font-weight:700; font-size:24px; color:white; z-index:5; }
+
+/* Logo */
+.s-logo { position:absolute; bottom:22px; right:22px; display:flex; align-items:center; gap:8px; z-index:5; }
+.s-logo img { height:36px; width:auto; object-fit:contain; }
+.s-logo-txt { font-family:'Roboto Condensed',sans-serif; font-weight:900; font-size:30px; color:var(--sl-dark); letter-spacing:.02em; }
+.s-logo-tm { font-size:13px; vertical-align:super; }
+
+/* Dashed separator */
+.dash { width:100%; height:2px; background-image:repeating-linear-gradient(to right,#AAAAAA 0,#AAAAAA 14px,transparent 14px,transparent 22px); margin:22px 0; flex-shrink:0; }
+
+/* Overflow safety */
+.af { overflow:hidden; word-break:break-word; }
+
+/* COVER */
+.cv-inner { display:flex; flex-direction:column; justify-content:center; height:100%; }
+.cv-chapter { font-size:32px; font-weight:700; color:var(--sl-dark); margin-bottom:16px; }
+.cv-headline { font-family:'Roboto Condensed',sans-serif; font-weight:900; font-size:96px; line-height:1.0; color:var(--sl-dark); text-transform:uppercase; text-shadow:4px 4px 0 rgba(80,80,80,.26); margin-bottom:28px; word-break:break-word; overflow:hidden; }
+.cv-toc { display:flex; flex-direction:column; gap:8px; margin:8px 0; }
+.cv-toc-item { font-family:'Roboto Mono',monospace; font-size:26px; font-weight:400; color:var(--sl-dark); line-height:1.45; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* TOC */
+.toc-inner { display:flex; flex-direction:column; height:100%; overflow:hidden; }
+.toc-sec { margin-bottom:36px; flex-shrink:0; }
+.toc-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+.toc-title { font-size:34px; font-weight:700; color:var(--sl-dark); line-height:1.25; flex:1; margin-right:20px; overflow:hidden; }
+.toc-pages { font-size:30px; font-weight:700; color:var(--sl-dark); white-space:nowrap; flex-shrink:0; }
+.toc-subs { display:flex; flex-direction:column; gap:5px; }
+.toc-sub { font-family:'Roboto Mono',monospace; font-size:24px; color:var(--sl-dark); line-height:1.45; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* CONTENT */
+.ct-inner { display:flex; flex-direction:column; height:100%; overflow:hidden; }
+.ct-sec { margin-bottom:42px; flex-shrink:0; overflow:hidden; }
+.ct-sec:last-child { margin-bottom:0; }
+.ct-h { font-size:46px; font-weight:700; color:var(--sl-dark); line-height:1.2; margin-bottom:20px; overflow:hidden; }
+.ct-body { font-size:28px; font-weight:400; color:var(--sl-dark); line-height:1.65; overflow:hidden; }
+.ct-body strong { font-weight:700; }
+.hl-label { display:inline-block; background:var(--sl-yellow); font-size:26px; font-weight:700; color:var(--sl-dark); padding:5px 12px; line-height:1.5; margin-bottom:16px; }
+.num-list { display:flex; flex-direction:column; gap:18px; overflow:hidden; }
+.num-item { font-size:28px; font-weight:400; color:var(--sl-dark); line-height:1.55; overflow:hidden; }
+.num-item strong { font-weight:700; }
+.num-n { font-weight:700; }
+.bl-heading { font-size:28px; font-weight:700; color:var(--sl-blue); text-transform:uppercase; letter-spacing:.03em; margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+
+/* CODE BLOCK */
+.code-blk { background:#0D0D0D; border-radius:10px; padding:22px 26px; margin:20px 0; flex-shrink:0; overflow:hidden; }
+.code-dots { display:flex; gap:9px; margin-bottom:18px; }
+.cd { width:15px; height:15px; border-radius:50%; flex-shrink:0; }
+.cd.r { background:#FF5F57; } .cd.y { background:#FEBC2E; } .cd.g { background:#28C840; }
+.code-lines { display:flex; flex-direction:column; gap:7px; }
+.code-ln { font-family:'Roboto Mono',monospace; font-size:26px; color:var(--sl-yellow); line-height:1.5; white-space:pre; overflow:hidden; text-overflow:ellipsis; }
+.code-ln .kw  { color:#C678DD; }
+.code-ln .str { color:var(--sl-yellow); }
+.code-ln .cm  { color:#5C6370; font-style:italic; }
+
+/* CTA */
+.cta-inner { display:flex; flex-direction:column; justify-content:center; align-items:flex-start; height:100%; }
+.cta-tag { font-family:'Roboto Mono',monospace; font-size:24px; font-weight:600; color:var(--sl-blue); letter-spacing:.1em; text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:12px; }
+.cta-tag::before { content:''; display:inline-block; width:40px; height:5px; background:var(--sl-yellow); flex-shrink:0; }
+.cta-hl { font-family:'Roboto Condensed',sans-serif; font-weight:900; font-size:90px; line-height:1.0; color:var(--sl-dark); text-transform:uppercase; text-shadow:4px 4px 0 rgba(80,80,80,.2); margin-bottom:30px; overflow:hidden; word-break:break-word; }
+.cta-body { font-size:28px; font-weight:400; color:var(--sl-grey); line-height:1.65; margin-bottom:40px; overflow:hidden; }
+.cta-btns { display:flex; flex-direction:column; gap:16px; width:100%; }
+.cta-btn { display:flex; align-items:center; padding:20px 30px; font-family:'Roboto',sans-serif; font-size:28px; font-weight:700; overflow:hidden; }
+.cta-btn.p { background:var(--sl-blue); color:white; }
+.cta-btn.s { background:transparent; border:3px solid var(--sl-blue); color:var(--sl-dark); }
+.cta-author { margin-top:34px; font-size:24px; font-weight:500; color:var(--sl-grey); display:flex; align-items:center; gap:10px; }
+.cta-author strong { color:var(--sl-dark); }
+
+::-webkit-scrollbar { width:3px; height:3px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#252836; border-radius:2px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ TOP BAR ═══ -->
+<div class="topbar">
+  <div class="tb-logo">Carousel<span>Gen</span></div>
+  <div class="tb-sep"></div>
+  <div class="tb-info">1080 × 1620 · 2:3 · Roboto · JSON → PNG</div>
+  <div class="tb-right" id="slide-count"></div>
+</div>
+
+<!-- ═══ APP BODY ═══ -->
+<div class="app-body">
+
+  <!-- LEFT PANEL -->
+  <div class="panel left">
+    <div class="ph"><span class="ph-title">① JSON Content</span></div>
+    <div class="pb">
+      <textarea id="jtx" class="jtx" spellcheck="false"
+        placeholder='Paste JSON here or click "Load Sample"...'></textarea>
+      <div id="jst" class="jst"></div>
+      <div id="warn-list" class="warn-list"></div>
+      <button class="btn btn-primary" id="gen-btn">▶ Generate Slides</button>
+      <button class="btn btn-outline" onclick="loadSample()">📋 Load Sample JSON</button>
+      <div class="divider"></div>
+      <div class="lu-label">② Brand Logo (optional)</div>
+      <div class="lu-zone" id="lu-zone">
+        <input type="file" id="lu-input" accept="image/*" onchange="handleLogo(event)">
+        <img id="lu-img" class="lu-img" src="" alt="logo">
+        <div class="lu-ph" id="lu-ph">Click to upload logo<br>
+          <span style="font-size:10px;color:var(--muted)">PNG · JPG · SVG</span></div>
+      </div>
+      <button class="btn btn-outline" id="lu-clr" style="display:none;font-size:11.5px;padding:5px;"
+        onclick="clearLogo()">✕ Remove Logo</button>
+    </div>
+  </div>
+
+  <!-- CENTER PREVIEW -->
+  <div class="center" id="center">
+    <div class="empty" id="empty">
+      <div class="empty-ico">📱</div>
+      <h3>No slides yet</h3>
+      <p>Paste your JSON on the left and click <strong>Generate Slides</strong> to preview your carousel.</p>
+    </div>
+    <div class="pv-wrap" id="pv-wrap" style="display:none">
+      <div class="pv-port">
+        <div class="pv-scaler" id="pv-scaler"></div>
+      </div>
+      <div class="nav-row">
+        <button class="nav-btn" id="btn-prev" onclick="navSlide(-1)">‹</button>
+        <div class="dots-row" id="dots-row"></div>
+        <button class="nav-btn" id="btn-next" onclick="navSlide(1)">›</button>
+      </div>
+      <div class="slide-lbl" id="slide-lbl"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel right">
+    <div class="ph"><span class="ph-title">③ Slides</span></div>
+    <div class="slides-list" id="slist">
+      <div style="font-size:12px;color:var(--muted);padding:8px 4px;">Generate slides to see list.</div>
+    </div>
+    <div class="exp-sec">
+      <div class="prog-wrap" id="prog-wrap">
+        <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+        <div class="prog-txt" id="prog-txt">Processing…</div>
+      </div>
+      <button class="btn btn-success" id="btn-zip" onclick="downloadZip()">📦 Download All as ZIP</button>
+      <button class="btn btn-outline" id="btn-all" onclick="downloadAllSequential()">⬇ Save All Slides</button>
+      <button class="btn btn-yellow"  id="btn-cur" onclick="downloadCurrent()">🖼 Save This Slide</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ CAPTURE STAGE (off-screen but rendered) ═══ -->
+<div id="capture-stage"></div>
+
+<!-- ═══ EXPORT OVERLAY ═══ -->
+<div class="ov" id="ov">
+  <div class="ov-box">
+    <div class="ov-icon" id="ov-icon">⚙️</div>
+    <div class="ov-title" id="ov-title">Exporting Slides…</div>
+    <div class="ov-sub"   id="ov-sub">Preparing…</div>
+    <div class="ov-bar"><div class="ov-fill" id="ov-fill"></div></div>
+    <div class="ov-cancel" onclick="cancelExport()">Cancel</div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════════ */
+'use strict';
+let DATA   = null;
+let SLIDES = [];
+let IDX    = 0;
+let LOGO   = null;
+let EXPORTING = false;
+let CANCEL_FLAG = false;
+
+/* carousel topic slug — used in filenames */
+function topicSlug() {
+  const raw = DATA?.brand?.name || DATA?.cover?.headline || 'carousel';
+  return raw.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'').slice(0,28) || 'carousel';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   JSON LIVE VALIDATION
+═══════════════════════════════════════════════════════════════ */
+const jtx = document.getElementById('jtx');
+jtx.addEventListener('input', () => {
+  const v = jtx.value.trim();
+  if (!v) { setJst('',''); jtx.className='jtx'; return; }
+  try { JSON.parse(v); jtx.className='jtx valid';   setJst('✓ Valid JSON','ok');  }
+  catch(e) { jtx.className='jtx invalid'; setJst('✗ '+e.message,'err'); }
+});
+
+function setJst(msg, type) {
+  const el = document.getElementById('jst');
+  el.textContent = msg;
+  el.className = 'jst' + (msg ? ' show '+type : '');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LOGO
+═══════════════════════════════════════════════════════════════ */
+function handleLogo(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    LOGO = ev.target.result;
+    document.getElementById('lu-img').src = LOGO;
+    document.getElementById('lu-img').style.display = 'block';
+    document.getElementById('lu-ph').style.display  = 'none';
+    document.getElementById('lu-clr').style.display = 'block';
+    if (DATA) doGenerate();
+  };
+  r.readAsDataURL(f);
+}
+function clearLogo() {
+  LOGO = null;
+  document.getElementById('lu-img').style.display = 'none';
+  document.getElementById('lu-ph').style.display  = 'block';
+  document.getElementById('lu-clr').style.display = 'none';
+  document.getElementById('lu-input').value = '';
+  if (DATA) doGenerate();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GENERATE
+═══════════════════════════════════════════════════════════════ */
+function generateSlides() {
+  const v = jtx.value.trim();
+  if (!v) { setJst('Please paste JSON first.','err'); return; }
+  let d;
+  try { d = JSON.parse(v); }
+  catch(e) { setJst('✗ '+e.message,'err'); return; }
+  DATA = d;
+  doGenerate();
+}
+
+function doGenerate() {
+  SLIDES = [];
+  const d = DATA;
+  if (d.cover)   SLIDES.push({type:'cover',   data:d.cover,   label:'Cover'});
+  if (d.toc)     SLIDES.push({type:'toc',     data:d.toc,     label:'Table of Contents'});
+  if (d.content) {
+    const arr = Array.isArray(d.content) ? d.content : [d.content];
+    arr.forEach((c,i) => SLIDES.push({type:'content', data:c, label:c.slide_label||`Content ${i+1}`}));
+  }
+  if (d.cta) SLIDES.push({type:'cta', data:d.cta, label:'CTA / Closing'});
+
+  if (!SLIDES.length) { setJst('No slide keys found. Need: cover, toc, content[], cta','err'); return; }
+
+  runWarnings(d);
+
+  /* ── Populate capture-stage with real DOM slides ── */
+  populateCaptureStage();
+
+  IDX = 0;
+  showPreview();
+  buildList();
+  document.getElementById('slide-count').textContent = SLIDES.length + ' slides';
+  setJst('✓ '+SLIDES.length+' slides generated','ok');
+
+  /* Auto-fit text after layout */
+  requestAnimationFrame(() => {
+    setTimeout(() => { fitAll(); refreshPreview(); }, 200);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   POPULATE CAPTURE STAGE
+   Slides live in #capture-stage (fixed, off-bottom-of-viewport).
+   html2canvas can paint fixed-position elements correctly.
+═══════════════════════════════════════════════════════════════ */
+function populateCaptureStage() {
+  const stage = document.getElementById('capture-stage');
+  stage.innerHTML = '';
+  SLIDES.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'slide';
+    el.id = 'sl-' + i;
+    el.innerHTML = buildSlide(s, i);
+    stage.appendChild(el);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WARNINGS
+═══════════════════════════════════════════════════════════════ */
+const WL = { 'cover.chapter':5,'cover.headline':8,'cover.toc_item':7,'cta.headline':8,'cta.body':40,'cta.btn':9 };
+const wc = s => s ? s.trim().split(/\s+/).filter(Boolean).length : 0;
+
+function runWarnings(d) {
+  const warns = [];
+  const chk = (f,v,l) => { if(wc(v)>l) warns.push(`"${f}": ${wc(v)} words (max ${l})`); };
+  if(d.cover){ chk('cover.chapter',d.cover.chapter,WL['cover.chapter']); chk('cover.headline',d.cover.headline,WL['cover.headline']); (d.cover.toc_items||[]).forEach((t,i)=>chk(`toc_items[${i}]`,t,WL['cover.toc_item'])); }
+  if(d.cta){ chk('cta.headline',d.cta.headline,WL['cta.headline']); chk('cta.body',d.cta.body,WL['cta.body']); chk('cta.btn_primary',d.cta.btn_primary,WL['cta.btn']); chk('cta.btn_secondary',d.cta.btn_secondary,WL['cta.btn']); }
+  document.getElementById('warn-list').innerHTML = warns.map(w=>`<div class="warn-item">⚠ ${w}</div>`).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SLIDE HTML BUILDERS
+═══════════════════════════════════════════════════════════════ */
+function buildSlide(s, i) {
+  switch(s.type) {
+    case 'cover':   return mkCover(s.data, i);
+    case 'toc':     return mkTOC(s.data, i);
+    case 'content': return mkContent(s.data, i);
+    case 'cta':     return mkCTA(s.data, i);
+    default: return '';
+  }
+}
+
+/* helpers */
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function bold(s) {
+  if (!s) return '';
+  return esc(s).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+}
+function synHL(line) {
+  if (!line) return '';
+  let s = esc(line);
+  s = s.replace(/\b(def|class|import|from|return|if|else|elif|for|while|in|not|and|or|True|False|None|print|range|len|type|int|str|float|list|dict|set|tuple|with|as|try|except|pass|lambda)\b/g,'<span class="kw">$1</span>');
+  s = s.replace(/(&quot;[^&]*?&quot;|&#39;[^&]*?&#39;)/g,'<span class="str">$1</span>');
+  s = s.replace(/(#.*)$/,'<span class="cm">$1</span>');
+  return s;
+}
+function logoHTML() {
+  const name = DATA?.brand?.name || '';
+  if (!LOGO && !name) return '';
+  const img = LOGO ? `<img src="${LOGO}" style="height:36px;width:auto;object-fit:contain;">` : '';
+  const txt = name ? `<span class="s-logo-txt">${esc(name)}<span class="s-logo-tm">™</span></span>` : '';
+  return `<div class="s-logo">${img}${txt}</div>`;
+}
+
+function mkCover(d, idx) {
+  const hl = d.headline||''; const sz = hl.length>32?74:hl.length>22?86:96;
+  const items = (d.toc_items||[]).slice(0,7).map(t=>`<div class="cv-toc-item af">${esc(t)}</div>`).join('');
+  return `<div class="s-bar"></div><div class="s-stripe"></div>
+    <div class="s-body sidebar"><div class="cv-inner">
+      <div class="cv-chapter af">${esc(d.chapter||'')}</div>
+      <div class="cv-headline af" style="font-size:${sz}px">${esc(hl)}</div>
+      <div class="dash"></div>
+      <div class="cv-toc">${items}</div>
+      <div class="dash"></div>
+    </div></div>${logoHTML()}`;
+}
+
+function mkTOC(d, idx) {
+  const secs = (d.sections||[]).slice(0,5).map(s=>{
+    const subs = (s.items||[]).slice(0,7).map(it=>`<div class="toc-sub">${esc(it)}</div>`).join('');
+    return `<div class="toc-sec"><div class="toc-row">
+      <div class="toc-title af">${esc(s.title||'')}</div>
+      <div class="toc-pages">${esc(s.pages||'')}</div>
+    </div><div class="toc-subs">${subs}</div></div>`;
+  }).join('');
+  return `<div class="s-bar"><div class="s-bar-label"><span>${esc(d.label||'TABLE OF CONTENTS')}</span></div></div>
+    <div class="s-stripe"></div>
+    <div class="s-body sidebar"><div class="toc-inner">${secs}</div></div>${logoHTML()}`;
+}
+
+function mkContent(d, idx) {
+  let html = '';
+  (d.sections||[]).forEach(sec => {
+    html += `<div class="ct-sec">`;
+    if (sec.heading) html += `<div class="ct-h af">${esc(sec.heading)}</div>`;
+    if (sec.body) { const p=Array.isArray(sec.body)?sec.body:[sec.body]; p.forEach(x=>{ html+=`<div class="ct-body af" style="margin-bottom:28px">${bold(x)}</div>`; }); }
+    if (sec.numbered_list) { html+=`<div class="num-list">`; sec.numbered_list.forEach((item,i)=>{ html+=`<div class="num-item af"><span class="num-n">${i+1}.</span> ${bold(item)}</div>`; }); html+=`</div>`; }
+    if (sec.highlighted_sections) { sec.highlighted_sections.forEach(hs=>{ html+=`<div style="margin-bottom:22px"><div class="hl-label">${esc(hs.title||'')}</div>`; const hb=Array.isArray(hs.body)?hs.body:(hs.body?[hs.body]:[]); hb.forEach(x=>{ html+=`<div class="ct-body af" style="margin-top:12px;margin-bottom:10px">${bold(x)}</div>`; }); html+=`</div>`; }); }
+    if (sec.blue_sections) { sec.blue_sections.forEach(bs=>{ html+=`<div style="margin-bottom:22px"><div class="bl-heading">${esc(bs.title||'')}${bs.icon?' '+esc(bs.icon):''}</div>`; const bb=Array.isArray(bs.body)?bs.body:(bs.body?[bs.body]:[]); bb.forEach(x=>{ html+=`<div class="ct-body af" style="margin-bottom:12px">${bold(x)}</div>`; }); if(bs.numbered_list){ html+=`<div class="num-list">`; bs.numbered_list.forEach((item,i)=>{ html+=`<div class="num-item af"><span class="num-n">${i+1}.</span> ${bold(item)}</div>`; }); html+=`</div>`; } html+=`</div>`; }); }
+    if (sec.code_block) { const lines=(sec.code_block.lines||[]).map(l=>`<div class="code-ln">${synHL(l)}</div>`).join(''); html+=`<div class="code-blk"><div class="code-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="code-lines">${lines}</div></div>`; }
+    html += `</div>`;
+  });
+  return `<div class="s-body full"><div class="ct-inner">${html}</div></div><div class="s-pgnum">${idx+1}</div>`;
+}
+
+function mkCTA(d, idx) {
+  const hl=d.headline||''; const sz=hl.length>30?68:hl.length>22?78:90;
+  const btnP=d.btn_primary?`<div class="cta-btn p af">${esc(d.btn_primary)}</div>`:'';
+  const btnS=d.btn_secondary?`<div class="cta-btn s af">${esc(d.btn_secondary)}</div>`:'';
+  const auth=(d.author||d.handle)?`<div class="cta-author">${d.author?`<strong>${esc(d.author)}</strong>`:''} ${d.handle?esc(d.handle):''}</div>`:'';
+  return `<div class="s-bar"></div><div class="s-stripe"></div>
+    <div class="s-body sidebar"><div class="cta-inner">
+      <div class="cta-tag af">${esc(d.tag||'GET STARTED')}</div>
+      <div class="cta-hl af" style="font-size:${sz}px">${esc(hl)}</div>
+      <div class="cta-body af">${esc(d.body||'')}</div>
+      <div class="cta-btns">${btnP}${btnS}</div>${auth}
+    </div></div>${logoHTML()}`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PREVIEW
+═══════════════════════════════════════════════════════════════ */
+function showPreview() {
+  document.getElementById('empty').style.display    = 'none';
+  document.getElementById('pv-wrap').style.display  = 'flex';
+  buildDots();
+  refreshPreview();
+}
+
+function refreshPreview() {
+  const scaler = document.getElementById('pv-scaler');
+  const src    = document.getElementById('sl-' + IDX);
+  if (!src) return;
+  scaler.innerHTML = '';
+  const clone = src.cloneNode(true);
+  clone.style.position = 'relative';
+  /* ── CRITICAL FIX: strip ALL ids from preview clone ──
+     Without this, getElementById('sl-0') finds the preview
+     clone first (inside the 0.296x pv-scaler transform)
+     instead of the full-size original in capture-stage.
+     html2canvas then captures the tiny 0.296x element,
+     producing the garbled/compressed cover PNG output.    */
+  clone.removeAttribute('id');
+  clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+  scaler.appendChild(clone);
+
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===IDX));
+  document.getElementById('btn-prev').disabled = IDX === 0;
+  document.getElementById('btn-next').disabled = IDX === SLIDES.length-1;
+
+  const types = {cover:'COVER',toc:'TOC',content:'CONTENT',cta:'CTA'};
+  document.getElementById('slide-lbl').textContent =
+    `${types[SLIDES[IDX]?.type]||''} · SLIDE ${IDX+1} OF ${SLIDES.length}`;
+
+  document.querySelectorAll('.sli').forEach((el,i) => el.classList.toggle('active', i===IDX));
+}
+
+function buildDots() {
+  document.getElementById('dots-row').innerHTML =
+    SLIDES.map((_,i) => `<div class="dot${i===0?' active':''}" onclick="jumpTo(${i})"></div>`).join('');
+}
+
+function navSlide(d) {
+  const n = IDX + d;
+  if (n>=0 && n<SLIDES.length) { IDX=n; refreshPreview(); }
+}
+function jumpTo(i) { IDX=i; refreshPreview(); }
+
+/* ═══════════════════════════════════════════════════════════════
+   SLIDES LIST
+═══════════════════════════════════════════════════════════════ */
+function buildList() {
+  const icons = {cover:'🖼',toc:'📋',content:'📄',cta:'🎯'};
+  document.getElementById('slist').innerHTML =
+    SLIDES.map((s,i) => `
+      <div class="sli${i===0?' active':''}" onclick="jumpTo(${i})">
+        <div class="sli-n">${i+1}</div>
+        <span>${icons[s.type]||'📄'} ${s.label}</span>
+      </div>`
+    ).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AUTO-FIT
+═══════════════════════════════════════════════════════════════ */
+function fitEl(el, min=13) {
+  if (!el) return;
+  let sz = parseFloat(window.getComputedStyle(el).fontSize);
+  let it = 0;
+  while (el.scrollHeight > el.clientHeight + 2 && sz > min && it++ < 50) {
+    sz -= 1; el.style.fontSize = sz+'px';
+  }
+}
+function fitAll() {
+  document.querySelectorAll('#capture-stage .af').forEach(el => fitEl(el));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   OVERLAY HELPERS
+═══════════════════════════════════════════════════════════════ */
+function showOverlay(title, sub, icon='⚙️') {
+  document.getElementById('ov-title').textContent = title;
+  document.getElementById('ov-sub').textContent   = sub;
+  document.getElementById('ov-icon').textContent  = icon;
+  document.getElementById('ov-fill').style.width  = '0%';
+  document.getElementById('ov').classList.add('show');
+}
+function updateOverlay(sub, pct) {
+  document.getElementById('ov-sub').textContent  = sub;
+  document.getElementById('ov-fill').style.width = pct+'%';
+}
+function hideOverlay() {
+  document.getElementById('ov').classList.remove('show');
+  document.getElementById('ov-fill').style.width = '0%';
+}
+function cancelExport() {
+  CANCEL_FLAG = true;
+  hideOverlay();
+}
+
+/* progress bar in right panel */
+function showProgress(txt) {
+  document.getElementById('prog-wrap').classList.add('show');
+  document.getElementById('prog-txt').textContent = txt;
+  document.getElementById('prog-fill').style.width = '0%';
+}
+function updateProgress(pct, txt) {
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-txt').textContent   = txt;
+}
+function hideProgress() {
+  document.getElementById('prog-wrap').classList.remove('show');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ████  CORE CAPTURE FUNCTION  ████
+
+   Root cause of cover corruption:
+   - onclone was overwriting cssText on the cloned .slide element,
+     wiping its `position:relative` — causing all absolutely-
+     positioned children (.s-bar, .s-stripe, .s-body, .cv-headline)
+     to collapse to (0,0) and stack on top of each other.
+   - windowWidth:1080 forced a viewport recalculation that broke
+     the fixed-position capture trick on some browsers.
+
+   Fix strategy:
+   - Clone the slide into a dedicated off-document container.
+   - Give that container position:absolute at (0,0) inside a
+     scratch iframe-like div sized exactly 1080×1620.
+   - Pass the CONTAINER (not the slide) to html2canvas so the
+     slide's own CSS class rules are never overridden.
+   - Keep windowWidth at actual window size to avoid viewport
+     recalculation glitches.
+═══════════════════════════════════════════════════════════════ */
+async function captureSlide(index) {
+  const el = document.getElementById('sl-' + index);
+  if (!el) throw new Error('Slide element not found: sl-' + index);
+
+  /* ── 1. Create a scratch container positioned at viewport origin ── */
+  const scratch = document.createElement('div');
+  scratch.style.cssText = `
+    position: fixed;
+    top: 0; left: 0;
+    width: 1080px; height: 1620px;
+    overflow: hidden;
+    z-index: 999999;
+    pointer-events: none;
+    background: #E8E8E8;
+  `;
+
+  /* ── 2. Deep-clone the slide INTO the scratch container ──
+     We do NOT touch the clone's own cssText — we let its
+     .slide class rules (position:relative, width:1080px,
+     height:1620px) stay exactly as authored.               ── */
+  const clone = el.cloneNode(true);
+  /* Only ensure it sits at top-left of the scratch box */
+  clone.style.position = 'absolute';
+  clone.style.top      = '0';
+  clone.style.left     = '0';
+  /* Remove the id so it doesn't conflict with the real element */
+  clone.removeAttribute('id');
+
+  scratch.appendChild(clone);
+  document.body.appendChild(scratch);
+
+  /* ── 3. Wait two frames for fonts + layout to settle ── */
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+  /* ── 4. Capture the scratch container (not the slide clone) ── */
+  let canvas;
+  try {
+    canvas = await html2canvas(scratch, {
+      width:        1080,
+      height:       1620,
+      scale:        1,
+      x:            0,
+      y:            0,
+      scrollX:      0,
+      scrollY:      0,
+      /* Use actual window dimensions — avoids layout recalculation */
+      windowWidth:  window.innerWidth,
+      windowHeight: window.innerHeight,
+      useCORS:      true,
+      allowTaint:   true,
+      logging:      false,
+      imageTimeout: 20000,
+      backgroundColor: '#E8E8E8'
+    });
+  } finally {
+    /* ── 5. Always clean up the scratch container ── */
+    document.body.removeChild(scratch);
+  }
+
+  return canvas;
+}
+
+/* Convert canvas to blob (proper async wrapper) */
+function canvasToBlob(canvas, type='image/png', quality=1.0) {
+  return new Promise((resolve, reject) => {
+    try {
+      canvas.toBlob(blob => {
+        if (blob) resolve(blob);
+        else reject(new Error('toBlob returned null'));
+      }, type, quality);
+    } catch(e) { reject(e); }
+  });
+}
+
+/* Native download — no FileSaver dependency */
+function triggerDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a   = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  /* Cleanup after short delay */
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }, 2000);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOWNLOAD ALL AS ZIP
+═══════════════════════════════════════════════════════════════ */
+async function downloadZip() {
+  if (!SLIDES.length) { alert('Generate slides first!'); return; }
+  if (EXPORTING) return;
+
+  EXPORTING    = true;
+  CANCEL_FLAG  = false;
+
+  /* Disable buttons */
+  setExportBtns(true);
+  showProgress('Building ZIP…');
+  showOverlay('Building ZIP…', 'Waiting for fonts…', '📦');
+
+  try {
+    await document.fonts.ready;
+
+    /* Check JSZip is loaded */
+    if (typeof JSZip === 'undefined') {
+      throw new Error('JSZip library failed to load. Check your internet connection and reload the page.');
+    }
+
+    const zip   = new JSZip();
+    const slug  = topicSlug();
+    const date  = new Date().toISOString().slice(0,10);
+    const total = SLIDES.length;
+
+    for (let i = 0; i < total; i++) {
+      if (CANCEL_FLAG) break;
+
+      const pct = Math.round((i / total) * 90);
+      const slideLabel = SLIDES[i].label.replace(/[^a-z0-9\s-]/gi,'').replace(/\s+/g,'-').toLowerCase().slice(0,30);
+      const fname = `${String(i+1).padStart(2,'0')}-${slug}-${slideLabel}.png`;
+
+      updateOverlay(`Capturing slide ${i+1} of ${total}: ${SLIDES[i].label}`, pct);
+      updateProgress(pct, `Slide ${i+1}/${total} — ${SLIDES[i].label}`);
+
+      const canvas = await captureSlide(i);
+      const blob   = await canvasToBlob(canvas);
+      zip.file(fname, blob);
+    }
+
+    if (!CANCEL_FLAG) {
+      updateOverlay('Compressing ZIP…', 92);
+      updateProgress(92, 'Compressing…');
+
+      const zipBlob = await zip.generateAsync({
+        type: 'blob',
+        compression: 'DEFLATE',
+        compressionOptions: { level: 6 }
+      });
+
+      updateProgress(100, 'Done! Downloading…');
+      updateOverlay('Done! Downloading…', 100);
+
+      triggerDownload(zipBlob, `${slug}-carousel-${date}.zip`);
+    }
+
+  } catch(err) {
+    console.error('ZIP export error:', err);
+    alert('Export failed: ' + err.message + '\n\nTip: Try the "Save All Slides" button instead, which downloads one at a time.');
+  } finally {
+    hideOverlay();
+    hideProgress();
+    setExportBtns(false);
+    EXPORTING = false;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOWNLOAD ALL — SEQUENTIAL (one file at a time, no zip needed)
+   Most reliable fallback — works in all browsers.
+═══════════════════════════════════════════════════════════════ */
+async function downloadAllSequential() {
+  if (!SLIDES.length) { alert('Generate slides first!'); return; }
+  if (EXPORTING) return;
+
+  EXPORTING   = true;
+  CANCEL_FLAG = false;
+
+  setExportBtns(true);
+  showProgress('Saving slides…');
+  showOverlay('Saving All Slides…', 'Waiting for fonts…', '⬇');
+
+  try {
+    await document.fonts.ready;
+    const slug  = topicSlug();
+    const total = SLIDES.length;
+
+    for (let i = 0; i < total; i++) {
+      if (CANCEL_FLAG) break;
+
+      const pct = Math.round(((i+1) / total) * 100);
+      const slideLabel = SLIDES[i].label.replace(/[^a-z0-9\s-]/gi,'').replace(/\s+/g,'-').toLowerCase().slice(0,30);
+      const fname = `${String(i+1).padStart(2,'0')}-${slug}-${slideLabel}.png`;
+
+      updateOverlay(`Saving slide ${i+1} of ${total}`, pct, '⬇');
+      updateProgress(pct, `Slide ${i+1}/${total}`);
+
+      const canvas = await captureSlide(i);
+      const blob   = await canvasToBlob(canvas);
+      triggerDownload(blob, fname);
+
+      /* Small delay between downloads to avoid browser blocking */
+      await new Promise(r => setTimeout(r, 600));
+    }
+
+  } catch(err) {
+    console.error('Sequential download error:', err);
+    alert('Download failed: ' + err.message);
+  } finally {
+    hideOverlay();
+    hideProgress();
+    setExportBtns(false);
+    EXPORTING = false;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOWNLOAD CURRENT SLIDE
+═══════════════════════════════════════════════════════════════ */
+async function downloadCurrent() {
+  if (!SLIDES.length) { alert('Generate slides first!'); return; }
+  if (EXPORTING) return;
+
+  EXPORTING = true;
+  setExportBtns(true);
+
+  const slug       = topicSlug();
+  const slideLabel = SLIDES[IDX].label.replace(/[^a-z0-9\s-]/gi,'').replace(/\s+/g,'-').toLowerCase().slice(0,30);
+  const fname      = `${String(IDX+1).padStart(2,'0')}-${slug}-${slideLabel}.png`;
+
+  showProgress(`Saving slide ${IDX+1}…`);
+  showOverlay('Saving Slide…', `Capturing: ${SLIDES[IDX].label}`, '🖼');
+
+  try {
+    await document.fonts.ready;
+    const canvas = await captureSlide(IDX);
+    const blob   = await canvasToBlob(canvas);
+    triggerDownload(blob, fname);
+    updateProgress(100, 'Saved!');
+    setTimeout(hideProgress, 1500);
+  } catch(err) {
+    console.error('Single slide capture error:', err);
+    alert('Failed to capture slide: ' + err.message);
+    hideProgress();
+  } finally {
+    hideOverlay();
+    setExportBtns(false);
+    EXPORTING = false;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BUTTON STATE HELPER
+═══════════════════════════════════════════════════════════════ */
+function setExportBtns(disabled) {
+  ['btn-zip','btn-all','btn-cur'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = disabled;
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   KEYBOARD
+═══════════════════════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (document.activeElement === jtx) return;
+  if (e.key === 'ArrowLeft')  navSlide(-1);
+  if (e.key === 'ArrowRight') navSlide(1);
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   WIRE UP
+═══════════════════════════════════════════════════════════════ */
+document.getElementById('gen-btn').onclick = generateSlides;
+
+/* ═══════════════════════════════════════════════════════════════
+   SAMPLE JSON
+═══════════════════════════════════════════════════════════════ */
+function loadSample() {
+  const s = {
+    "brand": { "name": "python" },
+    "cover": {
+      "chapter": "Chapter 1",
+      "headline": "Introduction to Python",
+      "toc_items": [
+        "1.1 What is Python?",
+        "1.2 Features of Python",
+        "1.3 Applications of Python",
+        "1.4 Python Installation",
+        "1.5 First Python Program",
+        "1.6 Running Python Scripts",
+        "1.7 Python IDEs and Editors"
+      ]
+    },
+    "toc": {
+      "label": "TABLE OF CONTENTS",
+      "sections": [
+        { "title": "Introduction to Python", "pages": "1 – 9",
+          "items": ["1.1 What is Python?","1.2 Features of Python","1.3 Applications of Python","1.4 Python installation","1.5 First Python program"] },
+        { "title": "Modules, Comments, & Pip", "pages": "10 – 16",
+          "items": ["2.1 Modules in Python","2.2 Comments in Python","2.3 What is Pip?","2.4 Installing packages with Pip","2.5 Virtual environments"] },
+        { "title": "Variables, Data Types & Operators", "pages": "17 – 27",
+          "items": ["3.1 Variables in Python","3.2 Data Types in Python","3.3 Keywords in Python","3.4 Operators in Python","3.5 Type conversion"] },
+        { "title": "Control Flow and Functions", "pages": "28 – 51",
+          "items": ["4.1 if / elif / else","4.2 for loops and while loops","4.3 break, continue, pass","4.4 Defining functions","4.5 Lambda functions"] }
+      ]
+    },
+    "content": [
+      {
+        "slide_label": "What is Python + Features",
+        "sections": [
+          {
+            "heading": "1.1 What is Python?",
+            "body": [
+              "Python is a **high-level, general-purpose programming language** celebrated for its clean syntax and readability. Created by **Guido van Rossum** in 1991, it was designed with a philosophy that emphasizes code readability and simplicity, making software development faster and more enjoyable.",
+              "Being open-source and **freely available** for both personal and commercial use, Python has grown into one of the most popular languages in the world. Its vibrant ecosystem of libraries and frameworks makes it suitable for almost any software project — from a simple automation script to large-scale enterprise applications."
+            ]
+          },
+          {
+            "heading": "1.2 Key Features",
+            "numbered_list": [
+              "**Easy to Learn:** Python uses English-like keywords with minimal punctuation, making it extremely beginner-friendly even without prior programming experience.",
+              "**Interpreted Language:** Executes code line by line at runtime rather than compiling first, which greatly aids real-time debugging and interactive development.",
+              "**Dynamically Typed:** Variables do not require explicit type declarations — the interpreter determines types at runtime, supporting flexible and agile coding.",
+              "**Extensive Standard Library:** Ships with modules covering file I/O, networking, regular expressions, data serialization, testing, and much more.",
+              "**Cross-Platform:** Python runs identically on Windows, macOS, and Linux without modification to the source code."
+            ]
+          }
+        ]
+      },
+      {
+        "slide_label": "Applications of Python",
+        "sections": [
+          {
+            "heading": "1.3 Applications of Python",
+            "body": "Python's **versatility and user-friendly design** make it indispensable across industries. Its rich ecosystem of specialized libraries means there is almost no field where Python cannot be applied effectively:",
+            "highlighted_sections": [
+              { "title": "1. Data Analysis and Visualization", "body": "Python dominates data science with **Pandas and NumPy** for data manipulation, and **Matplotlib, Seaborn, and Plotly** for rich interactive visualizations. It is the backbone of data science workflows worldwide." },
+              { "title": "2. Web Development", "body": "**Django** (full-stack) and **Flask** (micro-framework) power the backends of major platforms including **Google, Instagram, YouTube, Reddit, and Dropbox**. Python handles routing, databases, auth, and REST APIs." },
+              { "title": "3. Machine Learning & AI", "body": "Python is the **de facto language for ML and AI**. **Scikit-Learn** covers classical algorithms while **TensorFlow and PyTorch** power deep learning research and production models at scale." },
+              { "title": "4. Task Automation & Scripting", "body": "Python automates repetitive workflows — file management, **web scraping with BeautifulSoup and Scrapy**, sending emails, manipulating spreadsheets with **openpyxl**, and scheduling batch jobs." }
+            ]
+          }
+        ]
+      },
+      {
+        "slide_label": "First Python Program",
+        "sections": [
+          {
+            "heading": "1.5 First Python Program",
+            "body": "Before writing code, verify Python is installed and a code editor is ready. Follow these steps to create and run your very first Python program:",
+            "numbered_list": [
+              "Open your terminal and verify Python is installed: type **python --version** or **python3 --version**.",
+              "Navigate to your project folder using the **cd** command, then right-click and select **'Open with Code'** to launch VS Code.",
+              "In VS Code, create a new file in the Explorer panel and name it **first_program.py**.",
+              "Type the code shown below into the file, then save with **Ctrl+S** (Windows) or **Cmd+S** (Mac).",
+              "Open the integrated terminal in VS Code and run: **python first_program.py** — you should see the output immediately."
+            ],
+            "code_block": {
+              "lines": [
+                "# My first Python program",
+                "name = \"World\"",
+                "message = f\"Hello, {name}!\"",
+                "print(message)",
+                "",
+                "# Output: Hello, World!"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "slide_label": "Python & VS Code Setup",
+        "sections": [{
+          "blue_sections": [
+            {
+              "title": "1. PYTHON INSTALLATION",
+              "icon": "🐍",
+              "body": "Install the Python interpreter before writing any code. Steps for Windows (similar on macOS/Linux):",
+              "numbered_list": [
+                "Visit **https://python.org/downloads/** and click **'Download Python 3.x.x'** — always use the latest stable version.",
+                "Run the installer. On the first screen, **check 'Add Python to PATH'** — this is critical.",
+                "Click **'Install Now'**. Once complete, open Command Prompt and type **python --version** to confirm."
+              ]
+            },
+            {
+              "title": "2. VS CODE INSTALLATION",
+              "icon": "💻",
+              "body": "VS Code is the most popular free editor for Python with a rich extension ecosystem:",
+              "numbered_list": [
+                "Go to **https://code.visualstudio.com/** and click **'Download for Windows'**.",
+                "Run **VSCodeSetup.exe**. On 'Additional Tasks', **check all boxes** — especially 'Add to PATH' and 'Open with Code' context menu.",
+                "After install, open VS Code and install the **Python extension by Microsoft** from the Extensions panel (Ctrl+Shift+X).",
+                "Also install **Code Runner by Jun Han** to run Python files with a single keyboard shortcut."
+              ]
+            }
+          ]
+        }]
+      }
+    ],
+    "cta": {
+      "tag": "START CODING TODAY",
+      "headline": "Your Python Journey Starts Now",
+      "body": "You now have a solid foundation to begin programming in Python. You understand what it is, how to install it, how to write your first program, and where it is used in the real world. The most important step is to start — open VS Code, create a new file, and write your first line of code today. Every expert was once a beginner.",
+      "btn_primary":   "💾 Save this post for later",
+      "btn_secondary": "📤 Share with a friend learning Python",
+      "author": "Python Basics",
+      "handle": "@pythonbasics"
+    }
+  };
+  jtx.value = JSON.stringify(s, null, 2);
+  jtx.className = 'jtx valid';
+  setJst('✓ Sample JSON loaded — click Generate Slides', 'ok');
+}
+</script>
+</body>
+</html>
