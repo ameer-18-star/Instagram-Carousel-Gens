@@ -1,0 +1,182 @@
+{
+  "cover": {
+    "series": "Series Name Will Be Here",
+    "title": "How To Boost Focus Permanently",
+    "highlight_words": ["Focus"]
+  },
+  "slides": [
+    {
+      "type": "body",
+      "label": "The Truth",
+      "content": [
+        {
+          "type": "label",
+          "text": "Here's the truth:"
+        },
+        {
+          "type": "para",
+          "text": "You can't force focus but you can build it with the right habits. And when those habits are paired with a good system, they become unstoppable."
+        },
+        {
+          "type": "para",
+          "text": "We highly recommend you check out our WhatsApp Channel \"Art Of UltraLearning\" which gives you the systems to create routines that make focus second nature."
+        },
+        {
+          "type": "para",
+          "text": "Grab it now via the __LINK IN BIO!__"
+        }
+      ]
+    },
+    {
+      "type": "tip",
+      "label": "1. Train Your Brain",
+      "heading": "1. Train Your Brain:",
+      "content": [
+        {
+          "type": "para",
+          "text": "Two types of attention:"
+        },
+        {
+          "type": "bullet",
+          "text": "Selective"
+        },
+        {
+          "type": "bullet",
+          "text": "Sustained"
+        },
+        {
+          "type": "para",
+          "text": "Build your sustained attention by focusing on a task for a set time limit."
+        },
+        {
+          "type": "para",
+          "text": "Build your selective attention by focusing on one task without distractions."
+        }
+      ]
+    },
+    {
+      "type": "tip",
+      "label": "2. Prioritize Focus",
+      "heading": "2. Prioritize Focus:",
+      "content": [
+        {
+          "type": "para",
+          "text": "Intentionally make 'focus' a priority in your life."
+        },
+        {
+          "type": "para",
+          "text": "First, identify what you need to prioritize."
+        },
+        {
+          "type": "para",
+          "text": "Next, allocate the time needed to complete your task without distraction."
+        },
+        {
+          "type": "para",
+          "text": "Finally, remove all other tasks or commitments during that dedicated time."
+        }
+      ]
+    },
+    {
+      "type": "tip",
+      "label": "3. Utilize the Power of Music",
+      "heading": "3. Utilize the Power of Music:",
+      "content": [
+        {
+          "type": "para",
+          "text": "Music can boost brain power and improve focus."
+        },
+        {
+          "type": "para",
+          "text": "The ideal focus-boosting music:"
+        },
+        {
+          "type": "bullet",
+          "text": "Has no lyrics"
+        },
+        {
+          "type": "bullet",
+          "text": "Is upbeat"
+        },
+        {
+          "type": "bullet",
+          "text": "Is familiar or lyrically predictable"
+        }
+      ]
+    },
+    {
+      "type": "tip",
+      "label": "4. Optimize Your Environment",
+      "heading": "4. Optimize Your Environment:",
+      "content": [
+        {
+          "type": "para",
+          "text": "The environment you work in affects your focus."
+        },
+        {
+          "type": "para",
+          "text": "To optimize your focus:"
+        },
+        {
+          "type": "numbered",
+          "num": "1",
+          "text": "Eliminate visual distractions"
+        },
+        {
+          "type": "numbered",
+          "num": "2",
+          "text": "Reduce noise levels or use noise-cancelling headphones"
+        },
+        {
+          "type": "numbered",
+          "num": "3",
+          "text": "Adjust the lighting to reduce eye strain"
+        }
+      ]
+    },
+    {
+      "type": "tip",
+      "label": "5. Mindful Meditation",
+      "heading": "5. Mindful Meditation:",
+      "content": [
+        {
+          "type": "para",
+          "text": "Mindful meditation can boost focus by increasing the size of the brain's prefrontal cortex."
+        },
+        {
+          "type": "para",
+          "text": "To try mindful meditation:"
+        },
+        {
+          "type": "bullet",
+          "text": "Find a quiet place,"
+        },
+        {
+          "type": "bullet",
+          "text": "Set a timer,"
+        },
+        {
+          "type": "bullet",
+          "text": "Focus only on breathing."
+        },
+        {
+          "type": "para",
+          "text": "When your mind wanders, gently guide it back to your breath."
+        }
+      ]
+    },
+    {
+      "type": "recap",
+      "label": "Recap",
+      "label_text": "#Recap:",
+      "title": "How to Boost Focus\nPermanently:",
+      "items": [
+        "Train Your Brain",
+        "Prioritize Focus",
+        "Utilize the Power of Music",
+        "Optimize Your Environment",
+        "Mindful Meditation"
+      ]
+    }
+  ]
+}

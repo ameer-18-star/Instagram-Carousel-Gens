@@ -1,0 +1,347 @@
+{
+  "_instructions": {
+    "canvas_size": "1080 × 1620 px — vertical 2:3 ratio. Each slide has ~50% more vertical space than a square 1:1 post.",
+    "how_to_use": "Paste this entire JSON into the carousel generator. Remove the _instructions block and any _note keys before generating. Remove any slide keys you do not need.",
+    "slide_order": "cover → toc → content (array, as many objects as you need) → cta",
+    "bold_text": "Wrap any word or phrase in **double asterisks** to make it bold inline. Example: 'Python is a **powerful** language'",
+    "content_array": "The 'content' key is an ARRAY. Each object becomes one slide. You can have 1 to 8 content slides.",
+    "logo": "Upload your logo PNG/JPG using the logo upload button in the app. brand.name is a text fallback shown bottom-right.",
+    "word_limits_for_2x3_canvas": {
+      "cover.chapter":           "Max 6 words",
+      "cover.headline":          "Max 9 words — displayed very large, 2–3 lines OK on taller canvas",
+      "cover.toc_items":         "Max 9 words per item — 7 items fit comfortably now",
+      "toc.section_title":       "Max 10 words per section title",
+      "toc.section_items":       "Max 8 words per sub-item — up to 7 items per section",
+      "content.heading":         "Max 12 words",
+      "content.body_paragraph":  "Max 90 words per paragraph — font auto-scales if exceeded",
+      "content.highlight_title": "Max 10 words — shown on yellow background strip",
+      "content.numbered_item":   "Max 45 words per item — up to 8 items fit on tall slide",
+      "content.code_lines":      "Max 55 characters per line — up to 10 lines fit in code block",
+      "cta.headline":            "Max 9 words — displayed very large",
+      "cta.body":                "Max 55 words",
+      "cta.buttons":             "Max 10 words each"
+    }
+  },
+
+  "brand": {
+    "_note": "Shown as logo text bottom-right on cover, TOC, and CTA slides. Upload an actual image in the app for best results.",
+    "name": "python"
+  },
+
+  "cover": {
+    "_note": "COVER SLIDE — Blue sidebar + yellow stripe on left. Giant bold uppercase headline. Dashed lines wrap a TOC preview list. Up to 7 items fit on the taller canvas.",
+    "chapter": "Chapter 1",
+    "headline": "Introduction to Python",
+    "toc_items": [
+      "1.1 What is Python?",
+      "1.2 Features of Python",
+      "1.3 Applications of Python",
+      "1.4 Python Installation",
+      "1.5 First Python Program",
+      "1.6 Running Python Scripts",
+      "1.7 Python IDEs and Editors"
+    ]
+  },
+
+  "toc": {
+    "_note": "TABLE OF CONTENTS SLIDE — Rotated white bold 'TABLE OF CONTENTS' text in the blue sidebar. Up to 5 sections, each with a page range and up to 7 sub-items. The taller canvas fits much more content here.",
+    "label": "TABLE OF CONTENTS",
+    "sections": [
+      {
+        "title": "Introduction to Python",
+        "pages": "1 – 9",
+        "items": [
+          "1.1 What is Python?",
+          "1.2 Features of Python",
+          "1.3 Applications of Python",
+          "1.4 Python installation",
+          "1.5 First Python program",
+          "1.6 Running Python scripts",
+          "1.7 Python IDEs and editors"
+        ]
+      },
+      {
+        "title": "Modules, Comments, & Pip",
+        "pages": "10 – 16",
+        "items": [
+          "2.1 Modules in Python",
+          "2.2 Comments in Python",
+          "2.3 What is Pip?",
+          "2.4 Installing packages with Pip",
+          "2.5 Virtual environments"
+        ]
+      },
+      {
+        "title": "Variables, Data Types, Keywords & Operators",
+        "pages": "17 – 27",
+        "items": [
+          "3.1 Variables in Python",
+          "3.2 Data Types in Python",
+          "3.3 Keywords in Python",
+          "3.4 Identifiers in Python",
+          "3.5 Operators in Python",
+          "3.6 Type conversion and casting"
+        ]
+      },
+      {
+        "title": "Detailed Overview of Python Data Types",
+        "pages": "28 – 51",
+        "items": [
+          "4.1 Numbers — int, float, complex",
+          "4.2 Strings and string methods",
+          "4.3 Dictionary — key-value pairs",
+          "4.4 Set — unordered unique elements",
+          "4.5 Tuple — immutable sequences",
+          "4.6 Boolean — True and False",
+          "4.7 None — the null type"
+        ]
+      },
+      {
+        "title": "Control Flow and Functions",
+        "pages": "52 – 74",
+        "items": [
+          "5.1 if, elif, and else statements",
+          "5.2 for loops and while loops",
+          "5.3 break, continue, and pass",
+          "5.4 Defining and calling functions",
+          "5.5 Lambda functions",
+          "5.6 Scope and namespaces"
+        ]
+      }
+    ]
+  },
+
+  "content": [
+
+    {
+      "_note": "CONTENT SLIDE 1 — Two full sections: intro body paragraphs + features numbered list. The taller canvas fits 3 body paragraphs and a 6-item numbered list comfortably.",
+      "slide_label": "What is Python + Features",
+      "sections": [
+        {
+          "heading": "1.1 What is Python?",
+          "body": [
+            "Python is a **high-level, general-purpose programming language** celebrated for its clean syntax and readability. Created by **Guido van Rossum** in 1991, it was designed with a philosophy that emphasizes code readability and simplicity, making software development faster and more enjoyable.",
+            "Being open-source and freely available for both **personal and commercial use**, Python has grown into one of the most popular languages in the world. Its vibrant ecosystem of libraries and frameworks makes it suitable for almost any software project — from a simple script to a large-scale enterprise application.",
+            "Python's **built-in data structures**, dynamic typing, and dynamic binding facilitate rapid application development and scripting. Its **user-friendly syntax** prioritizes readability, which directly lowers the maintenance cost of large codebases over time."
+          ]
+        },
+        {
+          "heading": "1.2 Features of Python",
+          "numbered_list": [
+            "**Easy to Learn and Read:** Python uses English-like keywords and minimal punctuation, making its syntax extremely beginner-friendly and easy to pick up even without a programming background.",
+            "**Easy to Code:** Python minimizes coding effort with its concise syntax and a rich standard library ecosystem, enabling fast development of both simple scripts and complex applications.",
+            "**Interpreted Language:** Python executes code line by line at runtime rather than compiling it first, which greatly aids real-time debugging and interactive development.",
+            "**Dynamically Typed:** Variables in Python do not require explicit type declarations — the interpreter determines the type at runtime, supporting flexible and agile coding practices.",
+            "**Object-Oriented and Functional:** Python supports multiple programming paradigms including OOP, functional programming, and procedural programming, giving developers great flexibility in design.",
+            "**Extensive Standard Library:** Python ships with a large standard library covering everything from file I/O, regular expressions, and networking to data serialization and testing utilities."
+          ]
+        }
+      ]
+    },
+
+    {
+      "_note": "CONTENT SLIDE 2 — Applications of Python with highlighted yellow subheadings. Four highlighted sections fill the taller canvas well. Each section has a heading + 2-paragraph body.",
+      "slide_label": "Applications of Python",
+      "sections": [
+        {
+          "heading": "1.3 Applications of Python",
+          "body": "Python's **versatility and user-friendly design** make it indispensable across a wide range of industries and domains. Its rich ecosystem of specialized libraries means there is almost no field where Python cannot be applied effectively. Here are the most prominent real-world applications:",
+          "highlighted_sections": [
+            {
+              "title": "1. Data Analysis and Visualization",
+              "body": "Python is the dominant tool for **data analysis and scientific visualization**. Libraries like **Pandas and NumPy** handle everything from data cleaning and transformation to statistical analysis. For visualization, **Matplotlib, Seaborn, and Plotly** allow developers to create detailed charts, graphs, and interactive dashboards. Python is the backbone of modern data science workflows in companies of every size."
+            },
+            {
+              "title": "2. Web Development",
+              "body": "Python is widely used for **server-side web development** through mature frameworks like **Django** (batteries-included, full-stack) and **Flask** (lightweight, micro-framework). It handles URL routing, database interaction, authentication, and API development with ease. Noteworthy platforms built on Python include **Google, Instagram, YouTube, Dropbox, Reddit, and Pinterest**, demonstrating its scalability for massive traffic."
+            },
+            {
+              "title": "3. Machine Learning and Artificial Intelligence",
+              "body": "Python is the **de facto language for machine learning and AI**. Libraries like **NumPy and Pandas** handle data manipulation, while **Scikit-Learn** covers classical ML algorithms. For deep learning, frameworks like **TensorFlow and PyTorch** enable building and training neural networks at scale. Python's readable syntax and active research community make it the first choice for AI practitioners worldwide."
+            },
+            {
+              "title": "4. Task Automation and Scripting",
+              "body": "Python excels at **automating repetitive tasks** that would otherwise consume hours of manual work. Scripts can automate file management, batch renaming, web scraping with **BeautifulSoup and Scrapy**, sending emails, manipulating spreadsheets with **openpyxl**, interacting with APIs, and scheduling jobs. Even non-programmers can quickly learn to write Python automation scripts to supercharge their daily workflows."
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "_note": "CONTENT SLIDE 3 — Code block slide with installation steps + a multi-line code example. The taller canvas fits 5+ steps plus a larger code block with multiple lines.",
+      "slide_label": "First Python Program",
+      "sections": [
+        {
+          "heading": "1.5 First Python Program",
+          "body": "Your first Python program will be a simple one to get you started. Before writing any code, ensure you have Python installed on your computer and a code editor ready. Follow these steps carefully to create and run your very first program:",
+          "numbered_list": [
+            "Open your terminal (macOS/Linux) or Command Prompt (Windows) and verify Python is installed by typing **python --version** or **python3 --version**.",
+            "Navigate to the folder where you want to save your project files using the **cd** command.",
+            "Right-click inside the folder and select **'Open with Code'** to launch Visual Studio Code in that directory.",
+            "Inside VS Code, open the Explorer panel and click **'New File'**, then name it **first_program.py**.",
+            "Type or paste the code shown below into the file, then save with **Ctrl + S** (Windows) or **Cmd + S** (Mac).",
+            "Run your program by pressing **Ctrl + Alt + N** if using the Code Runner extension, or open the integrated terminal and type **python first_program.py**.",
+            "Check the terminal output — you should see **'Hello, World!'** printed. Congratulations on your first Python program!"
+          ],
+          "code_block": {
+            "lines": [
+              "# My first Python program",
+              "name = \"World\"",
+              "message = f\"Hello, {name}!\"",
+              "print(message)",
+              "",
+              "# Output: Hello, World!"
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "_note": "CONTENT SLIDE 4 — Installation steps using blue headings. Two blue_sections fit well on the taller canvas. Each has a longer numbered list.",
+      "slide_label": "Python & VS Code Installation",
+      "sections": [
+        {
+          "blue_sections": [
+            {
+              "title": "1. PYTHON INSTALLATION",
+              "icon": "🐍",
+              "body": "Before you can write Python code, you need to install the Python interpreter on your system. The steps below are for Windows, but the process is similar on macOS and Linux:",
+              "numbered_list": [
+                "Visit the official Python website at **https://python.org/downloads/** in your browser.",
+                "Click **'Download Python 3.x.x'** — always download the latest stable version.",
+                "Run the downloaded installer. On the first screen, **check the box 'Add Python to PATH'** — this is critical.",
+                "Click **'Install Now'** for a standard installation or 'Customize' if you want to choose the install location.",
+                "Once installation completes, open Command Prompt and type **python --version** to confirm it installed correctly.",
+                "If the version number appears (e.g. Python 3.12.0), your installation was successful."
+              ]
+            },
+            {
+              "title": "2. VS CODE INSTALLATION",
+              "icon": "💻",
+              "body": "Visual Studio Code is a free, powerful code editor made by Microsoft. It is the most popular editor for Python development due to its rich extension ecosystem and built-in terminal:",
+              "numbered_list": [
+                "Go to **https://code.visualstudio.com/** and click **'Download for Windows'** (or your OS).",
+                "Run the downloaded **VSCodeSetup.exe** installer.",
+                "Accept the license agreement and click **'Next'** through the setup screens.",
+                "On the 'Additional Tasks' screen, **check all boxes** — especially 'Add to PATH' and 'Open with Code' context menu options.",
+                "Click **'Install'** and wait for the installation to complete, then click **'Finish'**.",
+                "Open VS Code, go to the **Extensions panel** (Ctrl+Shift+X), and install the **'Python'** extension by Microsoft.",
+                "Also install **'Code Runner'** by Jun Han to enable running Python files with a single keyboard shortcut."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "_note": "CONTENT SLIDE 5 — Mixed slide: body paragraph + highlighted sections for scientific computing and game development. Three rich highlighted sections fill the tall canvas.",
+      "slide_label": "More Python Applications",
+      "sections": [
+        {
+          "heading": "More Applications of Python",
+          "body": "Beyond data science and web development, Python powers entire industries with its simplicity and powerful libraries. From scientific research labs to Hollywood visual effects studios, Python continues to expand its reach into new domains every year. Here are more areas where Python excels:",
+          "highlighted_sections": [
+            {
+              "title": "5. Scientific Computing",
+              "body": "Python is the primary language for **computational science and research**. **SciPy** provides algorithms for optimization, integration, interpolation, linear algebra, and signal processing. **SymPy** handles symbolic mathematics. **Matplotlib** and **Plotly** produce publication-quality scientific figures. Universities, research institutes, and NASA all use Python extensively in their computational workflows and simulations."
+            },
+            {
+              "title": "6. Game Development",
+              "body": "Python supports both **game development and game scripting**. The **Pygame** library provides tools for building 2D games, handling sprites, sound, and input events. Python is also embedded in professional game engines — **Blender** uses Python as its scripting language for automation, add-ons, and rendering pipelines. While not typically used for AAA games, Python is excellent for prototyping game mechanics and building indie games."
+            },
+            {
+              "title": "7. Cybersecurity and Ethical Hacking",
+              "body": "Python is widely used in the **cybersecurity field** for writing penetration testing tools, network scanners, exploit scripts, and security automation. Tools like **Scapy** allow custom packet crafting and network analysis. **Paramiko** handles SSH automation. Many well-known security frameworks are written in Python, and most cybersecurity courses teach Python as the primary scripting language for ethical hacking and defensive security work."
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "_note": "CONTENT SLIDE 6 — Variables, data types and operators with a detailed numbered list and a code block showing examples.",
+      "slide_label": "Variables and Data Types",
+      "sections": [
+        {
+          "heading": "3.1 Variables in Python",
+          "body": "A **variable** is a named container that stores a value in memory. In Python, you do not need to declare the type of a variable — the interpreter infers it automatically from the value you assign. Variable names must start with a letter or underscore, cannot contain spaces, and are **case-sensitive** (name and Name are different variables).",
+          "numbered_list": [
+            "**Integer (int):** Stores whole numbers without a decimal point. Example: **age = 25** or **count = 1000**. Python integers have unlimited precision.",
+            "**Float (float):** Stores numbers with decimal points. Example: **price = 9.99** or **pi = 3.14159**. Used for measurements and calculations.",
+            "**String (str):** Stores text enclosed in single or double quotes. Example: **name = 'Alice'**. Strings support slicing, formatting, and dozens of built-in methods.",
+            "**Boolean (bool):** Stores either **True** or **False**. Used in conditions and logical operations. All non-zero values are truthy in Python.",
+            "**List:** An ordered, mutable collection of items. Example: **colors = ['red', 'green', 'blue']**. Supports indexing, slicing, and methods like append and remove.",
+            "**Dictionary (dict):** Stores key-value pairs. Example: **person = {'name': 'Ali', 'age': 30}**. Keys must be unique and immutable.",
+            "**Tuple:** An ordered, immutable sequence. Example: **coords = (10, 20)**. Tuples are faster than lists and used when data should not change.",
+            "**None:** The absence of a value. Similar to null in other languages. Used as a default return value and placeholder."
+          ]
+        },
+        {
+          "code_block": {
+            "lines": [
+              "# Variable assignment examples",
+              "name    = \"Python\"        # str",
+              "version = 3.12            # float",
+              "is_fun  = True            # bool",
+              "skills  = ['code', 'debug']  # list",
+              "info    = {'lang': name}  # dict",
+              "print(type(name))         # <class 'str'>"
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "_note": "CONTENT SLIDE 7 — Control flow: if/else and loops with detailed explanations and a realistic multi-line code block.",
+      "slide_label": "Control Flow — If, Loops",
+      "sections": [
+        {
+          "heading": "5.1 Control Flow in Python",
+          "body": "**Control flow** determines the order in which Python executes statements. Without control flow, every program would simply run top to bottom. Python provides conditional statements and loops to make programs dynamic, responsive, and capable of repeating tasks efficiently.",
+          "highlighted_sections": [
+            {
+              "title": "if / elif / else Statements",
+              "body": "The **if statement** tests a condition and executes a block of code only when that condition is True. **elif** (else if) allows you to chain multiple conditions together. **else** runs when none of the preceding conditions are True. Python uses **indentation** (4 spaces) instead of curly braces to define code blocks — this is a core part of Python's clean, readable syntax philosophy."
+            },
+            {
+              "title": "for Loops and while Loops",
+              "body": "A **for loop** iterates over a sequence (list, string, range, tuple, or dictionary) and executes the loop body once per item. A **while loop** keeps executing as long as its condition remains True. Use **break** to exit a loop early, **continue** to skip the current iteration, and **pass** as a placeholder when a block is syntactically required but you want no action taken. The built-in **range()** function generates a sequence of numbers, making for loops extremely versatile."
+            }
+          ],
+          "code_block": {
+            "lines": [
+              "# if / elif / else example",
+              "score = 85",
+              "if score >= 90:",
+              "    print(\"Grade: A\")",
+              "elif score >= 75:",
+              "    print(\"Grade: B\")  # this runs",
+              "else:",
+              "    print(\"Grade: C\")",
+              "",
+              "# for loop with range",
+              "for i in range(1, 4):",
+              "    print(f\"Step {i}\")"
+            ]
+          }
+        }
+      ]
+    }
+
+  ],
+
+  "cta": {
+    "_note": "CTA / CLOSING SLIDE — Blue sidebar + yellow stripe (matches cover). Large bold headline, longer body paragraph, two action buttons, and author info. The taller canvas allows a more detailed body paragraph and larger buttons.",
+    "tag": "START CODING TODAY",
+    "headline": "Your Python Journey Starts Now",
+    "body": "You now have a solid foundation to begin your Python programming journey. You understand what Python is, how to install it, how to write your first program, and where it is used in the real world. The most important next step is simply to start — open VS Code, create a new file, and write your first line of code today. Every expert was once a beginner. Consistency and curiosity are all you need.",
+    "btn_primary":   "💾 Save this post for later",
+    "btn_secondary": "📤 Share with a friend learning Python",
+    "author": "Python Basics",
+    "handle": "@pythonbasics"
+  }
+}

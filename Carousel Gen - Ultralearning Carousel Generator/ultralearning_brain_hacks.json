@@ -1,0 +1,397 @@
+{
+  "slides": [
+
+    {
+      "type": "cover",
+      "label": "Cover",
+      "title": "10 **Neuroscience-Backed** Brain Hacks to Train Your ==Supercomputer Brain==",
+      "series": "Art Of UltraLearning",
+      "hook": "90% of people forget what they learn within **24 hours**. Not because they're not smart — because they're using the __wrong methods.__",
+      "tags": [
+        "#Neuroscience",
+        "#UltraLearning",
+        "#BrainHacks",
+        "#LearnFaster",
+        "#DeepWork"
+      ]
+    },
+
+    {
+      "type": "intro",
+      "label": "Why This Matters",
+      "tag": "Introduction",
+      "method": "Why Most People Never Learn Fast",
+      "heading": "Your Brain is a **Supercomputer** Running the Wrong Software",
+      "paragraphs": [
+        "The average person spends **thousands of hours** studying, reading, and watching content — yet retains almost nothing after 7 days. It's not an intelligence problem. It's a __method problem.__",
+        "Neuroscience has now identified the exact biological mechanisms — **neuroplasticity, synaptic strengthening, and dopamine-driven encoding** — that determine how fast and how deeply information actually sticks.",
+        "Master these mechanisms and you don't just learn faster. You ==think differently.== You retain more. You perform at a level most people believe is reserved for geniuses."
+      ],
+      "blockquote": "The brain is not a vessel to be filled, but a fire to be kindled.",
+      "cite": "Plutarch · Validated by Modern Neuroscience"
+    },
+
+    {
+      "type": "ordered_list",
+      "label": "Hack 01 — Active Recall",
+      "tag": "Hack #01",
+      "method": "Active Recall — The Retrieval Protocol",
+      "heading": "Active **Recall**: The 5-Step Learning Protocol",
+      "steps": [
+        {
+          "num": "1",
+          "title": "Study for 25 focused minutes",
+          "desc": "One topic, zero distractions. Phone off. Single tab open. Full attention on the material."
+        },
+        {
+          "num": "2",
+          "title": "Close everything completely",
+          "desc": "Shut the book. Pause the video. Create a total blank slate — no peeking allowed."
+        },
+        {
+          "num": "3",
+          "title": "Write everything you remember",
+          "desc": "Brain dump every concept onto paper. This forces retrieval — not passive recognition."
+        },
+        {
+          "num": "4",
+          "title": "Return and check your gaps",
+          "desc": "Compare your notes to the source material. Only your gaps need to be re-studied."
+        },
+        {
+          "num": "5",
+          "title": "Repeat at 24h · 3 days · 7 days",
+          "desc": "Spaced intervals permanently lock the material into your long-term memory storage."
+        }
+      ]
+    },
+
+    {
+      "type": "table",
+      "label": "Hack 02 — Spaced Repetition",
+      "tag": "Hack #02",
+      "method": "Ebbinghaus Forgetting Curve (1885) · Replicated 100+ Times",
+      "heading": "Spaced **Repetition**: Memory on Autopilot",
+      "columns": ["Interval", "Without SR", "With SR ✓"],
+      "rows": [
+        { "cells": ["Day 1",  "100% recall",    "100% recall"] },
+        { "cells": ["Day 2",  "58% retained",   "Review triggered"] },
+        { "cells": ["Day 7",  "25% retained",   "92% retained"] },
+        { "cells": ["Day 14", "15% retained",   "88% retained"] },
+        { "cells": ["Day 30", "~10% retained",  "85% retained"] },
+        { "cells": ["Day 90", "Nearly zero",    "Permanent memory"] }
+      ],
+      "note": "Source: Ebbinghaus Forgetting Curve (1885) · Replicated in 100+ modern studies"
+    },
+
+    {
+      "type": "bar_graph",
+      "label": "Hack 03 — Teach to Learn",
+      "tag": "Hack #03",
+      "method": "Learning Pyramid — National Training Laboratories",
+      "heading": "Average **Retention Rate** by Learning Method",
+      "bars": [
+        { "label": "Teaching Others",      "pct": 90 },
+        { "label": "Practice by Doing",    "pct": 75 },
+        { "label": "Group Discussion",     "pct": 50 },
+        { "label": "Demonstration",        "pct": 30 },
+        { "label": "Audio-Visual",         "pct": 20 },
+        { "label": "Reading Only",         "pct": 10 },
+        { "label": "Passive Lecture",      "pct": 5  }
+      ],
+      "footnote": "LESSON: Teach what you learn — retention skyrockets to 90% instantly"
+    },
+
+    {
+      "type": "pie_chart",
+      "label": "Hack 04 — Brain Time Allocation",
+      "tag": "Hack #04",
+      "method": "Pomodoro Technique + Deep Work Timing — Cal Newport",
+      "heading": "Optimal **Brain Time** Allocation for UltraLearning",
+      "center_label": "Brain",
+      "center_sub": "Time",
+      "segments": [
+        { "label": "Deep Focus (Flow State)",         "pct": 40 },
+        { "label": "Active Recall & Practice",        "pct": 25 },
+        { "label": "Rest & Sleep (Consolidation)",    "pct": 20 },
+        { "label": "Spaced Review Sessions",          "pct": 15 }
+      ]
+    },
+
+    {
+      "type": "timeline",
+      "label": "Hack 05 — Flow State Protocol",
+      "tag": "Hack #05",
+      "method": "The Deep Work Protocol — Cal Newport · Flow Research Collective",
+      "heading": "Flow State **Activation** Timeline",
+      "steps": [
+        {
+          "marker": "0",
+          "time": "0:00 – 0:05 MIN",
+          "title": "Eliminate All Distractions",
+          "desc": "Phone off. Notifications silenced. One tab open. Prime the environment before starting."
+        },
+        {
+          "marker": "5",
+          "time": "0:05 – 0:15 MIN",
+          "title": "Shallow Focus Warm-Up",
+          "desc": "Brain ramps up slowly. Minor mental resistance is completely normal — push through it."
+        },
+        {
+          "marker": "15",
+          "time": "0:15 – 0:90 MIN",
+          "title": "Peak Flow State",
+          "desc": "Norepinephrine and dopamine spike. Time distorts. Absorption reaches maximum capacity."
+        },
+        {
+          "marker": "90",
+          "time": "0:90 MIN — HARD STOP",
+          "title": "Mandatory Break + Recall",
+          "desc": "Ultradian rhythm resets. Take 20 min break, then immediately do a recall session."
+        }
+      ]
+    },
+
+    {
+      "type": "progress",
+      "label": "Hack 06 — Neuroplasticity Gains",
+      "tag": "Hack #06",
+      "method": "Neuroplasticity Research — Dr. Andrew Huberman · Stanford Lab",
+      "heading": "**Neuroplasticity** Gains After 30 Days of Training",
+      "items": [
+        {
+          "label": "Working Memory Capacity",
+          "value": "+67",
+          "unit": "%",
+          "pct": 67,
+          "sub": "Dual n-back training · 20 min/day for 30 days"
+        },
+        {
+          "label": "Long-Term Retention",
+          "value": "+85",
+          "unit": "%",
+          "pct": 85,
+          "sub": "Spaced repetition combined with quality sleep consolidation"
+        },
+        {
+          "label": "Sustained Focus Duration",
+          "value": "+120",
+          "unit": "%",
+          "pct": 90,
+          "sub": "Deep work blocks + eliminating phone in the morning"
+        },
+        {
+          "label": "Creative Problem Solving",
+          "value": "+43",
+          "unit": "%",
+          "pct": 43,
+          "sub": "Interleaving practice combined with diffuse mode thinking"
+        },
+        {
+          "label": "Speed of Learning New Skills",
+          "value": "+52",
+          "unit": "%",
+          "pct": 52,
+          "sub": "Active recall sessions paired with the chunking method"
+        }
+      ]
+    },
+
+    {
+      "type": "bullet_list",
+      "label": "Hack 07 — Cognitive Load Reduction",
+      "tag": "Hack #07",
+      "method": "Cognitive Load Theory — John Sweller, 1988",
+      "heading": "**Reduce** Cognitive Load for Maximum Absorption",
+      "bullets": [
+        {
+          "title": "Chunk Your Information",
+          "desc": "Break all content into 3–5 item groups. Your working memory holds only ~7 items at once."
+        },
+        {
+          "title": "One Screen, One Task Only",
+          "desc": "Multitasking reduces IQ by 10 points temporarily. Single-tasking always outperforms."
+        },
+        {
+          "title": "Pre-Study Brain Dump",
+          "desc": "Write every distracting thought before starting. This clears valuable working memory bandwidth."
+        },
+        {
+          "title": "Build Mental Models First",
+          "desc": "Link new information to existing frameworks. This reduces cognitive load by up to 60%."
+        },
+        {
+          "title": "Use Dual-Channel Encoding",
+          "desc": "Pair images with words. Dual channel theory shows they are processed in parallel for deeper encoding."
+        }
+      ]
+    },
+
+    {
+      "type": "quote",
+      "label": "Hack 08 — Sleep is Memory",
+      "tag": "Hack #08",
+      "method": "Sleep Neuroscience — Matthew Walker Ph.D. · UC Berkeley",
+      "heading": "Sleep is Not Rest. Sleep is **Memory Installation.**",
+      "quote": "During deep sleep, your hippocampus replays everything you learned that day — transferring it to the neocortex for permanent storage. Skip sleep and you delete the file.",
+      "attr": "Matthew Walker, Ph.D. · Why We Sleep (2017)",
+      "stats": [
+        { "value": "40%",   "label": "Memory loss from sleeping less than 6 hours" },
+        { "value": "8h",    "label": "Optimal nightly sleep for peak learning recall" },
+        { "value": "20min", "label": "Power nap boosts alertness and retention by 34%" }
+      ]
+    },
+
+    {
+      "type": "icon_grid",
+      "label": "Hack 09 — Dopamine Protocol",
+      "tag": "Hack #09",
+      "method": "Dopamine-Driven Learning — Dr. Andrew Huberman · Stanford",
+      "heading": "Hack **Dopamine** to Learn Faster Every Day",
+      "cards": [
+        {
+          "icon": "🎯",
+          "title": "Set Micro-Goals",
+          "desc": "Define tiny wins every 25 minutes. Each completion releases a dopamine spike that fuels the next session.",
+          "highlight": true
+        },
+        {
+          "icon": "🏃",
+          "title": "Exercise Before Study",
+          "desc": "Just 20 minutes of cardio before studying raises BDNF levels by 200% — literally growing new brain cells."
+        },
+        {
+          "icon": "🌡️",
+          "title": "Cold Exposure",
+          "desc": "A cold shower post-study spikes dopamine by 250% above baseline and keeps it elevated for 3–5 hours."
+        },
+        {
+          "icon": "📝",
+          "title": "Celebrate Your Effort",
+          "desc": "Reward the process, not just the result. This conditions your brain to crave the learning state itself.",
+          "highlight": true
+        },
+        {
+          "icon": "☀️",
+          "title": "Morning Sunlight",
+          "desc": "10 minutes of sunlight within 30 minutes of waking sets your circadian rhythm for peak focus by 10 AM."
+        },
+        {
+          "icon": "🚫",
+          "title": "No Phone in the Morning",
+          "desc": "Checking your phone first thing blunts your dopamine sensitivity for the entire rest of the day."
+        }
+      ]
+    },
+
+    {
+      "type": "checklist",
+      "label": "Hack 10 — Best Study Methods",
+      "tag": "Hack #10",
+      "method": "Evidence-Based Review — Dunlosky et al. 2013 · Psychological Science",
+      "heading": "Which Study Methods **Actually Work**?",
+      "columns": ["Method", "Memory", "Transfer", "Speed"],
+      "rows": [
+        { "cells": ["Active Recall",        "yes", "yes", "yes"] },
+        { "cells": ["Spaced Repetition",    "yes", "yes", "no"]  },
+        { "cells": ["Feynman Technique",    "yes", "yes", "yes"] },
+        { "cells": ["Interleaving",         "yes", "yes", "yes"] },
+        { "cells": ["Mind Mapping",         "yes", "no",  "yes"] },
+        { "cells": ["Re-reading Notes",     "no",  "no",  "no"]  },
+        { "cells": ["Highlighting Text",    "no",  "no",  "no"]  }
+      ],
+      "note": "✓ = Scientifically validated high-utility method   ✗ = Low utility per evidence review"
+    },
+
+    {
+      "type": "numbered_cards",
+      "label": "Hacks 11–15 — Power Moves",
+      "tag": "Bonus Hacks #11–15",
+      "method": "Scott Young's UltraLearning Framework · MIT Challenge",
+      "heading": "5 More **Power Moves** for Your Brain",
+      "cards": [
+        {
+          "num": "11",
+          "icon": "🧒",
+          "title": "The Feynman Technique",
+          "desc": "Explain any concept to a 10-year-old. Gaps in your explanation reveal exact gaps in your understanding."
+        },
+        {
+          "num": "12",
+          "icon": "🔀",
+          "title": "Interleaving Practice",
+          "desc": "Deliberately mix different topics during a study session. Harder but produces 43% better long-term transfer."
+        },
+        {
+          "num": "13",
+          "icon": "🔥",
+          "title": "Desirable Difficulty",
+          "desc": "Always study at the edge of your current ability. Material that feels easy builds zero new neural pathways."
+        },
+        {
+          "num": "14",
+          "icon": "❓",
+          "title": "Elaborative Interrogation",
+          "desc": "Ask 'Why is this true?' for every single fact you study. Forces deep semantic processing and long retention."
+        },
+        {
+          "num": "15",
+          "icon": "🚶",
+          "title": "Diffuse Mode Thinking",
+          "desc": "Walk, shower, or simply relax. Your default mode network solves complex problems passively while you rest."
+        }
+      ]
+    },
+
+    {
+      "type": "summary",
+      "label": "Complete Summary — All 15 Hacks",
+      "tag": "Complete Summary",
+      "heading": "All **15 Brain Hacks** in One Single View",
+      "items": [
+        { "num": "01", "title": "Active Recall",       "desc": "Test, don't re-read"         },
+        { "num": "02", "title": "Spaced Repetition",   "desc": "Review at optimal gaps"      },
+        { "num": "03", "title": "Teach Others",        "desc": "90% retention rate"          },
+        { "num": "04", "title": "Deep Work Blocks",    "desc": "90-minute focus sessions"    },
+        { "num": "05", "title": "Flow State Entry",    "desc": "15-minute activation ramp"   },
+        { "num": "06", "title": "Neuroplasticity",     "desc": "Train at your edge daily"    },
+        { "num": "07", "title": "Cognitive Load",      "desc": "Chunk and single-task"       },
+        { "num": "08", "title": "Sleep = Memory",      "desc": "8h for full consolidation"   },
+        { "num": "09", "title": "Dopamine Hacks",      "desc": "Exercise, light, cold goals" },
+        { "num": "10", "title": "Best Methods",        "desc": "Recall beats highlighting"   },
+        { "num": "11", "title": "Feynman Method",      "desc": "Explain it simply"           },
+        { "num": "12", "title": "Interleaving",        "desc": "Mix topics for transfer"     },
+        { "num": "13", "title": "Difficulty",          "desc": "Hard = new neural paths"     },
+        { "num": "14", "title": "Ask Why",             "desc": "Deeper semantic encoding"    },
+        { "num": "15", "title": "Diffuse Mode",        "desc": "Rest unlocks breakthroughs"  },
+        { "num": "🔑", "title": "Save This Post",      "desc": "Come back to it daily",  "highlight": true }
+      ]
+    },
+
+    {
+      "type": "cta",
+      "label": "Follow CTA",
+      "icon": "U",
+      "heading": "Ready to Unlock Your **Supercomputer** Brain?",
+      "sub": "This is just the beginning. Every single day we drop new brain hacks, focus protocols, and cognitive upgrades — all backed by real neuroscience research.",
+      "buttons": [
+        {
+          "style": "primary",
+          "icon": "💾",
+          "text": "Save This Post — Come Back Daily"
+        },
+        {
+          "style": "secondary",
+          "icon": "👆",
+          "text": "Follow @ArtOfUltraLearning"
+        },
+        {
+          "style": "ghost",
+          "icon": "💬",
+          "text": "Join WhatsApp Channel for Daily Drops"
+        }
+      ]
+    }
+
+  ]
+}

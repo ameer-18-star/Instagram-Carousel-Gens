@@ -1,0 +1,87 @@
+{
+  "cover": {
+    "lines": ["15 Small Habits that", "will Change Your", "Life in 2025:"],
+    "number": "15",
+    "underline_word": "2025"
+  },
+  "tips": [
+    {
+      "num": 1,
+      "heading": "Mental Tasking",
+      "body": "Before sleeping, think of a problem you have, don't try to solve it, just release it to your subconscious to work on it overnight."
+    },
+    {
+      "num": 2,
+      "heading": "Mindful Mornings",
+      "body": "Spend the first few minutes of your day in meditation or quiet reflection to set a positive tone for the hours ahead."
+    },
+    {
+      "num": 3,
+      "heading": "Daily Goal Review",
+      "body": "Remind yourself of your goals every morning, write them down and keep manifesting."
+    },
+    {
+      "num": 4,
+      "heading": "Workday Shutdown Ritual",
+      "body": "End your workday with a simple shutdown ritual to help separate your professional and personal life."
+    },
+    {
+      "num": 5,
+      "heading": "Evening Learning",
+      "body": "Dedicate time before bed to read books that contribute to your personal and professional growth."
+    },
+    {
+      "num": 6,
+      "heading": "Wake Up and Ground Yourself",
+      "body": "Aligns your circadian rhythm with the sun, reduces stress and inflammation by reconnecting you with the earth's natural energy."
+    },
+    {
+      "num": 7,
+      "heading": "No Phone First Thing",
+      "body": "The hardest, but most rewarding. Set yourself up for a focused and calm day without the distraction of emails or social media straight away."
+    },
+    {
+      "num": 8,
+      "heading": "Hydrate Right",
+      "body": "Drink filtered or spring water with a pinch of natural electrolytes like Celtic sea salt and fresh lemon."
+    },
+    {
+      "num": 9,
+      "heading": "Prioritize Protein",
+      "body": "Centre every meal around bioavailable, nutrient dense protein from grass-fed meat and eggs."
+    },
+    {
+      "num": 10,
+      "heading": "Morning Texts",
+      "body": "Send a good morning message to a friend or loved one, this means more than you realize."
+    },
+    {
+      "num": 11,
+      "heading": "Work Blocks",
+      "body": "Airplane mode is the best productivity tool, use it when working."
+    },
+    {
+      "num": 12,
+      "heading": "Limit Blue Light",
+      "body": "Use orange or red lights that don't flicker in the evening to reduce blue light exposure."
+    },
+    {
+      "num": 13,
+      "heading": "Plan Tomorrow Today",
+      "body": "Every evening, plan your next day's tasks. If you fail to plan, you plan to fail."
+    },
+    {
+      "num": 14,
+      "heading": "Journaling",
+      "body": "Write down one beautiful moment from your day to cultivate gratitude and a positive mindset."
+    },
+    {
+      "num": 15,
+      "heading": "Consistent Bedtime",
+      "body": "Stick to a regular bedtime to regulate your body's internal clock, enhancing sleep quality and energy levels."
+    }
+  ],
+  "outro": {
+    "quote": "The small habits you repeat daily aren't just routines; they're the seeds of your future. Plant wisely, nurture consistently, and you'll grow a life beyond your imagination."
+  }
+}

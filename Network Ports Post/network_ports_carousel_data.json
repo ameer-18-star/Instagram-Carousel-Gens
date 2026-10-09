@@ -1,0 +1,490 @@
+{
+  "_meta": {
+    "project": "Network Ports Carousel Generator",
+    "author": "@kerem.tech",
+    "version": "1.0.0",
+    "description": "14-slide Instagram carousel data for the Network Ports You Need to Memorize series. Import this into the carousel generator to load all slides instantly.",
+    "slide_size": "1080x1350 (Instagram 4:5 ratio)",
+    "total_slides": 14,
+    "fonts": ["Space Mono", "DM Sans"],
+    "color_palette": {
+      "background": "#0a0a0a",
+      "cyan":   "#00e5ff",
+      "purple": "#a78bfa",
+      "green":  "#4ade80",
+      "orange": "#fb923c",
+      "yellow": "#fbbf24",
+      "pink":   "#f472b6",
+      "red":    "#f87171",
+      "teal":   "#2dd4bf",
+      "white":  "#e2e8f0"
+    }
+  },
+
+  "config": {
+    "handle": "@kerem.tech",
+    "series_title": "Network Ports You Need to Memorize",
+    "export_format": "JPEG",
+    "export_quality": 0.95
+  },
+
+  "slides": [
+    {
+      "id": 1,
+      "type": "cover",
+      "label": "Cover",
+      "color": "#00e5ff",
+      "data": {
+        "pre_text": "$ ports.txt",
+        "title": "NETWORK PORTS YOU NEED TO MEMORIZE.",
+        "subtitle": "For devs, sysadmins, IT, security pros & students.",
+        "swipe_label": "swipe"
+      }
+    },
+
+    {
+      "id": 2,
+      "type": "proto",
+      "label": "[ WEB ]",
+      "color": "#00e5ff",
+      "data": {
+        "category": "WEB",
+        "card_subtitle": "web traffic · http family",
+        "ports": [
+          { "number": "80",  "name": "HTTP",  "description": "cleartext" },
+          { "number": "443", "name": "HTTPS", "description": "tls encrypted" }
+        ],
+        "used_for": [
+          "API endpoints & mobile backends",
+          "Web apps default to HTTPS (443)",
+          "Internal tools still on plain HTTP (80)",
+          "IoT and printer web UIs (80)"
+        ],
+        "watch_for": [
+          "HTTPS-stripping / missing HSTS",
+          "Mixed content on HTTPS pages",
+          "Weak TLS (1.0 / 1.1) still enabled",
+          "Default admin panels exposed"
+        ],
+        "recon": [
+          "$ nmap -p80,443 -sCV <target>",
+          "$ sslscan <target>:443",
+          "$ gobuster dir -u https://<target> -w list"
+        ]
+      }
+    },
+
+    {
+      "id": 3,
+      "type": "proto",
+      "label": "[ REMOTE SHELL ]",
+      "color": "#a78bfa",
+      "data": {
+        "category": "REMOTE SHELL",
+        "card_subtitle": "interactive remote shell",
+        "ports": [
+          { "number": "22", "name": "SSH",    "description": "encrypted" },
+          { "number": "23", "name": "TELNET", "description": "cleartext" }
+        ],
+        "used_for": [
+          "SSH: secure shell, SFTP, port forwarding",
+          "SSH: Git over SSH, CI/CD automation",
+          "Telnet: legacy router & IoT admin",
+          "Telnet: vendor appliances & embedded"
+        ],
+        "watch_for": [
+          "SSH: brute force on weak passwords",
+          "SSH: old crypto (RSA-1024, DSA, CBC)",
+          "Telnet: ALL traffic cleartext (creds too)",
+          "Telnet: default vendor passwords in use"
+        ],
+        "recon": [
+          "$ nmap -p22,23 -sCV <target>",
+          "$ ssh-audit <target>",
+          "$ hydra -L users -P pass ssh://<target>"
+        ]
+      }
+    },
+
+    {
+      "id": 4,
+      "type": "proto",
+      "label": "[ REMOTE DESKTOP ]",
+      "color": "#a78bfa",
+      "data": {
+        "category": "REMOTE DESKTOP",
+        "card_subtitle": "graphical remote desktop",
+        "ports": [
+          { "number": "3389", "name": "RDP", "description": "encrypted" },
+          { "number": "5900", "name": "VNC", "description": "varies" }
+        ],
+        "used_for": [
+          "RDP: Windows remote desktop & RDS",
+          "RDP: cloud Windows VM access",
+          "VNC: cross-platform graphical sessions",
+          "VNC: appliance & embedded device GUIs"
+        ],
+        "watch_for": [
+          "RDP: BlueKeep (CVE-2019-0708)",
+          "RDP: brute force on exposed hosts",
+          "RDP: NLA disabled, weak encryption",
+          "VNC: often unauth or weak passwords"
+        ],
+        "recon": [
+          "$ nmap -p3389,5900 -sCV <target>",
+          "$ hydra -L users -P pass rdp://<target>",
+          "$ xfreerdp /v:<target>  |  vncviewer <t>"
+        ]
+      }
+    },
+
+    {
+      "id": 5,
+      "type": "proto",
+      "label": "[ FILE TRANSFER ]",
+      "color": "#4ade80",
+      "data": {
+        "category": "FILE TRANSFER",
+        "card_subtitle": "data uploads & downloads",
+        "ports": [
+          { "number": "21", "name": "FTP",  "description": "cleartext" },
+          { "number": "69", "name": "TFTP", "description": "no auth" }
+        ],
+        "used_for": [
+          "FTP: legacy file admin & uploads",
+          "FTP: anonymous public file repos",
+          "TFTP: PXE boot & firmware push",
+          "TFTP: network device config transfer"
+        ],
+        "watch_for": [
+          "FTP: cleartext credentials in transit",
+          "FTP: anonymous login often enabled",
+          "TFTP: no auth at all (UDP)",
+          "TFTP: device configs often hold secrets"
+        ],
+        "recon": [
+          "$ nmap -p21,69 --script=ftp-*,tftp-* <t>",
+          "$ ftp <target>   # try anonymous",
+          "$ tftp <target> -c get <known-file>"
+        ]
+      }
+    },
+
+    {
+      "id": 6,
+      "type": "proto",
+      "label": "[ MAIL . OUTBOUND ]",
+      "color": "#fb923c",
+      "data": {
+        "category": "MAIL . OUTBOUND",
+        "card_subtitle": "mail sending · relay & submission",
+        "ports": [
+          { "number": "25",  "name": "SMTP",   "description": "cleartext" },
+          { "number": "465", "name": "SMTPS",  "description": "tls" },
+          { "number": "587", "name": "SUBMIT", "description": "starttls" }
+        ],
+        "used_for": [
+          "25: server-to-server mail (MTA-MTA)",
+          "587: authenticated client submission",
+          "465: legacy SMTP-over-SSL (still common)",
+          "All: app notification emails"
+        ],
+        "watch_for": [
+          "Open relays sending spam (port 25)",
+          "User enumeration (VRFY, EXPN, RCPT)",
+          "STARTTLS downgrade attacks",
+          "SPF / DKIM / DMARC misconfigs"
+        ],
+        "recon": [
+          "$ nmap -p25,465,587 --script=smtp-* <t>",
+          "$ swaks --to user@<target>",
+          "$ smtp-user-enum -M VRFY -U u.txt -t <t>"
+        ]
+      }
+    },
+
+    {
+      "id": 7,
+      "type": "proto",
+      "label": "[ MAIL . INBOUND ]",
+      "color": "#fb923c",
+      "data": {
+        "category": "MAIL . INBOUND",
+        "card_subtitle": "mail retrieval · cleartext vs tls",
+        "ports": [
+          { "number": "110", "name": "POP3",  "description": "" },
+          { "number": "995", "name": "POP3S", "description": "" },
+          { "number": "143", "name": "IMAP",  "description": "" },
+          { "number": "993", "name": "IMAPS", "description": "" }
+        ],
+        "used_for": [
+          "POP3 (110): download to one device only",
+          "POP3S (995): TLS-encrypted POP3",
+          "IMAP (143): multi-device sync (modern)",
+          "IMAPS (993): TLS IMAP (default for clients)"
+        ],
+        "watch_for": [
+          "110 / 143: cleartext auth & message body",
+          "Brute force on mailbox accounts",
+          "Mail deleted server-side after POP3 dl",
+          "Force 993 / 995 only in client configs"
+        ],
+        "recon": [
+          "$ nmap -p110,143,993,995 --script=*pop3*,*imap*",
+          "$ hydra -L users -P pass imap://<target>",
+          "$ openssl s_client -connect <t>:993"
+        ]
+      }
+    },
+
+    {
+      "id": 8,
+      "type": "proto",
+      "label": "[ DNS & KERBEROS ]",
+      "color": "#fbbf24",
+      "data": {
+        "category": "DNS & KERBEROS",
+        "card_subtitle": "name resolution & AD authentication",
+        "ports": [
+          { "number": "53", "name": "DNS",  "description": "udp/tcp" },
+          { "number": "88", "name": "KERB", "description": "encrypted" }
+        ],
+        "used_for": [
+          "DNS: domain lookups, MX, SRV, PTR",
+          "DNS: service discovery & SPF/DMARC",
+          "Kerberos: AD authentication (TGT/TGS)",
+          "Kerberos: SSO across domain services"
+        ],
+        "watch_for": [
+          "DNS: zone transfers (AXFR) exposed",
+          "DNS: cache poisoning, UDP amplification",
+          "Kerb: AS-REP roasting, Kerberoasting",
+          "Kerb: golden / silver tickets, PtT"
+        ],
+        "recon": [
+          "$ dig axfr <domain> @<dns-server>",
+          "$ GetNPUsers.py <domain>/ -dc-ip <ip>",
+          "$ GetUserSPNs.py <domain>/<user>"
+        ]
+      }
+    },
+
+    {
+      "id": 9,
+      "type": "proto",
+      "label": "[ LDAP ]",
+      "color": "#4ade80",
+      "data": {
+        "category": "LDAP",
+        "card_subtitle": "directory queries · cleartext vs tls",
+        "ports": [
+          { "number": "389", "name": "LDAP",  "description": "cleartext" },
+          { "number": "636", "name": "LDAPS", "description": "tls" }
+        ],
+        "used_for": [
+          "AD / directory queries (users, groups)",
+          "Application authentication backend",
+          "Centralized identity management",
+          "Cross-app SSO via LDAP bind"
+        ],
+        "watch_for": [
+          "389: anonymous bind enabled by default",
+          "389: cleartext credentials in queries",
+          "LDAP injection from web apps",
+          "Sensitive attrs exposed (mail, phone)"
+        ],
+        "recon": [
+          "$ ldapsearch -x -H ldap://<target>",
+          "$ nmap -p389,636 --script=ldap-* <target>",
+          "$ ldapdomaindump <target>"
+        ]
+      }
+    },
+
+    {
+      "id": 10,
+      "type": "proto",
+      "label": "[ WINDOWS . SMB ]",
+      "color": "#f472b6",
+      "data": {
+        "category": "WINDOWS . SMB",
+        "card_subtitle": "windows file sharing & RPC",
+        "ports": [
+          { "number": "135", "name": "MSRPC",   "description": "rpc" },
+          { "number": "139", "name": "NETBIOS", "description": "legacy" },
+          { "number": "445", "name": "SMB",     "description": "modern" }
+        ],
+        "used_for": [
+          "135: endpoint mapper for DCOM / WMI",
+          "139: legacy NetBIOS session service",
+          "445: modern SMB file & printer sharing",
+          "All: domain controller communication"
+        ],
+        "watch_for": [
+          "445: EternalBlue (MS17-010), Zerologon",
+          "139: NBT-NS poisoning (Responder)",
+          "SMB v1 still enabled on legacy hosts",
+          "Pass-the-Hash / NTLM relay attacks"
+        ],
+        "recon": [
+          "$ nmap -p135,139,445 --script=smb-* <t>",
+          "$ crackmapexec smb <target>",
+          "$ enum4linux-ng -A <target>"
+        ]
+      }
+    },
+
+    {
+      "id": 11,
+      "type": "proto",
+      "label": "[ DATABASES . SQL ]",
+      "color": "#f87171",
+      "data": {
+        "category": "DATABASES . SQL",
+        "card_subtitle": "relational databases",
+        "ports": [
+          { "number": "1433", "name": "MSSQL",   "description": "tcp" },
+          { "number": "3306", "name": "MySQL",   "description": "tcp" },
+          { "number": "5432", "name": "POSTGRES", "description": "tcp" }
+        ],
+        "used_for": [
+          "MSSQL (1433): Microsoft enterprise DB",
+          "MySQL (3306): LAMP stack, WordPress",
+          "Postgres (5432): modern app backends",
+          "All: linked servers / replication links"
+        ],
+        "watch_for": [
+          "Default admin accounts (sa, root)",
+          "Weak / no password (legacy installs)",
+          "xp_cmdshell or pg_read_server_files",
+          "Direct internet exposure (Shodan)"
+        ],
+        "recon": [
+          "$ nmap -p1433,3306,5432 -sCV <target>",
+          "$ mssqlclient.py <user>@<target>",
+          "$ hydra -L users -P pass mysql://<t>"
+        ]
+      }
+    },
+
+    {
+      "id": 12,
+      "type": "proto",
+      "label": "[ DATABASES . NOSQL ]",
+      "color": "#f87171",
+      "data": {
+        "category": "DATABASES . NOSQL",
+        "card_subtitle": "key-value & document stores",
+        "ports": [
+          { "number": "6379",  "name": "REDIS", "description": "no auth" },
+          { "number": "27017", "name": "MONGO", "description": "no auth" }
+        ],
+        "used_for": [
+          "Redis (6379): cache, queue, session store",
+          "Redis: pub/sub messaging",
+          "MongoDB (27017): document database",
+          "MongoDB: modern web app backends"
+        ],
+        "watch_for": [
+          "Redis: no auth by default = RCE risk",
+          "Redis: SSRF -> Redis -> shell pivots",
+          "MongoDB: no auth on default installs",
+          "Both: most exposed DBs on the internet"
+        ],
+        "recon": [
+          "$ nmap -p6379,27017 -sCV <target>",
+          "$ redis-cli -h <target>   # try direct",
+          "$ mongo <target>:27017"
+        ]
+      }
+    },
+
+    {
+      "id": 13,
+      "type": "proto",
+      "label": "[ NETWORK MGMT ]",
+      "color": "#2dd4bf",
+      "data": {
+        "category": "NETWORK MGMT",
+        "card_subtitle": "monitoring · logging · time sync",
+        "ports": [
+          { "number": "161", "name": "SNMP",   "description": "udp" },
+          { "number": "514", "name": "SYSLOG", "description": "udp" },
+          { "number": "123", "name": "NTP",    "description": "udp" }
+        ],
+        "used_for": [
+          "SNMP (161): network device monitoring",
+          "Syslog (514): centralized log collection",
+          "NTP (123): time sync across infra",
+          "All: critical infra observability"
+        ],
+        "watch_for": [
+          "SNMP: 'public' community string still set",
+          "SNMP: full config dump via OID walks",
+          "Syslog: log injection / spoofing",
+          "NTP: UDP amplification (mode 6/7)"
+        ],
+        "recon": [
+          "$ onesixtyone -c community.txt <target>",
+          "$ nmap -sU -p161,123 --script=snmp-*,ntp-*",
+          "$ snmpwalk -v2c -c public <target>"
+        ]
+      }
+    },
+
+    {
+      "id": 14,
+      "type": "outro",
+      "label": "CTA / Outro",
+      "color": "#fbbf24",
+      "data": {
+        "command": "$ exit 0",
+        "cta_text": "SAVE_THIS.",
+        "subtitle": "You'll see these everywhere.",
+        "follow_text": "Follow for daily security content.",
+        "socials": [
+          { "platform": "Instagram", "handle": "@kerem.tech",  "color": "#e1306c" },
+          { "platform": "X / Twitter", "handle": "@keraattin", "color": "#1d9bf0" },
+          { "platform": "YouTube",   "handle": "Kerem Tech",   "color": "#f87171" },
+          { "platform": "GitHub",    "handle": "keraattin",    "color": "#3ecf8e" }
+        ]
+      }
+    }
+  ],
+
+  "port_reference": {
+    "_note": "Quick-reference table of all ports featured in this carousel",
+    "ports": [
+      { "number": 21,    "name": "FTP",      "protocol": "TCP",     "category": "File Transfer",   "encryption": false },
+      { "number": 22,    "name": "SSH",      "protocol": "TCP",     "category": "Remote Shell",    "encryption": true  },
+      { "number": 23,    "name": "Telnet",   "protocol": "TCP",     "category": "Remote Shell",    "encryption": false },
+      { "number": 25,    "name": "SMTP",     "protocol": "TCP",     "category": "Mail Outbound",   "encryption": false },
+      { "number": 53,    "name": "DNS",      "protocol": "TCP/UDP", "category": "DNS & Kerberos",  "encryption": false },
+      { "number": 69,    "name": "TFTP",     "protocol": "UDP",     "category": "File Transfer",   "encryption": false },
+      { "number": 80,    "name": "HTTP",     "protocol": "TCP",     "category": "Web",             "encryption": false },
+      { "number": 88,    "name": "Kerberos", "protocol": "TCP/UDP", "category": "DNS & Kerberos",  "encryption": true  },
+      { "number": 110,   "name": "POP3",     "protocol": "TCP",     "category": "Mail Inbound",    "encryption": false },
+      { "number": 123,   "name": "NTP",      "protocol": "UDP",     "category": "Network Mgmt",    "encryption": false },
+      { "number": 135,   "name": "MSRPC",    "protocol": "TCP",     "category": "Windows SMB",     "encryption": false },
+      { "number": 139,   "name": "NetBIOS",  "protocol": "TCP",     "category": "Windows SMB",     "encryption": false },
+      { "number": 143,   "name": "IMAP",     "protocol": "TCP",     "category": "Mail Inbound",    "encryption": false },
+      { "number": 161,   "name": "SNMP",     "protocol": "UDP",     "category": "Network Mgmt",    "encryption": false },
+      { "number": 389,   "name": "LDAP",     "protocol": "TCP",     "category": "LDAP",            "encryption": false },
+      { "number": 443,   "name": "HTTPS",    "protocol": "TCP",     "category": "Web",             "encryption": true  },
+      { "number": 445,   "name": "SMB",      "protocol": "TCP",     "category": "Windows SMB",     "encryption": false },
+      { "number": 465,   "name": "SMTPS",    "protocol": "TCP",     "category": "Mail Outbound",   "encryption": true  },
+      { "number": 514,   "name": "Syslog",   "protocol": "UDP",     "category": "Network Mgmt",    "encryption": false },
+      { "number": 587,   "name": "SMTP Sub", "protocol": "TCP",     "category": "Mail Outbound",   "encryption": "starttls" },
+      { "number": 636,   "name": "LDAPS",    "protocol": "TCP",     "category": "LDAP",            "encryption": true  },
+      { "number": 993,   "name": "IMAPS",    "protocol": "TCP",     "category": "Mail Inbound",    "encryption": true  },
+      { "number": 995,   "name": "POP3S",    "protocol": "TCP",     "category": "Mail Inbound",    "encryption": true  },
+      { "number": 1433,  "name": "MSSQL",    "protocol": "TCP",     "category": "Databases SQL",   "encryption": false },
+      { "number": 3306,  "name": "MySQL",    "protocol": "TCP",     "category": "Databases SQL",   "encryption": false },
+      { "number": 3389,  "name": "RDP",      "protocol": "TCP",     "category": "Remote Desktop",  "encryption": true  },
+      { "number": 5432,  "name": "Postgres", "protocol": "TCP",     "category": "Databases SQL",   "encryption": false },
+      { "number": 5900,  "name": "VNC",      "protocol": "TCP",     "category": "Remote Desktop",  "encryption": "varies" },
+      { "number": 6379,  "name": "Redis",    "protocol": "TCP",     "category": "Databases NoSQL", "encryption": false },
+      { "number": 27017, "name": "MongoDB",  "protocol": "TCP",     "category": "Databases NoSQL", "encryption": false }
+    ]
+  }
+}

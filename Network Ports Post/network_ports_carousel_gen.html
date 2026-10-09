@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Network Ports Carousel Generator — @kerem.tech</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;--surf:#111214;--surf2:#1a1c20;
+  --border:#252830;--border2:#2e333c;
+  --txt:#e4e6ed;--txt2:#7a7f8e;
+  --acc:#00e5ff;--green:#3ecf8e;--red-ui:#FF4444;
+}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+#topbar{height:50px;display:flex;align-items:center;gap:12px;padding:0 20px;
+  background:var(--surf);border-bottom:1px solid var(--border);flex-shrink:0;z-index:10}
+.tb-logo{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--acc);white-space:nowrap}
+.tb-logo em{color:var(--txt);font-style:normal}
+.tb-pipe{width:1px;height:18px;background:var(--border2)}
+.tb-meta{font-size:9px;font-weight:700;color:var(--txt2);letter-spacing:.1em;text-transform:uppercase}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tb-badge{font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--surf2);border:1px solid var(--border2);color:var(--txt2);padding:4px 10px;border-radius:20px}
+
+#layout{display:grid;grid-template-columns:300px 1fr 255px;height:calc(100vh - 50px);overflow:hidden}
+.panel{background:var(--surf);display:flex;flex-direction:column;overflow:hidden}
+.panel.left{border-right:1px solid var(--border)}
+.panel.right{border-left:1px solid var(--border)}
+.panel-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ph-title{font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--txt2)}
+.panel-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+
+.field-label{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:4px}
+.text-input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:7px;
+  color:var(--txt);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  padding:8px 11px;outline:none;transition:border-color .2s}
+.text-input:focus{border-color:var(--acc)}
+select.text-input{cursor:pointer}
+textarea.text-input{resize:vertical;font-family:'Space Mono',monospace;font-size:10px;line-height:1.7}
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;
+  border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;
+  cursor:pointer;border:none;transition:all .15s;width:100%}
+.btn:disabled{opacity:.3;cursor:not-allowed}
+.btn-primary{background:var(--acc);color:#000}
+.btn-primary:hover:not(:disabled){background:#33ebff;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,229,255,.25)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border2);color:var(--txt2)}
+.btn-ghost:hover:not(:disabled){border-color:var(--txt2);color:var(--txt)}
+.div{height:1px;background:var(--border);flex-shrink:0}
+
+.port-entry{background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.port-row{display:flex;gap:6px;align-items:center}
+.port-num-in{width:72px;background:var(--surf2);border:1.5px solid var(--border2);border-radius:6px;
+  color:var(--acc);font-family:'Space Mono',monospace;font-size:13px;font-weight:700;padding:5px 7px;outline:none;text-align:center}
+.port-name-in{flex:1;background:var(--surf2);border:1.5px solid var(--border2);border-radius:6px;
+  color:var(--txt);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;padding:5px 8px;outline:none;text-transform:uppercase}
+.port-sub-in{flex:1;background:var(--surf2);border:1.5px solid var(--border2);border-radius:6px;
+  color:var(--txt2);font-family:'Space Mono',monospace;font-size:10px;padding:5px 8px;outline:none}
+.port-del{width:26px;height:26px;background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.2);
+  border-radius:5px;color:var(--red-ui);font-size:13px;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.port-del:hover{background:rgba(255,68,68,.25)}
+
+.swatch-row{display:flex;gap:6px;flex-wrap:wrap}
+.swatch{width:26px;height:26px;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0}
+.swatch.active{border-color:#fff;transform:scale(1.2);box-shadow:0 0 8px rgba(255,255,255,.3)}
+
+#center{background:var(--bg);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;position:relative;overflow:hidden;gap:16px;padding:24px}
+#center::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 50% at 50% 40%,rgba(0,229,255,.03) 0%,transparent 70%)}
+#empty-state{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;color:var(--txt2);z-index:1;padding:20px}
+#empty-state .es-icon{font-size:52px;opacity:.2}
+#empty-state h3{font-size:15px;font-weight:800;color:var(--txt);opacity:.3}
+#empty-state p{font-size:11.5px;max-width:260px;line-height:1.7;font-weight:500}
+#preview-area{display:none;flex-direction:column;align-items:center;gap:14px;z-index:1}
+#preview-port{width:345px;height:431px;position:relative;overflow:hidden;border-radius:10px;
+  box-shadow:0 24px 60px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.05);flex-shrink:0}
+#preview-scaler{width:1080px;height:1350px;transform:scale(0.3194);transform-origin:top left;position:absolute;top:0;left:0}
+.nav-row{display:flex;align-items:center;gap:14px}
+.nav-btn{width:34px;height:34px;border-radius:50%;background:var(--surf);border:1.5px solid var(--border2);
+  color:var(--txt);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.nav-btn:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+.nav-btn:disabled{opacity:.2;cursor:not-allowed}
+.dots-wrap{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:220px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--border2);cursor:pointer;transition:all .2s}
+.dot.active{background:var(--acc);transform:scale(1.5)}
+.slide-label{font-size:9.5px;font-weight:700;color:var(--txt2);letter-spacing:.1em;text-transform:uppercase;font-family:'Space Mono',monospace}
+
+#slides-list{flex:1;overflow-y:auto;padding:8px 10px;display:flex;flex-direction:column;gap:3px}
+.sli{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:7px;
+  cursor:pointer;border:1px solid transparent;transition:all .14s;font-size:11px;font-weight:600;color:var(--txt2)}
+.sli:hover{background:rgba(0,229,255,.06);border-color:rgba(0,229,255,.14);color:var(--txt)}
+.sli.active{background:rgba(0,229,255,.12);border-color:rgba(0,229,255,.32);color:var(--acc)}
+.sli-num{width:20px;height:20px;border-radius:5px;background:var(--surf2);font-size:9px;font-weight:900;
+  font-family:'Space Mono',monospace;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--txt2)}
+.sli.active .sli-num{background:var(--acc);color:#000}
+.sli-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+
+#export-sec{padding:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:7px;flex-shrink:0}
+.prog-track{height:4px;background:var(--surf2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--acc),#33ebff);border-radius:3px;transition:width .3s}
+.prog-text{font-size:9.5px;color:var(--txt2);font-weight:700;font-family:'Space Mono',monospace;text-align:center}
+
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(8px);
+  z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center}
+#overlay.show{display:flex}
+.ov-card{background:var(--surf);border:1px solid var(--border2);border-radius:16px;padding:40px 52px;text-align:center;min-width:340px}
+.ov-emoji{font-size:42px;margin-bottom:14px}
+.ov-title{font-size:20px;font-weight:900;margin-bottom:8px;color:var(--txt)}
+.ov-sub{font-size:12px;color:var(--txt2);font-weight:600;margin-bottom:22px;min-height:20px}
+.ov-track{height:8px;background:var(--surf2);border-radius:6px;overflow:hidden}
+.ov-prog{height:100%;width:0%;background:linear-gradient(90deg,var(--acc),#33ebff);border-radius:6px;transition:width .35s}
+
+#capture-stage{position:fixed;top:0;left:-9999px;width:1080px;pointer-events:none;z-index:-10;visibility:hidden}
+
+/* ═══ SLIDE STYLES 1080×1350 ═══ */
+.slide{width:1080px;height:1350px;position:relative;overflow:hidden;font-family:'Space Mono',monospace;background:#0a0a0a;color:#fff;flex-shrink:0}
+.sl-num{position:absolute;top:44px;right:56px;z-index:30;font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:.05em}
+.sl-handle{position:absolute;bottom:54px;left:56px;z-index:30;font-family:'Space Mono',monospace;font-size:26px;font-weight:400;color:rgba(255,255,255,.28)}
+.sl-dots-row{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);z-index:30;display:flex;gap:10px;align-items:center}
+.sl-dot-item{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.18)}
+.sl-dot-item.cur{background:rgba(255,255,255,.75);transform:scale(1.2)}
+
+/* COVER */
+.s-cover{background:#0a0a0a;width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:80px 72px 200px}
+.cov-pre{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;letter-spacing:.06em;margin-bottom:36px}
+.cov-title{font-family:'DM Sans',sans-serif;font-size:98px;font-weight:900;color:#FFF;line-height:1.05;margin-bottom:28px;letter-spacing:-.02em}
+.cov-rule{width:120px;height:5px;margin-bottom:36px}
+.cov-sub{font-family:'Space Mono',monospace;font-size:28px;line-height:1.7}
+.cov-swipe-row{position:absolute;bottom:175px;left:72px;display:flex;align-items:center;gap:18px;font-family:'Space Mono',monospace;font-size:28px;font-weight:700}
+.cov-arrow-line{display:flex;align-items:center;gap:0}
+.cov-arrow-body{height:2px;width:140px}
+.cov-arrow-head{width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent}
+
+/* PROTOCOL SLIDE */
+.s-proto{background:#0a0a0a;width:100%;height:100%;display:flex;flex-direction:column;padding:50px 60px 170px}
+.sp-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:48px}
+.sp-cat{font-family:'Space Mono',monospace;font-size:30px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.sp-cat-br{opacity:.6}
+.sp-ports-card{border:2px solid;border-radius:16px;padding:48px 52px 40px;display:flex;flex-direction:column;align-items:center;margin-bottom:44px}
+.sp-ports-row{display:flex;gap:70px;align-items:flex-end;justify-content:center;margin-bottom:28px;flex-wrap:wrap}
+.sp-port{display:flex;flex-direction:column;align-items:center;gap:4px}
+.sp-port-num{font-family:'DM Sans',sans-serif;font-size:100px;font-weight:900;line-height:.9;letter-spacing:-.02em}
+.sp-port-rule{width:48px;height:3px;margin:10px 0 6px}
+.sp-port-name{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;letter-spacing:.04em;color:#FFF;text-transform:uppercase}
+.sp-port-sub{font-family:'Space Mono',monospace;font-size:19px;color:rgba(255,255,255,.38);letter-spacing:.03em}
+.sp-card-sub{font-family:'Space Mono',monospace;font-size:20px;color:rgba(255,255,255,.28);letter-spacing:.05em}
+.sp-section{margin-bottom:32px}
+.sp-sec-label{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding-bottom:10px;margin-bottom:16px;display:inline-block;border-bottom:3px solid}
+.sp-list{list-style:none;display:flex;flex-direction:column;gap:13px}
+.sp-list li{font-family:'Space Mono',monospace;font-size:22px;color:rgba(255,255,255,.7);display:flex;align-items:flex-start;gap:14px;line-height:1.5}
+.sp-list li::before{content:'>';color:rgba(255,255,255,.32);flex-shrink:0;font-weight:700}
+.sp-code-block{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:24px 28px;display:flex;flex-direction:column;gap:9px}
+.sp-code-line{font-family:'Space Mono',monospace;font-size:20px;color:rgba(255,255,255,.62);display:flex;gap:12px;align-items:flex-start}
+.sp-code-dollar{color:#3ecf8e;flex-shrink:0}
+
+/* OUTRO */
+.s-outro{background:#0a0a0a;width:100%;height:100%;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:80px 72px 200px}
+.outro-cmd{font-family:'Space Mono',monospace;font-size:34px;font-weight:700;color:#3ecf8e;letter-spacing:.08em;margin-bottom:56px}
+.outro-cta{font-family:'DM Sans',sans-serif;font-size:106px;font-weight:900;color:#FFF;line-height:1;letter-spacing:-.02em}
+.outro-cta-rule{height:6px;margin:22px 0 28px}
+.outro-cta-sub{font-family:'Space Mono',monospace;font-size:28px;color:rgba(255,255,255,.38);letter-spacing:.04em;margin-bottom:72px}
+.outro-find{width:100%;text-align:center;font-family:'Space Mono',monospace;font-size:18px;color:rgba(255,255,255,.28);letter-spacing:.16em;text-transform:uppercase;margin-bottom:26px}
+.outro-socials{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:100%}
+.outro-soc{border:2px solid;border-radius:13px;padding:26px 28px;display:flex;flex-direction:column;align-items:center;gap:7px}
+.soc-icon{font-size:42px;line-height:1}
+.soc-platform{font-family:'Space Mono',monospace;font-size:16px;color:rgba(255,255,255,.35);letter-spacing:.08em}
+.soc-handle{font-family:'Space Mono',monospace;font-size:21px;font-weight:700;letter-spacing:.04em}
+.outro-follow-txt{align-self:center;font-family:'Space Mono',monospace;font-size:19px;font-weight:700;color:rgba(255,255,255,.32);letter-spacing:.1em;margin-top:28px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <span class="tb-logo">PORTS<em>.txt</em> — CarouselGen</span>
+  <div class="tb-pipe"></div>
+  <span class="tb-meta">Network Ports · @kerem.tech style</span>
+  <div class="tb-right">
+    <span class="tb-badge" id="slide-count-badge">0 slides</span>
+    <button id="btn-preset" onclick="quickLoadPresets()" style="background:rgba(0,229,255,.12);border:1.5px solid rgba(0,229,255,.3);color:#00e5ff;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;padding:5px 14px;border-radius:6px;cursor:pointer;transition:all .15s">⚡ Load All 14 Slides</button>
+  </div>
+</div>
+
+<div id="layout">
+  <!-- LEFT: Editor -->
+  <div class="panel left">
+    <div class="panel-head">
+      <span class="ph-title">Slide Editor</span>
+      <span id="slide-type-badge" style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--acc);text-transform:uppercase;font-family:'Space Mono',monospace">COVER</span>
+    </div>
+    <div class="panel-body">
+      <div>
+        <div class="field-label">Handle (all slides)</div>
+        <input class="text-input" id="cfg-handle" value="@kerem.tech" oninput="debouncedRegen()">
+      </div>
+      <div class="div"></div>
+      <div>
+        <div class="field-label">Slide Type</div>
+        <select class="text-input" id="slide-type" onchange="onTypeChange()">
+          <option value="cover">Cover (Slide 01)</option>
+          <option value="proto">Protocol / Port Slide</option>
+          <option value="outro">CTA / Outro (Last Slide)</option>
+        </select>
+      </div>
+
+      <!-- COVER FIELDS -->
+      <div id="fields-cover">
+        <div class="field-label">Title</div>
+        <input class="text-input" id="cov-title" value="NETWORK PORTS YOU NEED TO MEMORIZE." oninput="debouncedRegen()">
+        <div style="height:8px"></div>
+        <div class="field-label">Subtitle</div>
+        <input class="text-input" id="cov-sub" value="For devs, sysadmins, IT, security pros &amp; students." oninput="debouncedRegen()">
+        <div style="height:8px"></div>
+        <div class="field-label">Accent Color</div>
+        <div class="swatch-row" id="cover-color-swatches"></div>
+      </div>
+
+      <!-- PROTO FIELDS -->
+      <div id="fields-proto" style="display:none">
+        <div class="field-label">Category (e.g. WEB, REMOTE SHELL)</div>
+        <input class="text-input" id="proto-cat" value="WEB" oninput="debouncedRegen()">
+        <div style="height:8px"></div>
+        <div class="field-label">Card Subtitle</div>
+        <input class="text-input" id="proto-card-sub" value="web traffic · http family" oninput="debouncedRegen()">
+        <div style="height:8px"></div>
+        <div class="field-label">Accent Color</div>
+        <div class="swatch-row" id="proto-color-swatches"></div>
+        <div style="height:12px"></div>
+        <div class="field-label">Ports (max 4)</div>
+        <div id="ports-list" style="display:flex;flex-direction:column;gap:7px"></div>
+        <button class="btn btn-ghost" style="margin-top:7px;font-size:11px" onclick="addPort()">+ Add Port</button>
+        <div style="height:10px"></div>
+        <div class="field-label">USED FOR (one per line)</div>
+        <textarea class="text-input" id="proto-used" rows="4" oninput="debouncedRegen()">API endpoints & mobile backends
+Web apps default to HTTPS (443)
+Internal tools still on plain HTTP (80)
+IoT and printer web UIs (80)</textarea>
+        <div style="height:8px"></div>
+        <div class="field-label">WATCH FOR (one per line)</div>
+        <textarea class="text-input" id="proto-watch" rows="4" oninput="debouncedRegen()">HTTPS-stripping / missing HSTS
+Mixed content on HTTPS pages
+Weak TLS (1.0 / 1.1) still enabled
+Default admin panels exposed</textarea>
+        <div style="height:8px"></div>
+        <div class="field-label">RECON commands (one per line)</div>
+        <textarea class="text-input" id="proto-recon" rows="3" oninput="debouncedRegen()">$ nmap -p80,443 -sCV &lt;target&gt;
+$ sslscan &lt;target&gt;:443
+$ gobuster dir -u https://&lt;target&gt; -w list</textarea>
+      </div>
+
+      <!-- OUTRO FIELDS -->
+      <div id="fields-outro" style="display:none">
+        <div class="field-label">CTA Text</div>
+        <input class="text-input" id="outro-cta" value="SAVE_THIS." oninput="debouncedRegen()">
+        <div style="height:8px"></div>
+        <div class="field-label">Subtitle</div>
+        <input class="text-input" id="outro-sub" value="You'll see these everywhere." oninput="debouncedRegen()">
+        <div style="height:8px"></div>
+        <div class="field-label">Instagram</div>
+        <input class="text-input" id="outro-ig" value="@kerem.tech" oninput="debouncedRegen()">
+        <div style="height:8px"></div>
+        <div class="field-label">X / Twitter</div>
+        <input class="text-input" id="outro-tw" value="@keraattin" oninput="debouncedRegen()">
+        <div style="height:8px"></div>
+        <div class="field-label">YouTube</div>
+        <input class="text-input" id="outro-yt" value="Kerem Tech" oninput="debouncedRegen()">
+        <div style="height:8px"></div>
+        <div class="field-label">GitHub</div>
+        <input class="text-input" id="outro-gh" value="keraattin" oninput="debouncedRegen()">
+        <div style="height:8px"></div>
+        <div class="field-label">Accent Color</div>
+        <div class="swatch-row" id="outro-color-swatches"></div>
+      </div>
+
+      <div class="div"></div>
+      <button class="btn btn-primary" onclick="generateCurrent()">▶ Preview This Slide</button>
+      <button class="btn btn-ghost" style="font-size:11px" onclick="addCurrentSlide()">+ Add to Carousel</button>
+    </div>
+  </div>
+
+  <!-- CENTER: Preview -->
+  <div id="center">
+    <div id="empty-state">
+      <div class="es-icon">🖧</div>
+      <h3>No slides yet</h3>
+      <p>Use ⚡ Load All 14 Slides for a full preset, or build custom slides on the left.</p>
+    </div>
+    <div id="preview-area">
+      <div id="preview-port">
+        <div id="preview-scaler"></div>
+      </div>
+      <div class="nav-row">
+        <button class="nav-btn" id="nav-prev" onclick="navSlide(-1)">‹</button>
+        <div class="dots-wrap" id="dots-wrap"></div>
+        <button class="nav-btn" id="nav-next" onclick="navSlide(1)">›</button>
+      </div>
+      <span class="slide-label" id="slide-label-txt">SLIDE 1 / 1</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: Slides list -->
+  <div class="panel right">
+    <div class="panel-head">
+      <span class="ph-title">Slides</span>
+      <span id="slide-count-r" style="font-size:9px;font-weight:700;color:var(--txt2);font-family:'Space Mono',monospace">0</span>
+    </div>
+    <div id="slides-list"></div>
+    <div id="export-sec">
+      <button class="btn btn-ghost" style="font-size:11px;color:var(--red-ui);border-color:rgba(255,68,68,.3)" onclick="removeSelectedSlide()">− Remove Selected</button>
+      <div class="div"></div>
+      <button class="btn btn-primary" id="export-btn" onclick="exportAll()" disabled>⬇ Export ZIP</button>
+      <div id="prog-wrap" style="display:none;flex-direction:column;gap:5px">
+        <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+        <div class="prog-text" id="prog-text">0 / 0</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="overlay">
+  <div class="ov-card">
+    <div class="ov-emoji">📸</div>
+    <div class="ov-title">Exporting Carousel</div>
+    <div class="ov-sub" id="ov-sub-txt">Rendering slides…</div>
+    <div class="ov-track"><div class="ov-prog" id="ov-prog"></div></div>
+  </div>
+</div>
+
+<div id="capture-stage"></div>
+
+<script>
+/* ══ STATE ══ */
+const SLIDES = [];
+let selectedIdx = 0;
+let currentPreviewHTML = '';
+
+/* ══ COLORS ══ */
+const PALETTE = [
+  '#00e5ff','#a78bfa','#4ade80','#fb923c',
+  '#fbbf24','#f472b6','#f87171','#2dd4bf','#e2e8f0'
+];
+let coverColor = '#00e5ff';
+let protoColor = '#00e5ff';
+let outroColor = '#fbbf24';
+
+function buildSwatches(id, current, onChange) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  PALETTE.forEach(c => {
+    const s = document.createElement('div');
+    s.className = 'swatch' + (c === current ? ' active' : '');
+    s.style.background = c;
+    s.onclick = () => { onChange(c); buildSwatches(id, c, onChange); debouncedRegen(); };
+    el.appendChild(s);
+  });
+}
+buildSwatches('cover-color-swatches', coverColor, v => coverColor = v);
+buildSwatches('proto-color-swatches', protoColor, v => protoColor = v);
+buildSwatches('outro-color-swatches', outroColor, v => outroColor = v);
+
+/* ══ PORT EDITOR ══ */
+let portData = [{num:'80',name:'HTTP',sub:'cleartext'},{num:'443',name:'HTTPS',sub:'tls encrypted'}];
+
+function renderPortsList() {
+  const el = document.getElementById('ports-list');
+  el.innerHTML = '';
+  portData.forEach((p, i) => {
+    const d = document.createElement('div');
+    d.className = 'port-entry';
+    d.innerHTML = `
+      <div class="port-row">
+        <input class="port-num-in" value="${xss(p.num)}" placeholder="#" oninput="portData[${i}].num=this.value;debouncedRegen()">
+        <input class="port-name-in" value="${xss(p.name)}" placeholder="NAME" oninput="portData[${i}].name=this.value;debouncedRegen()">
+        <button class="port-del" onclick="removePort(${i})">✕</button>
+      </div>
+      <input class="port-sub-in" value="${xss(p.sub)}" placeholder="description" oninput="portData[${i}].sub=this.value;debouncedRegen()" style="width:100%;border-radius:5px">
+    `;
+    el.appendChild(d);
+  });
+}
+renderPortsList();
+
+function addPort() {
+  if(portData.length >= 4) return;
+  portData.push({num:'', name:'', sub:''});
+  renderPortsList();
+}
+function removePort(i) {
+  portData.splice(i, 1);
+  renderPortsList();
+  debouncedRegen();
+}
+
+/* ══ UTILS ══ */
+function xss(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function lines(s){ return (s||'').split('\n').map(l=>l.trim()).filter(Boolean); }
+function gv(id){ return document.getElementById(id).value; }
+function hex2rgba(hex, a){ const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${a})`; }
+
+/* ══ DOT NAV ══ */
+function buildSlideDots(cur, total) {
+  return Array.from({length:total},(_,i)=>`<div class="sl-dot-item${i+1===cur?' cur':''}"></div>`).join('');
+}
+
+/* ══ SLIDE BUILDERS ══ */
+function buildCoverHTML(n, total, color) {
+  const handle = gv('cfg-handle');
+  const title  = gv('cov-title');
+  const sub    = gv('cov-sub');
+  const c      = color || coverColor;
+  return `<div class="slide">
+    <div class="s-cover">
+      <div class="cov-pre" style="color:${c}">$ ports.txt</div>
+      <div class="cov-title">${xss(title)}</div>
+      <div class="cov-rule" style="background:${c}"></div>
+      <div class="cov-sub" style="color:rgba(255,255,255,.45)">${xss(sub)}</div>
+    </div>
+    <div class="cov-swipe-row" style="color:${c}">
+      swipe
+      <div class="cov-arrow-line">
+        <div class="cov-arrow-body" style="background:${c}"></div>
+        <div class="cov-arrow-head" style="border-left:15px solid ${c}"></div>
+      </div>
+    </div>
+    <div class="sl-handle">${xss(handle)}</div>
+    <div class="sl-dots-row">${buildSlideDots(n,total)}</div>
+  </div>`;
+}
+
+function buildProtoHTML(n, total, opts) {
+  const handle   = gv('cfg-handle');
+  const cat      = opts ? opts.cat : gv('proto-cat').toUpperCase();
+  const cardSub  = opts ? opts.cardSub : gv('proto-card-sub');
+  const ports    = opts ? opts.ports : portData;
+  const usedFor  = opts ? opts.used  : lines(gv('proto-used'));
+  const watchFor = opts ? opts.watch : lines(gv('proto-watch'));
+  const recon    = opts ? opts.recon : lines(gv('proto-recon'));
+  const c        = opts ? opts.color : protoColor;
+  const numStr   = `${String(n).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+
+  const portsHTML = ports.map(p=>`
+    <div class="sp-port">
+      <div class="sp-port-num" style="color:${c}">${xss(p.num)}</div>
+      <div class="sp-port-rule" style="background:${c}"></div>
+      <div class="sp-port-name">${xss(p.name)}</div>
+      ${p.sub?`<div class="sp-port-sub">${xss(p.sub)}</div>`:''}
+    </div>`).join('');
+
+  const usedHTML  = usedFor.map(l=>`<li>${xss(l)}</li>`).join('');
+  const watchHTML = watchFor.map(l=>`<li>${xss(l)}</li>`).join('');
+  const reconHTML = recon.map(l=>{
+    const has$ = l.startsWith('$');
+    const cmd  = has$ ? l.slice(1).trim() : l;
+    return `<div class="sp-code-line"><span class="sp-code-dollar">$</span><span>${xss(has$?cmd:l)}</span></div>`;
+  }).join('');
+
+  return `<div class="slide">
+    <div class="s-proto">
+      <div class="sp-header">
+        <div class="sp-cat" style="color:${c}">
+          <span class="sp-cat-br">[ </span>${xss(cat)}<span class="sp-cat-br"> ]</span>
+        </div>
+        <div class="sl-num">${xss(numStr)}</div>
+      </div>
+      <div class="sp-ports-card" style="border-color:${hex2rgba(c,.22)};background:${hex2rgba(c,.06)}">
+        <div class="sp-ports-row">${portsHTML}</div>
+        <div class="sp-card-sub">${xss(cardSub)}</div>
+      </div>
+      ${usedHTML?`<div class="sp-section">
+        <div class="sp-sec-label" style="color:${c};border-color:${c}">USED FOR</div>
+        <ul class="sp-list">${usedHTML}</ul>
+      </div>`:''}
+      ${watchHTML?`<div class="sp-section">
+        <div class="sp-sec-label" style="color:#f87171;border-color:#f87171">WATCH FOR</div>
+        <ul class="sp-list">${watchHTML}</ul>
+      </div>`:''}
+      ${reconHTML?`<div class="sp-section">
+        <div class="sp-sec-label" style="color:${c};border-color:${c}">RECON</div>
+        <div class="sp-code-block">${reconHTML}</div>
+      </div>`:''}
+    </div>
+    <div class="sl-handle">${xss(handle)}</div>
+    <div class="sl-dots-row">${buildSlideDots(n,total)}</div>
+  </div>`;
+}
+
+function buildOutroHTML(n, total, opts) {
+  const handle = gv('cfg-handle');
+  const cta    = opts ? opts.cta    : gv('outro-cta');
+  const sub    = opts ? opts.sub    : gv('outro-sub');
+  const ig     = opts ? opts.ig     : gv('outro-ig');
+  const tw     = opts ? opts.tw     : gv('outro-tw');
+  const yt     = opts ? opts.yt     : gv('outro-yt');
+  const gh     = opts ? opts.gh     : gv('outro-gh');
+  const c      = opts ? opts.color  : outroColor;
+
+  return `<div class="slide">
+    <div class="s-outro">
+      <div class="outro-cmd">$ exit 0</div>
+      <div class="outro-cta">${xss(cta)}</div>
+      <div class="outro-cta-rule" style="background:${c};width:180px"></div>
+      <div class="outro-cta-sub">${xss(sub)}</div>
+      <div class="outro-find">── FIND ME HERE ──</div>
+      <div class="outro-socials">
+        <div class="outro-soc" style="border-color:rgba(225,48,108,.4)">
+          <div class="soc-icon">📸</div>
+          <div class="soc-platform">Instagram</div>
+          <div class="soc-handle" style="color:#e1306c">${xss(ig)}</div>
+        </div>
+        <div class="outro-soc" style="border-color:rgba(29,155,240,.4)">
+          <div class="soc-icon" style="font-size:40px;font-family:'DM Sans',sans-serif;font-weight:900;color:#1d9bf0">𝕏</div>
+          <div class="soc-platform">X / Twitter</div>
+          <div class="soc-handle" style="color:#1d9bf0">${xss(tw)}</div>
+        </div>
+        <div class="outro-soc" style="border-color:rgba(255,0,0,.4)">
+          <div class="soc-icon">▶️</div>
+          <div class="soc-platform">YouTube</div>
+          <div class="soc-handle" style="color:#f87171">${xss(yt)}</div>
+        </div>
+        <div class="outro-soc" style="border-color:rgba(62,207,142,.4)">
+          <div class="soc-icon" style="font-size:38px">◈</div>
+          <div class="soc-platform">GitHub</div>
+          <div class="soc-handle" style="color:#3ecf8e">${xss(gh)}</div>
+        </div>
+      </div>
+      <div class="outro-follow-txt">Follow for daily security content.</div>
+    </div>
+    <div class="sl-handle">${xss(handle)}</div>
+    <div class="sl-dots-row">${buildSlideDots(n,total)}</div>
+  </div>`;
+}
+
+/* ══ LIVE PREVIEW ══ */
+let regenTimer = null;
+function debouncedRegen(){ clearTimeout(regenTimer); regenTimer = setTimeout(generateCurrent, 160); }
+
+function generateCurrent() {
+  const type  = gv('slide-type');
+  const n     = Math.max(selectedIdx + 1, SLIDES.length > 0 ? SLIDES.length : 1);
+  const total = Math.max(SLIDES.length, 1);
+  let html = '';
+  if(type === 'cover') html = buildCoverHTML(1, total);
+  else if(type === 'outro') html = buildOutroHTML(total, total);
+  else html = buildProtoHTML(n, total);
+  currentPreviewHTML = html;
+  document.getElementById('slide-type-badge').textContent = type.toUpperCase();
+  showInPreview([{html}], 0);
+}
+
+function onTypeChange() {
+  const t = gv('slide-type');
+  document.getElementById('fields-cover').style.display = t==='cover' ? '' : 'none';
+  document.getElementById('fields-proto').style.display = t==='proto' ? '' : 'none';
+  document.getElementById('fields-outro').style.display = t==='outro' ? '' : 'none';
+  generateCurrent();
+}
+generateCurrent();
+
+/* ══ SLIDE MANAGEMENT ══ */
+function addCurrentSlide() {
+  if(!currentPreviewHTML) return;
+  const type  = gv('slide-type');
+  const label = type==='cover' ? 'Cover' : type==='outro' ? 'CTA / Outro' : '[ '+gv('proto-cat').toUpperCase()+' ]';
+  const color = type==='cover' ? coverColor : type==='outro' ? outroColor : protoColor;
+  SLIDES.push({type, html: currentPreviewHTML, label, color});
+  rebuildAllDots();
+  selectedIdx = SLIDES.length - 1;
+  updateUI();
+}
+
+function removeSelectedSlide() {
+  if(SLIDES.length === 0) return;
+  SLIDES.splice(selectedIdx, 1);
+  rebuildAllDots();
+  selectedIdx = Math.max(0, selectedIdx - 1);
+  updateUI();
+}
+
+function rebuildAllDots() {
+  const total = SLIDES.length;
+  SLIDES.forEach((s, i) => {
+    s.html = s.html.replace(/<div class="sl-dots-row">[\s\S]*?<\/div>/,
+      `<div class="sl-dots-row">${buildSlideDots(i+1, total)}</div>`);
+  });
+}
+
+function updateUI() {
+  const count = SLIDES.length;
+  document.getElementById('slide-count-badge').textContent = count + ' slides';
+  document.getElementById('slide-count-r').textContent = count;
+  document.getElementById('export-btn').disabled = count === 0;
+
+  const list = document.getElementById('slides-list');
+  list.innerHTML = '';
+  SLIDES.forEach((s, i) => {
+    const d = document.createElement('div');
+    d.className = 'sli' + (i===selectedIdx ? ' active' : '');
+    d.innerHTML = `
+      <div class="sli-num">${i+1}</div>
+      <div style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${xss(s.label)}</div>
+      <div class="sli-dot" style="background:${s.color}"></div>`;
+    d.onclick = () => { selectedIdx = i; updateUI(); showInPreview(SLIDES, i); };
+    list.appendChild(d);
+  });
+  if(count > 0) showInPreview(SLIDES, Math.min(selectedIdx, count-1));
+}
+
+/* ══ PREVIEW RENDERER ══ */
+function showInPreview(slides, idx) {
+  document.getElementById('empty-state').style.display = 'none';
+  const area = document.getElementById('preview-area');
+  area.style.display = 'flex';
+  document.getElementById('preview-scaler').innerHTML = slides[idx]?.html || '';
+
+  const dw = document.getElementById('dots-wrap');
+  dw.innerHTML = '';
+  slides.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===idx?' active':'');
+    d.onclick = () => { selectedIdx=i; updateUI(); showInPreview(slides,i); };
+    dw.appendChild(d);
+  });
+
+  document.getElementById('slide-label-txt').textContent = `SLIDE ${idx+1} / ${slides.length}`;
+  document.getElementById('nav-prev').disabled = idx <= 0;
+  document.getElementById('nav-next').disabled = idx >= slides.length-1;
+}
+
+function navSlide(dir) {
+  const next = selectedIdx + dir;
+  if(next >= 0 && next < SLIDES.length){ selectedIdx = next; updateUI(); showInPreview(SLIDES, selectedIdx); }
+}
+
+/* ══ PRESET DATA (all 14 slides) ══ */
+const PRESET_DATA = [
+  {type:'cover', color:'#00e5ff'},
+  {type:'proto', cat:'WEB', color:'#00e5ff', cardSub:'web traffic · http family',
+    ports:[{num:'80',name:'HTTP',sub:'cleartext'},{num:'443',name:'HTTPS',sub:'tls'}],
+    used:['API endpoints & mobile backends','Web apps default to HTTPS (443)','Internal tools still on plain HTTP (80)','IoT and printer web UIs (80)'],
+    watch:['HTTPS-stripping / missing HSTS','Mixed content on HTTPS pages','Weak TLS (1.0 / 1.1) still enabled','Default admin panels exposed'],
+    recon:['$ nmap -p80,443 -sCV <target>','$ sslscan <target>:443','$ gobuster dir -u https://<target> -w list']},
+  {type:'proto', cat:'REMOTE SHELL', color:'#a78bfa', cardSub:'interactive remote shell',
+    ports:[{num:'22',name:'SSH',sub:'encrypted'},{num:'23',name:'TELNET',sub:'cleartext'}],
+    used:['SSH: secure shell, SFTP, port forwarding','SSH: Git over SSH, CI/CD automation','Telnet: legacy router & IoT admin','Telnet: vendor appliances & embedded'],
+    watch:['SSH: brute force on weak passwords','SSH: old crypto (RSA-1024, DSA, CBC)','Telnet: ALL traffic cleartext (creds too)','Telnet: default vendor passwords in use'],
+    recon:['$ nmap -p22,23 -sCV <target>','$ ssh-audit <target>','$ hydra -L users -P pass ssh://<target>']},
+  {type:'proto', cat:'REMOTE DESKTOP', color:'#a78bfa', cardSub:'graphical remote desktop',
+    ports:[{num:'3389',name:'RDP',sub:'encrypted'},{num:'5900',name:'VNC',sub:'varies'}],
+    used:['RDP: Windows remote desktop & RDS','RDP: cloud Windows VM access','VNC: cross-platform graphical sessions','VNC: appliance & embedded device GUIs'],
+    watch:['RDP: BlueKeep (CVE-2019-0708)','RDP: brute force on exposed hosts','RDP: NLA disabled, weak encryption','VNC: often unauth or weak passwords'],
+    recon:['$ nmap -p3389,5900 -sCV <target>','$ hydra -L users -P pass rdp://<target>','$ xfreerdp /v:<target>  |  vncviewer <t>']},
+  {type:'proto', cat:'FILE TRANSFER', color:'#4ade80', cardSub:'data uploads & downloads',
+    ports:[{num:'21',name:'FTP',sub:'cleartext'},{num:'69',name:'TFTP',sub:'no auth'}],
+    used:['FTP: legacy file admin & uploads','FTP: anonymous public file repos','TFTP: PXE boot & firmware push','TFTP: network device config transfer'],
+    watch:['FTP: cleartext credentials in transit','FTP: anonymous login often enabled','TFTP: no auth at all (UDP)','TFTP: device configs often hold secrets'],
+    recon:['$ nmap -p21,69 --script=ftp-*,tftp-* <t>','$ ftp <target>   # try anonymous','$ tftp <target> -c get <known-file>']},
+  {type:'proto', cat:'MAIL . OUTBOUND', color:'#fb923c', cardSub:'mail sending · relay & submission',
+    ports:[{num:'25',name:'SMTP',sub:'cleartext'},{num:'465',name:'SMTPS',sub:'tls'},{num:'587',name:'SUBMIT',sub:'starttls'}],
+    used:['25: server-to-server mail (MTA-MTA)','587: authenticated client submission','465: legacy SMTP-over-SSL (still common)','All: app notification emails'],
+    watch:['Open relays sending spam (port 25)','User enumeration (VRFY, EXPN, RCPT)','STARTTLS downgrade attacks','SPF / DKIM / DMARC misconfigs'],
+    recon:['$ nmap -p25,465,587 --script=smtp-* <t>','$ swaks --to user@<target>','$ smtp-user-enum -M VRFY -U u.txt -t <t>']},
+  {type:'proto', cat:'MAIL . INBOUND', color:'#fb923c', cardSub:'mail retrieval · cleartext vs tls',
+    ports:[{num:'110',name:'POP3',sub:''},{num:'995',name:'POP3S',sub:''},{num:'143',name:'IMAP',sub:''},{num:'993',name:'IMAPS',sub:''}],
+    used:['POP3 (110): download to one device only','POP3S (995): TLS-encrypted POP3','IMAP (143): multi-device sync (modern)','IMAPS (993): TLS IMAP (default for clients)'],
+    watch:['110 / 143: cleartext auth & message body','Brute force on mailbox accounts','Mail deleted server-side after POP3 dl','Force 993 / 995 only in client configs'],
+    recon:['$ nmap -p110,143,993,995 --script=*pop3*,*imap*','$ hydra -L users -P pass imap://<target>','$ openssl s_client -connect <t>:993']},
+  {type:'proto', cat:'DNS & KERBEROS', color:'#fbbf24', cardSub:'name resolution & AD authentication',
+    ports:[{num:'53',name:'DNS',sub:'udp/tcp'},{num:'88',name:'KERB',sub:'encrypted'}],
+    used:['DNS: domain lookups, MX, SRV, PTR','DNS: service discovery & SPF/DMARC','Kerberos: AD authentication (TGT/TGS)','Kerberos: SSO across domain services'],
+    watch:['DNS: zone transfers (AXFR) exposed','DNS: cache poisoning, UDP amplification','Kerb: AS-REP roasting, Kerberoasting','Kerb: golden / silver tickets, PtT'],
+    recon:['$ dig axfr <domain> @<dns-server>','$ GetNPUsers.py <domain>/ -dc-ip <ip>','$ GetUserSPNs.py <domain>/<user>']},
+  {type:'proto', cat:'LDAP', color:'#4ade80', cardSub:'directory queries · cleartext vs tls',
+    ports:[{num:'389',name:'LDAP',sub:'cleartext'},{num:'636',name:'LDAPS',sub:'tls'}],
+    used:['AD / directory queries (users, groups)','Application authentication backend','Centralized identity management','Cross-app SSO via LDAP bind'],
+    watch:['389: anonymous bind enabled by default','389: cleartext credentials in queries','LDAP injection from web apps','Sensitive attrs exposed (mail, phone)'],
+    recon:['$ ldapsearch -x -H ldap://<target>','$ nmap -p389,636 --script=ldap-* <target>','$ ldapdomaindump <target>']},
+  {type:'proto', cat:'WINDOWS . SMB', color:'#f472b6', cardSub:'windows file sharing & RPC',
+    ports:[{num:'135',name:'MSRPC',sub:'rpc'},{num:'139',name:'NETBIOS',sub:'legacy'},{num:'445',name:'SMB',sub:'modern'}],
+    used:['135: endpoint mapper for DCOM / WMI','139: legacy NetBIOS session service','445: modern SMB file & printer sharing','All: domain controller communication'],
+    watch:['445: EternalBlue (MS17-010), Zerologon','139: NBT-NS poisoning (Responder)','SMB v1 still enabled on legacy hosts','Pass-the-Hash / NTLM relay attacks'],
+    recon:['$ nmap -p135,139,445 --script=smb-* <t>','$ crackmapexec smb <target>','$ enum4linux-ng -A <target>']},
+  {type:'proto', cat:'DATABASES . SQL', color:'#f87171', cardSub:'relational databases',
+    ports:[{num:'1433',name:'MSSQL',sub:'tcp'},{num:'3306',name:'MySQL',sub:'tcp'},{num:'5432',name:'POSTGRES',sub:'tcp'}],
+    used:['MSSQL (1433): Microsoft enterprise DB','MySQL (3306): LAMP stack, WordPress','Postgres (5432): modern app backends','All: linked servers / replication links'],
+    watch:['Default admin accounts (sa, root)','Weak / no password (legacy installs)','xp_cmdshell or pg_read_server_files','Direct internet exposure (Shodan)'],
+    recon:['$ nmap -p1433,3306,5432 -sCV <target>','$ mssqlclient.py <user>@<target>','$ hydra -L users -P pass mysql://<t>']},
+  {type:'proto', cat:'DATABASES . NOSQL', color:'#f87171', cardSub:'key-value & document stores',
+    ports:[{num:'6379',name:'REDIS',sub:'no auth'},{num:'27017',name:'MONGO',sub:'no auth'}],
+    used:['Redis (6379): cache, queue, session store','Redis: pub/sub messaging','MongoDB (27017): document database','MongoDB: modern web app backends'],
+    watch:['Redis: no auth by default = RCE risk','Redis: SSRF -> Redis -> shell pivots','MongoDB: no auth on default installs','Both: most exposed DBs on the internet'],
+    recon:['$ nmap -p6379,27017 -sCV <target>','$ redis-cli -h <target>   # try direct','$ mongo <target>:27017']},
+  {type:'proto', cat:'NETWORK MGMT', color:'#2dd4bf', cardSub:'monitoring · logging · time sync',
+    ports:[{num:'161',name:'SNMP',sub:'udp'},{num:'514',name:'SYSLOG',sub:'udp'},{num:'123',name:'NTP',sub:'udp'}],
+    used:["SNMP (161): network device monitoring","Syslog (514): centralized log collection","NTP (123): time sync across infra","All: critical infra observability"],
+    watch:["SNMP: 'public' community string still set","SNMP: full config dump via OID walks","Syslog: log injection / spoofing","NTP: UDP amplification (mode 6/7)"],
+    recon:['$ onesixtyone -c community.txt <target>','$ nmap -sU -p161,123 --script=snmp-*,ntp-*','$ snmpwalk -v2c -c public <target>']},
+  {type:'outro', color:'#fbbf24'},
+];
+
+function quickLoadPresets() {
+  SLIDES.length = 0;
+  const handle = gv('cfg-handle') || '@kerem.tech';
+  const total  = PRESET_DATA.length;
+
+  PRESET_DATA.forEach((p, i) => {
+    const n = i + 1;
+    let html = '';
+    let label = '';
+    if(p.type === 'cover') {
+      const c = p.color;
+      html = `<div class="slide">
+        <div class="s-cover">
+          <div class="cov-pre" style="color:${c}">$ ports.txt</div>
+          <div class="cov-title">NETWORK PORTS YOU NEED TO MEMORIZE.</div>
+          <div class="cov-rule" style="background:${c}"></div>
+          <div class="cov-sub" style="color:rgba(255,255,255,.45)">For devs, sysadmins, IT,\nsecurity pros &amp; students.</div>
+        </div>
+        <div class="cov-swipe-row" style="color:${c}">swipe
+          <div class="cov-arrow-line">
+            <div class="cov-arrow-body" style="background:${c}"></div>
+            <div class="cov-arrow-head" style="border-left:15px solid ${c}"></div>
+          </div>
+        </div>
+        <div class="sl-handle">${xss(handle)}</div>
+        <div class="sl-dots-row">${buildSlideDots(n,total)}</div>
+      </div>`;
+      label = 'Cover';
+    } else if(p.type === 'outro') {
+      const c = p.color;
+      html = `<div class="slide">
+        <div class="s-outro">
+          <div class="outro-cmd">$ exit 0</div>
+          <div class="outro-cta">SAVE_THIS.</div>
+          <div class="outro-cta-rule" style="background:${c};width:180px"></div>
+          <div class="outro-cta-sub">You'll see these everywhere.</div>
+          <div class="outro-find">── FIND ME HERE ──</div>
+          <div class="outro-socials">
+            <div class="outro-soc" style="border-color:rgba(225,48,108,.4)"><div class="soc-icon">📸</div><div class="soc-platform">Instagram</div><div class="soc-handle" style="color:#e1306c">${xss(handle)}</div></div>
+            <div class="outro-soc" style="border-color:rgba(29,155,240,.4)"><div class="soc-icon" style="font-size:40px;font-family:'DM Sans',sans-serif;font-weight:900;color:#1d9bf0">𝕏</div><div class="soc-platform">X / Twitter</div><div class="soc-handle" style="color:#1d9bf0">@keraattin</div></div>
+            <div class="outro-soc" style="border-color:rgba(255,0,0,.4)"><div class="soc-icon">▶️</div><div class="soc-platform">YouTube</div><div class="soc-handle" style="color:#f87171">Kerem Tech</div></div>
+            <div class="outro-soc" style="border-color:rgba(62,207,142,.4)"><div class="soc-icon" style="font-size:38px">◈</div><div class="soc-platform">GitHub</div><div class="soc-handle" style="color:#3ecf8e">keraattin</div></div>
+          </div>
+          <div class="outro-follow-txt">Follow for daily security content.</div>
+        </div>
+        <div class="sl-handle">${xss(handle)}</div>
+        <div class="sl-dots-row">${buildSlideDots(n,total)}</div>
+      </div>`;
+      label = 'CTA / Outro';
+    } else {
+      // Override gv() functions with preset data by calling builder with opts
+      html = buildProtoHTML(n, total, p);
+      label = '[ ' + p.cat + ' ]';
+    }
+    SLIDES.push({type: p.type, html, label, color: p.color});
+  });
+
+  selectedIdx = 0;
+  updateUI();
+  showInPreview(SLIDES, 0);
+}
+
+/* ══ EXPORT ══ */
+async function exportAll() {
+  if(!SLIDES.length) return;
+  const overlay = document.getElementById('overlay');
+  const ovProg  = document.getElementById('ov-prog');
+  const ovSub   = document.getElementById('ov-sub-txt');
+  overlay.classList.add('show');
+  const stage = document.getElementById('capture-stage');
+  stage.style.visibility = 'visible';
+  const zip = new JSZip();
+  const folder = zip.folder('network_ports_carousel');
+
+  for(let i=0; i < SLIDES.length; i++){
+    ovProg.style.width = Math.round((i/SLIDES.length)*90) + '%';
+    ovSub.textContent = `Rendering ${i+1} / ${SLIDES.length}…`;
+    stage.innerHTML = SLIDES[i].html;
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    try {
+      const el = stage.querySelector('.slide');
+      const canvas = await html2canvas(el, {width:1080,height:1350,scale:1,useCORS:true,logging:false,backgroundColor:'#0a0a0a'});
+      const blob = await new Promise(res => canvas.toBlob(res,'image/jpeg',0.95));
+      const safe = SLIDES[i].label.replace(/[^a-zA-Z0-9_\-]/g,'_');
+      folder.file(`slide_${String(i+1).padStart(2,'0')}_${safe}.jpg`, blob);
+    } catch(e){ console.error(e); }
+  }
+
+  ovProg.style.width = '95%';
+  ovSub.textContent = 'Building ZIP…';
+  const content = await zip.generateAsync({type:'blob'});
+  const url = URL.createObjectURL(content);
+  const a = document.createElement('a'); a.href=url; a.download='network_ports_carousel.zip'; a.click();
+  URL.revokeObjectURL(url);
+  stage.innerHTML=''; stage.style.visibility='hidden';
+  ovProg.style.width='100%';
+  setTimeout(() => { overlay.classList.remove('show'); ovProg.style.width='0%'; }, 900);
+}
+</script>
+</body>
+</html>

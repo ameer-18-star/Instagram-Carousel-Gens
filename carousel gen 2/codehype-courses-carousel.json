@@ -1,0 +1,177 @@
+{
+  "cover": {
+    "emoji": "🔥",
+    "title": "100 Courses\nfor Everyone",
+    "subtitle1": "You don't need any",
+    "subtitle2": "courses beyond these!"
+  },
+  "slides": [
+    {
+      "type": "list",
+      "category": "Artificial Intelligence & ML",
+      "items": [
+        { "course": "Machine Learning", "by": "Andrew Ng" },
+        { "course": "AI for Everyone", "by": "DeepLearning.AI" },
+        { "course": "DL Specialization", "by": "DeepLearning.AI" },
+        { "course": "Generative AI Fundamentals", "by": "Google" },
+        { "course": "AI Engineering", "by": "IBM" },
+        { "course": "Natural Language Processing", "by": "Stanford" },
+        { "course": "Computer Vision", "by": "Meta" },
+        { "course": "Prompt Engineering", "by": "OpenAI" },
+        { "course": "Azure AI Fundamentals", "by": "Microsoft" },
+        { "course": "Applied AI", "by": "IBM" }
+      ]
+    },
+    {
+      "type": "list",
+      "category": "Business and Finance",
+      "items": [
+        { "course": "Foundations of Business", "by": "Wharton" },
+        { "course": "Financial Markets", "by": "Yale" },
+        { "course": "Startup Finance", "by": "Harvard" },
+        { "course": "Accounting Fundamentals", "by": "University of Illinois" },
+        { "course": "Corporate Finance", "by": "Columbia" },
+        { "course": "Business Strategy", "by": "Boston Consulting Group" },
+        { "course": "Product Management", "by": "Google" },
+        { "course": "Entrepreneurship", "by": "MIT" },
+        { "course": "Management Essentials", "by": "McKinsey" },
+        { "course": "Excel for Finance", "by": "Microsoft" }
+      ]
+    },
+    {
+      "type": "list",
+      "category": "Cybersecurity",
+      "items": [
+        { "course": "Introduction to Cybersecurity", "by": "Cisco" },
+        { "course": "IBM Cybersecurity Analyst", "by": "" },
+        { "course": "Google Cybersecurity Professional Certificate", "by": "" },
+        { "course": "Network Security", "by": "Fortinet" },
+        { "course": "Ethical Hacking", "by": "EC Council" },
+        { "course": "Cybersecurity Fundamentals", "by": "Microsoft" },
+        { "course": "SOC Analyst", "by": "Splunk" },
+        { "course": "Information Security", "by": "University of London" },
+        { "course": "Cloud Security", "by": "Google" },
+        { "course": "Digital Forensics", "by": "IBM" }
+      ]
+    },
+    {
+      "type": "list",
+      "category": "Mobile App Development",
+      "items": [
+        { "course": "Android Development", "by": "Google" },
+        { "course": "iOS App Development", "by": "Apple" },
+        { "course": "Flutter Development", "by": "Google" },
+        { "course": "React Native", "by": "Meta" },
+        { "course": "Kotlin for Android", "by": "Google" },
+        { "course": "Swift Programming", "by": "Apple" },
+        { "course": "Mobile UX Design", "by": "Google" },
+        { "course": "Firebase for Apps", "by": "Google" },
+        { "course": "App Monetization", "by": "Meta" },
+        { "course": "Cross Platform Apps", "by": "IBM" }
+      ]
+    },
+    {
+      "type": "list",
+      "category": "Web Development",
+      "items": [
+        { "course": "Web Development", "by": "University of London" },
+        { "course": "Full Stack Web Development", "by": "Meta" },
+        { "course": "Frontend Development", "by": "Google" },
+        { "course": "React", "by": "Meta" },
+        { "course": "Angular", "by": "Google" },
+        { "course": "Backend Development", "by": "IBM" },
+        { "course": "Node.js", "by": "OpenJS" },
+        { "course": "Web Accessibility", "by": "W3C" },
+        { "course": "Next.js", "by": "Vercel" },
+        { "course": "Web Performance", "by": "Google" }
+      ]
+    },
+    {
+      "type": "list",
+      "category": "Programming & CS",
+      "items": [
+        { "course": "CS50x", "by": "Harvard" },
+        { "course": "Introduction to Programming", "by": "Microsoft" },
+        { "course": "Java Programming", "by": "Duke University" },
+        { "course": "Python for Everybody", "by": "University of Michigan" },
+        { "course": "C Programming", "by": "IIT Kanpur" },
+        { "course": "Algorithms", "by": "Stanford" },
+        { "course": "Data Structures", "by": "UC San Diego" },
+        { "course": "Software Engineering", "by": "IBM" },
+        { "course": "Computer Architecture", "by": "Princeton" },
+        { "course": "Operating Systems", "by": "Google" }
+      ]
+    },
+    {
+      "type": "list",
+      "category": "Cloud Computing & DevOps",
+      "items": [
+        { "course": "Google Cloud Fundamentals", "by": "" },
+        { "course": "AWS Cloud Practitioner Essentials", "by": "" },
+        { "course": "Microsoft Azure Fundamentals", "by": "" },
+        { "course": "DevOps on AWS", "by": "" },
+        { "course": "Kubernetes Basics", "by": "Google" },
+        { "course": "Docker Essentials", "by": "IBM" },
+        { "course": "Site Reliability Engineering", "by": "Google" },
+        { "course": "CI CD Pipelines", "by": "GitHub" },
+        { "course": "Cloud Architecture", "by": "AWS" },
+        { "course": "Linux Administration", "by": "Red Hat" }
+      ]
+    },
+    {
+      "type": "list",
+      "category": "Career & Future Skills",
+      "items": [
+        { "course": "Communication Skills", "by": "University of Washington" },
+        { "course": "Project Management", "by": "Google" },
+        { "course": "Content Marketing", "by": "HubSpot" },
+        { "course": "Data Literacy", "by": "Microsoft" },
+        { "course": "AI for Productivity", "by": "Google" },
+        { "course": "No Code Development", "by": "Bubble" },
+        { "course": "Career Skills", "by": "LinkedIn" },
+        { "course": "Agile Project Management", "by": "IBM" },
+        { "course": "Digital Marketing", "by": "Google" },
+        { "course": "Critical Thinking", "by": "IBM" }
+      ]
+    },
+    {
+      "type": "list",
+      "category": "Data Science and Analytics",
+      "items": [
+        { "course": "Google Data Analytics Professional Certificate", "by": "" },
+        { "course": "Data Science", "by": "Johns Hopkins University" },
+        { "course": "Applied Data Science", "by": "University of Michigan" },
+        { "course": "IBM Data Science Professional Certificate", "by": "" },
+        { "course": "Statistics for Data Science", "by": "Harvard" },
+        { "course": "Excel Skills for Business", "by": "Macquarie University" },
+        { "course": "SQL for Data Science", "by": "UC Davis" },
+        { "course": "Data Analysis with Python", "by": "IBM" },
+        { "course": "Business Analytics", "by": "Wharton" },
+        { "course": "Power BI Data Analyst", "by": "Microsoft" }
+      ]
+    },
+    {
+      "type": "list",
+      "category": "Design & Creative Skills",
+      "items": [
+        { "course": "Graphic Design", "by": "CalArts" },
+        { "course": "UI UX Design", "by": "Google" },
+        { "course": "Design Thinking", "by": "IDEO" },
+        { "course": "Motion Graphics", "by": "Adobe" },
+        { "course": "Figma Essentials", "by": "Figma" },
+        { "course": "Branding", "by": "London Business School" },
+        { "course": "Product Design", "by": "Meta" },
+        { "course": "User Research", "by": "Google" },
+        { "course": "Typography", "by": "Adobe" },
+        { "course": "Visual Design", "by": "Apple" }
+      ]
+    }
+  ],
+  "outro": {
+    "emoji": "💾",
+    "title": "Save This Post!",
+    "subtitle": "Share with a friend who needs free courses. Follow for more valuable resources!",
+    "cta": ["Follow for Daily Tech Resources", "Save & Share This Post!"],
+    "hashtags": "#FreeCourses #LearnOnline #CodeHype"
+  }
+}

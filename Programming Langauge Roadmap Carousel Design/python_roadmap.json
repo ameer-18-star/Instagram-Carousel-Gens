@@ -1,0 +1,382 @@
+[
+  {
+    "_slide": 1,
+    "_variant": "A",
+    "_note": "3 groups × 2 nodes = 6 total — Variant A (standard)",
+    "title": "Basics",
+    "groups": [
+      {
+        "label": "Syntax",
+        "nodes": ["Variables", "Operators"]
+      },
+      {
+        "label": "Control Flow",
+        "nodes": ["if / elif / else", "Loops"],
+        "crossTo": [0]
+      },
+      {
+        "label": "Data Types",
+        "nodes": ["int / float / str", "Type Cast"]
+      }
+    ]
+  },
+  {
+    "_slide": 2,
+    "_variant": "B",
+    "_note": "3 groups × 3 nodes = 9 total — Variant B (compact)",
+    "title": "Data Structures",
+    "groups": [
+      {
+        "label": "List",
+        "nodes": ["Indexing", "Slicing", "Methods"]
+      },
+      {
+        "label": "Tuple",
+        "nodes": ["Immutable", "Packing", "Unpacking"]
+      },
+      {
+        "label": "Dictionary",
+        "nodes": ["Keys & Values", "Methods", "Comprehension"]
+      }
+    ]
+  },
+  {
+    "_slide": 3,
+    "_variant": "A",
+    "_note": "2 groups × 3 nodes = 6 total — Variant A",
+    "title": "Strings",
+    "groups": [
+      {
+        "label": "Operations",
+        "nodes": ["Concatenation", "Slicing", "f-strings"]
+      },
+      {
+        "label": "Methods",
+        "nodes": ["split / join", "strip / replace", "find / count"],
+        "crossTo": [0]
+      }
+    ]
+  },
+  {
+    "_slide": 4,
+    "_variant": "B",
+    "_note": "2 groups × 4 nodes = 8 total — Variant B (compact)",
+    "title": "Functions",
+    "groups": [
+      {
+        "label": "Basics",
+        "nodes": ["def & return", "Arguments", "*args", "**kwargs"]
+      },
+      {
+        "label": "Advanced",
+        "nodes": ["Lambda", "Closures", "Decorators", "Generators"],
+        "accent": true
+      }
+    ]
+  },
+  {
+    "_slide": 5,
+    "_variant": "A",
+    "_note": "3 groups × 2 nodes = 6 total — Variant A",
+    "title": "Sets & Range",
+    "groups": [
+      {
+        "label": "Set",
+        "nodes": ["union / intersect", "add / discard"]
+      },
+      {
+        "label": "Range",
+        "nodes": ["range()", "enumerate()"]
+      },
+      {
+        "label": "Comprehension",
+        "nodes": ["List Comp", "Dict / Set Comp"]
+      }
+    ]
+  },
+  {
+    "_slide": 6,
+    "_variant": "B",
+    "_note": "3 groups × 3 nodes = 9 total — Variant B",
+    "title": "OOP",
+    "groups": [
+      {
+        "label": "Class",
+        "nodes": ["__init__", "Attributes", "Methods"]
+      },
+      {
+        "label": "Inheritance",
+        "nodes": ["super()", "Overriding", "Multiple Inherit"]
+      },
+      {
+        "label": "Magic Methods",
+        "nodes": ["__str__", "__repr__", "Dunders"],
+        "crossTo": [1]
+      }
+    ]
+  },
+  {
+    "_slide": 7,
+    "_variant": "A",
+    "_note": "3 groups × 2 nodes = 6 total — Variant A",
+    "title": "OOP Advanced",
+    "groups": [
+      {
+        "label": "Encapsulation",
+        "nodes": ["Private Attrs", "@property"]
+      },
+      {
+        "label": "Abstraction",
+        "nodes": ["ABC Module", "Abstract Methods"]
+      },
+      {
+        "label": "Polymorphism",
+        "nodes": ["Method Overload", "Duck Typing"]
+      }
+    ]
+  },
+  {
+    "_slide": 8,
+    "_variant": "B",
+    "_note": "3 groups × 3 nodes = 9 total — Variant B",
+    "title": "Modules",
+    "groups": [
+      {
+        "label": "Built-in",
+        "nodes": ["os / sys", "math / random", "datetime"]
+      },
+      {
+        "label": "Custom",
+        "nodes": ["import", "__init__.py", "Packages"]
+      },
+      {
+        "label": "External",
+        "nodes": ["pip install", "requests", "dotenv"],
+        "accent": true
+      }
+    ]
+  },
+  {
+    "_slide": 9,
+    "_variant": "A",
+    "_note": "2 groups × 3 nodes = 6 total — Variant A",
+    "title": "File & I/O",
+    "groups": [
+      {
+        "label": "File Ops",
+        "nodes": ["open / close", "read / write", "with statement"]
+      },
+      {
+        "label": "Formats",
+        "nodes": ["JSON", "CSV", "Pickle"],
+        "crossTo": [0]
+      }
+    ]
+  },
+  {
+    "_slide": 10,
+    "_variant": "B",
+    "_note": "3 groups × 3 nodes = 9 total — Variant B",
+    "title": "Error Handling",
+    "groups": [
+      {
+        "label": "Exceptions",
+        "nodes": ["try / except", "finally", "raise"]
+      },
+      {
+        "label": "Custom Errors",
+        "nodes": ["Exception Class", "Custom Message", "Chaining"]
+      },
+      {
+        "label": "Builtins",
+        "nodes": ["ValueError", "TypeError", "KeyError"]
+      }
+    ]
+  },
+  {
+    "_slide": 11,
+    "_variant": "C",
+    "_note": "3 groups × 4 nodes = 12 total — Variant C (dense)",
+    "title": "Itertools",
+    "groups": [
+      {
+        "label": "Infinite",
+        "nodes": ["count()", "cycle()", "repeat()", "islice()"]
+      },
+      {
+        "label": "Combinatoric",
+        "nodes": ["combinations()", "permutations()", "product()", "chain()"]
+      },
+      {
+        "label": "Grouping",
+        "nodes": ["groupby()", "starmap()", "zip_longest()", "accumulate()"]
+      }
+    ]
+  },
+  {
+    "_slide": 12,
+    "_variant": "C",
+    "_note": "4 groups × 3 nodes = 12 total — Variant C (dense, 4 cols)",
+    "title": "Data Science",
+    "accentColor": "#22d3a0",
+    "groups": [
+      {
+        "label": "NumPy",
+        "nodes": ["ndarray", "Broadcasting", "ufuncs"],
+        "accent": true
+      },
+      {
+        "label": "Pandas",
+        "nodes": ["DataFrame", "Series", "GroupBy"],
+        "accent": true
+      },
+      {
+        "label": "Matplotlib",
+        "nodes": ["pyplot", "Subplots", "Styling"],
+        "accent": true
+      },
+      {
+        "label": "Scikit-learn",
+        "nodes": ["fit / predict", "Pipeline", "Metrics"],
+        "accent": true
+      }
+    ]
+  },
+  {
+    "_slide": 13,
+    "_variant": "B",
+    "_note": "3 groups × 3 nodes = 9 total — Variant B",
+    "title": "Concurrency",
+    "groups": [
+      {
+        "label": "Threading",
+        "nodes": ["Thread", "Lock / RLock", "Queue"]
+      },
+      {
+        "label": "Multiprocessing",
+        "nodes": ["Process", "Pool", "Shared Memory"]
+      },
+      {
+        "label": "Async / Await",
+        "nodes": ["asyncio", "coroutine", "event loop"],
+        "accent": true,
+        "crossTo": [0]
+      }
+    ]
+  },
+  {
+    "_slide": 14,
+    "_variant": "A",
+    "_note": "3 groups × 2 nodes = 6 total — Variant A",
+    "title": "Testing",
+    "groups": [
+      {
+        "label": "Unit Testing",
+        "nodes": ["unittest", "pytest"]
+      },
+      {
+        "label": "Mocking",
+        "nodes": ["mock.patch", "MagicMock"]
+      },
+      {
+        "label": "TDD",
+        "nodes": ["Red → Green", "Refactor"],
+        "crossTo": [0]
+      }
+    ]
+  },
+  {
+    "_slide": 15,
+    "_variant": "D",
+    "_note": "3 groups × 5 nodes = 15 total — Variant D (ultra-dense)",
+    "title": "Web Dev",
+    "groups": [
+      {
+        "label": "Flask",
+        "nodes": ["Routes", "Templates", "Blueprints", "Flask-Login", "Flask-SQL"],
+        "accent": true
+      },
+      {
+        "label": "Django",
+        "nodes": ["Models", "Views", "URLs", "Templates", "Admin"],
+        "accent": true
+      },
+      {
+        "label": "FastAPI",
+        "nodes": ["Path Ops", "Pydantic", "Depends", "Auth / JWT", "OpenAPI"],
+        "accent": true
+      }
+    ]
+  },
+  {
+    "_slide": 16,
+    "_variant": "B",
+    "_note": "3 groups × 3 nodes = 9 total — Variant B",
+    "title": "Databases",
+    "groups": [
+      {
+        "label": "SQL",
+        "nodes": ["sqlite3", "psycopg2", "Raw Queries"]
+      },
+      {
+        "label": "ORM",
+        "nodes": ["SQLAlchemy", "Django ORM", "Alembic"]
+      },
+      {
+        "label": "NoSQL",
+        "nodes": ["pymongo", "redis-py", "DynamoDB"],
+        "crossTo": [1]
+      }
+    ]
+  },
+  {
+    "_slide": 17,
+    "_variant": "C",
+    "_note": "4 groups × 3 nodes = 12 total — Variant C (dense, 4 cols)",
+    "title": "Advanced",
+    "groups": [
+      {
+        "label": "Functional",
+        "nodes": ["map()", "filter()", "reduce()"],
+        "accent": true
+      },
+      {
+        "label": "Meta",
+        "nodes": ["Metaclasses", "__slots__", "Descriptors"],
+        "accent": true
+      },
+      {
+        "label": "Performance",
+        "nodes": ["Cython", "Numba", "Profiling"],
+        "accent": true
+      },
+      {
+        "label": "Packaging",
+        "nodes": ["pyproject.toml", "wheel / sdist", "PyPI Upload"],
+        "accent": true
+      }
+    ]
+  },
+  {
+    "_slide": 18,
+    "_variant": "B",
+    "_note": "3 groups × 3 nodes = 9 total — Variant B — Career paths",
+    "title": "Career Paths",
+    "accentColor": "#f59e0b",
+    "groups": [
+      {
+        "label": "Backend",
+        "nodes": ["APIs", "Microservices", "DevOps"]
+      },
+      {
+        "label": "Data / AI",
+        "nodes": ["Data Engineer", "ML Engineer", "AI Research"]
+      },
+      {
+        "label": "Automation",
+        "nodes": ["Scripting", "Web Scraping", "Bot Dev"],
+        "crossTo": [0]
+      }
+    ]
+  }
+]

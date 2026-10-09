@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RoadmapGen — Programming Carousel Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07080a;--surf:#0e1014;--surf2:#161820;--surf3:#1c1f26;
+  --border:#22252e;--border2:#2a2e3a;--border3:#343848;
+  --txt:#dde0ea;--txt2:#6e7485;--txt3:#3a3e4a;
+  --acc:#38bdf8;--acc2:#0ea5e9;--acc-dim:rgba(56,189,248,.12);
+  --grn:#22d3a0;--red:#f43f5e;--amber:#f59e0b;
+  /* SLIDE TOKENS */
+  --sl-bg:#070d15;--sl-bg2:#0a0f1a;
+  --sl-white:#ffffff;--sl-blue:#38bdf8;
+  --sl-glow:rgba(56,189,248,.18);
+  --sl-pill-bg:rgba(255,255,255,.08);
+  --sl-pill-border:rgba(255,255,255,.15);
+  --slide-w:540px;--slide-h:675px;
+}
+html,body{height:100%;overflow:hidden;font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border3);border-radius:4px}
+
+/* ── TOP BAR ── */
+#topbar{height:48px;display:flex;align-items:center;gap:12px;padding:0 18px;
+  background:var(--surf);border-bottom:1px solid var(--border);flex-shrink:0;z-index:20}
+.tb-logo{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;
+  letter-spacing:-.02em;color:var(--acc);white-space:nowrap}
+.tb-logo span{color:var(--txt3)}
+.tb-sep{width:1px;height:18px;background:var(--border2);flex-shrink:0}
+.tb-label{font-size:9px;font-weight:700;color:var(--txt3);letter-spacing:.14em;text-transform:uppercase}
+.tb-lang{font-size:11px;font-weight:600;color:var(--acc);background:var(--acc-dim);
+  border:1px solid rgba(56,189,248,.25);padding:3px 10px;border-radius:20px;
+  display:none}
+#tb-lang-badge{display:none}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tb-badge{font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--surf2);border:1px solid var(--border2);color:var(--txt2);
+  padding:3px 9px;border-radius:20px;white-space:nowrap}
+
+/* ── MAIN LAYOUT ── */
+#layout{display:grid;grid-template-columns:300px 1fr 270px;height:calc(100vh - 48px);overflow:hidden}
+.panel{background:var(--surf);display:flex;flex-direction:column;overflow:hidden}
+.panel.left{border-right:1px solid var(--border)}
+.panel.right{border-left:1px solid var(--border)}
+.ph{padding:10px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ph-title{font-size:8.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--txt3)}
+.ph-action{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--acc);cursor:pointer;opacity:.8}
+.ph-action:hover{opacity:1}
+.pb{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+
+/* ── FIELD LABELS ── */
+.flbl{font-size:8.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--txt3);margin-bottom:4px;display:block}
+.finp{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:7px;
+  color:var(--txt);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;
+  padding:8px 10px;outline:none;transition:border-color .18s}
+.finp:focus{border-color:var(--acc)}
+.finp::placeholder{color:var(--txt3)}
+
+/* ── JSON EDITOR ── */
+#json-ta{width:100%;min-height:200px;max-height:280px;background:var(--bg);
+  border:1.5px solid var(--border);border-radius:8px;
+  color:#7dd3fc;font-family:'Space Mono',monospace;font-size:9.5px;
+  line-height:1.8;padding:10px 11px;resize:vertical;outline:none;transition:border-color .18s}
+#json-ta:focus{border-color:var(--acc)}
+#json-ta.ok{border-color:var(--grn)}
+#json-ta.err{border-color:var(--red)}
+#json-status{font-size:9.5px;font-weight:600;padding:5px 9px;border-radius:6px;display:none}
+#json-status.show{display:block}
+#json-status.ok{background:rgba(34,211,160,.07);color:var(--grn);border:1px solid rgba(34,211,160,.2)}
+#json-status.err{background:rgba(244,63,94,.07);color:var(--red);border:1px solid rgba(244,63,94,.2)}
+#json-status.warn{background:rgba(245,158,11,.07);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+
+/* ── BUTTONS ── */
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 14px;
+  border-radius:8px;font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;
+  cursor:pointer;border:none;transition:all .15s;width:100%;letter-spacing:.01em}
+.btn:disabled{opacity:.28;cursor:not-allowed}
+.btn-primary{background:var(--acc);color:#000}
+.btn-primary:hover:not(:disabled){background:#67d3fa;transform:translateY(-1px);box-shadow:0 6px 24px rgba(56,189,248,.3)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border2);color:var(--txt2)}
+.btn-ghost:hover:not(:disabled){border-color:var(--txt2);color:var(--txt)}
+.btn-grn{background:rgba(34,211,160,.08);border:1.5px solid rgba(34,211,160,.28);color:var(--grn)}
+.btn-grn:hover:not(:disabled){background:rgba(34,211,160,.14)}
+.btn-red{background:rgba(244,63,94,.08);border:1.5px solid rgba(244,63,94,.28);color:var(--red)}
+.btn-red:hover:not(:disabled){background:rgba(244,63,94,.14)}
+.btn-sm{padding:7px 11px;font-size:10.5px}
+.btn-row{display:grid;gap:6px}
+.btn-row.col2{grid-template-columns:1fr 1fr}
+.btn-row.col3{grid-template-columns:1fr 1fr 1fr}
+.btn svg{width:13px;height:13px;flex-shrink:0}
+
+/* ── DIVIDER ── */
+.hdiv{height:1px;background:var(--border);flex-shrink:0}
+
+/* ── PROGRESS BAR ── */
+#prog-wrap{display:none;flex-direction:column;gap:5px;padding:10px 12px;
+  background:var(--surf2);border-radius:8px;border:1px solid var(--border2)}
+#prog-wrap.show{display:flex}
+#prog-bar-outer{height:4px;background:var(--border2);border-radius:2px;overflow:hidden}
+#prog-bar{height:100%;background:var(--acc);border-radius:2px;width:0%;transition:width .3s}
+#prog-label{font-size:9px;font-weight:700;color:var(--txt2);letter-spacing:.08em}
+
+/* ── SLIDE STRIP (LEFT PANEL) ── */
+#slide-strip{display:flex;flex-direction:column;gap:6px}
+.sstrip-item{display:flex;align-items:center;gap:8px;padding:6px 8px;
+  border-radius:7px;cursor:pointer;border:1.5px solid transparent;transition:all .14s;
+  flex-shrink:0;background:var(--surf2)}
+.sstrip-item.active{border-color:var(--acc);background:var(--acc-dim)}
+.sstrip-item:hover:not(.active){border-color:var(--border2);background:var(--surf3)}
+.sstrip-thumb-wrap{width:36px;height:45px;border-radius:4px;overflow:hidden;
+  background:var(--bg);flex-shrink:0;position:relative}
+.sstrip-thumb-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:8px;color:var(--txt3)}
+.sstrip-info{flex:1;min-width:0}
+.sstrip-num{font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--txt3);margin-bottom:2px}
+.sstrip-type{font-size:10px;font-weight:600;color:var(--txt2);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sstrip-badge{font-size:7.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 7px;border-radius:10px;flex-shrink:0}
+.badge-cover{background:rgba(56,189,248,.15);color:var(--acc)}
+.badge-tree{background:rgba(34,211,160,.1);color:var(--grn)}
+.badge-cta{background:rgba(245,158,11,.1);color:var(--amber)}
+
+/* ── CENTER STAGE ── */
+#center{background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+#stage-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  padding:20px;position:relative}
+#slide-frame{width:var(--slide-w);height:var(--slide-h);flex-shrink:0;
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(255,255,255,.06),0 20px 60px rgba(0,0,0,.6);
+  position:relative}
+#stage-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;color:var(--txt3);font-size:13px;text-align:center;height:100%}
+#stage-empty svg{opacity:.2}
+#stage-empty p{opacity:.4;font-size:11px;max-width:240px;line-height:1.6}
+#stage-nav{display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:12px 20px;border-top:1px solid var(--border);flex-shrink:0;
+  background:var(--surf)}
+.nav-btn{background:var(--surf2);border:1.5px solid var(--border2);color:var(--txt2);
+  width:34px;height:34px;border-radius:7px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;transition:all .14s;font-size:14px}
+.nav-btn:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+.nav-btn:disabled{opacity:.25;cursor:not-allowed}
+#nav-label{font-size:11px;font-weight:600;color:var(--txt2);min-width:80px;text-align:center}
+.nav-dots{display:flex;gap:4px;align-items:center;flex-wrap:wrap;max-width:200px;justify-content:center}
+.nav-dot{width:5px;height:5px;border-radius:50%;background:var(--border3);cursor:pointer;transition:all .14s}
+.nav-dot.active{background:var(--acc);width:14px;border-radius:3px}
+.nav-dot:hover:not(.active){background:var(--txt3)}
+
+/* ── RIGHT PANEL CONTROLS ── */
+.ctrl-section{display:flex;flex-direction:column;gap:6px}
+.ctrl-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ctrl-stat{background:var(--surf2);border:1px solid var(--border);border-radius:6px;
+  padding:7px 10px;flex:1;text-align:center}
+.ctrl-stat-n{font-size:16px;font-weight:700;color:var(--acc);font-family:'Space Mono',monospace}
+.ctrl-stat-l{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3)}
+.slide-info-box{background:var(--surf2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.si-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.si-row:last-child{margin-bottom:0}
+.si-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3)}
+.si-val{font-size:11px;font-weight:600;color:var(--txt2)}
+.si-val.accent{color:var(--acc)}
+.layout-variant-badge{font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 8px;border-radius:10px;background:rgba(56,189,248,.12);color:var(--acc)}
+
+/* ════════════════════════════════════════════════════════
+   SLIDE STYLES — 540×675 coordinate space
+════════════════════════════════════════════════════════ */
+.slide-root{
+  width:540px;height:675px;position:relative;overflow:hidden;
+  background:var(--sl-bg);font-family:'Space Grotesk',sans-serif;
+  color:var(--sl-white);
+}
+
+/* ── GLOW LAYER ── */
+.sl-glow{
+  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:400px;height:300px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(56,189,248,.22) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+.sl-glow-center{
+  position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);
+  width:500px;height:400px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(14,22,40,.0) 0%,rgba(14,165,233,.08) 30%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+/* ── RAIL LINE (horizontal line + circles flanking title) ── */
+.sl-rail{
+  position:absolute;left:0;right:0;display:flex;align-items:center;z-index:2;
+}
+.sl-rail-line{flex:1;height:1px;background:rgba(255,255,255,.22)}
+.sl-rail-dot{width:6px;height:6px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);flex-shrink:0}
+
+/* ── BRAND PILLS (bottom) ── */
+.sl-bottom-bar{
+  position:absolute;bottom:28px;left:36px;right:36px;
+  display:flex;align-items:center;justify-content:space-between;z-index:5;
+}
+.sl-pill{
+  display:flex;align-items:center;gap:0;
+  background:var(--sl-pill-bg);border:1px solid var(--sl-pill-border);
+  border-radius:100px;padding:6px 16px;
+  font-size:11px;font-weight:700;letter-spacing:.04em;color:rgba(255,255,255,.75);
+  font-family:'Space Grotesk',sans-serif;
+}
+.sl-pill.swipe span{margin-left:6px;font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.1em}
+
+/* ══ COVER SLIDE ══ */
+.s-cover{
+  width:540px;height:675px;position:relative;overflow:hidden;
+  background:var(--sl-bg);
+}
+.cov-diagonal{
+  position:absolute;left:0;right:0;top:0;bottom:0;
+  background:linear-gradient(145deg,#050a12 0%,#0a1422 42%,#0d1928 55%,#060b14 100%);
+  z-index:0;
+}
+.cov-glow{
+  position:absolute;top:-40px;right:-40px;width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(56,189,248,.24) 0%,transparent 65%);
+  z-index:1;
+}
+.cov-glow2{
+  position:absolute;bottom:-60px;left:-40px;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(14,165,233,.12) 0%,transparent 65%);
+  z-index:1;
+}
+.cov-logo-area{
+  position:absolute;top:26px;left:32px;z-index:5;
+  display:flex;align-items:center;gap:10px;
+}
+.cov-logo-mark{
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(56,189,248,.15);border:1.5px solid rgba(56,189,248,.35);
+  display:flex;align-items:center;justify-content:center;
+}
+.cov-logo-mark svg{width:16px;height:16px;stroke:var(--sl-blue)}
+.cov-logo-handle{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.55);letter-spacing:.04em}
+.cov-save-badge{
+  position:absolute;top:26px;right:32px;z-index:5;
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase;
+}
+.cov-lang-logo{
+  position:absolute;top:50%;right:32px;transform:translateY(-50%);z-index:4;
+  display:flex;flex-direction:column;gap:12px;align-items:flex-end;
+}
+.cov-lang-icon{
+  font-size:64px;line-height:1;opacity:.18;filter:blur(1px);
+}
+.cov-lang-icon.top{font-size:96px;opacity:.12;filter:blur(2px)}
+.cov-content{
+  position:absolute;top:0;left:0;right:0;bottom:0;z-index:4;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 36px;padding-top:20px;
+}
+.cov-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--sl-blue);margin-bottom:12px;opacity:.9;
+}
+.cov-title-lang{
+  font-family:'Syne',sans-serif;font-size:72px;font-weight:800;
+  color:var(--sl-blue);line-height:1;letter-spacing:-.03em;
+  margin-bottom:4px;
+}
+.cov-title-road{
+  font-family:'Syne',sans-serif;font-size:56px;font-weight:700;
+  color:var(--sl-white);line-height:1;letter-spacing:-.02em;
+  margin-bottom:20px;
+}
+.cov-car{font-size:32px;display:inline-block;margin-left:6px;vertical-align:middle}
+.cov-swipe{
+  display:flex;align-items:center;gap:8px;margin-top:8px;
+  font-size:12px;font-weight:600;color:rgba(255,255,255,.35);letter-spacing:.1em;
+}
+.cov-swipe-line{width:40px;height:1px;background:rgba(255,255,255,.25)}
+
+/* ══ TREE SLIDE BASE ══ */
+.s-tree{
+  width:540px;height:675px;position:relative;overflow:hidden;
+  background:var(--sl-bg);
+  display:flex;flex-direction:column;
+  align-items:center;
+}
+.tree-title-wrap{
+  position:relative;z-index:3;margin-top:56px;margin-bottom:0;
+  display:flex;align-items:center;width:100%;padding:0 24px;
+}
+.tree-title{
+  font-family:'Syne',sans-serif;font-size:52px;font-weight:800;
+  color:var(--sl-white);letter-spacing:-.03em;line-height:1;
+  text-align:center;flex:1;
+}
+.tree-svg-wrap{
+  flex:1;width:100%;z-index:3;position:relative;overflow:hidden;
+}
+.tree-svg-wrap svg{width:100%;height:100%}
+
+/* ══ CTA SLIDE ══ */
+.s-cta{
+  width:540px;height:675px;position:relative;overflow:hidden;
+  background:var(--sl-bg);
+}
+.cta-grid-line{
+  position:absolute;left:0;right:0;top:0;bottom:0;
+  background-image:
+    linear-gradient(rgba(56,189,248,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(56,189,248,.04) 1px,transparent 1px);
+  background-size:40px 40px;z-index:0;
+}
+.cta-content{
+  position:absolute;inset:0;z-index:3;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 48px;
+}
+.cta-icon{font-size:48px;margin-bottom:20px}
+.cta-headline{
+  font-family:'Syne',sans-serif;font-size:36px;font-weight:800;
+  color:var(--sl-white);text-align:center;line-height:1.15;
+  letter-spacing:-.02em;margin-bottom:12px;
+}
+.cta-headline em{color:var(--sl-blue);font-style:normal}
+.cta-sub{
+  font-size:15px;font-weight:400;color:rgba(255,255,255,.5);
+  text-align:center;line-height:1.6;margin-bottom:28px;
+}
+.cta-action-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--sl-blue);color:#000;
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:12px 28px;border-radius:100px;
+}
+.cta-follow{
+  margin-top:20px;font-size:11px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:rgba(255,255,255,.25);text-align:center;
+}
+
+/* ── SLIDE NUMBER BADGE ── */
+.sl-numba{
+  position:absolute;top:22px;right:32px;z-index:6;
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;
+  color:rgba(255,255,255,.3);letter-spacing:.08em;
+}
+
+/* ── NODE STYLES in SVG ── */
+/* These classes are referenced by JS-generated SVG text */
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="tb-logo">Roadmap<span>Gen</span></div>
+  <div class="tb-sep"></div>
+  <div class="tb-label">Programming Carousel Generator</div>
+  <span id="tb-lang-badge" class="tb-lang"></span>
+  <div class="tb-right">
+    <div class="tb-badge" id="slide-count-info">0 slides</div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div id="layout">
+
+  <!-- LEFT: SLIDE STRIP + CONTROLS -->
+  <div class="panel left">
+    <div class="ph"><span class="ph-title">Slides</span><span class="ph-action" onclick="loadSample()">Load Sample</span></div>
+    <div class="pb" id="strip-pb">
+      <div id="slide-strip">
+        <div style="color:var(--txt3);font-size:11px;text-align:center;padding:20px 0;line-height:1.6">
+          Configure your carousel in the<br>right panel, then generate.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER: PREVIEW -->
+  <div id="center">
+    <div id="stage-wrap">
+      <div id="slide-frame">
+        <div id="stage-empty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="3" y="3" width="18" height="18" rx="3"/>
+            <path d="M3 9h18M9 21V9"/>
+          </svg>
+          <div style="font-size:13px;font-weight:600;color:var(--txt2)">No slides yet</div>
+          <p>Paste JSON data and hit Generate, or load a sample to get started.</p>
+        </div>
+        <div id="slide-content" style="display:none;width:100%;height:100%;"></div>
+      </div>
+    </div>
+    <div id="stage-nav">
+      <button class="nav-btn" id="nav-prev" onclick="navigate(-1)" disabled>&#8592;</button>
+      <div class="nav-dots" id="nav-dots"></div>
+      <div id="nav-label">— / —</div>
+      <button class="nav-btn" id="nav-next" onclick="navigate(1)" disabled>&#8594;</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: CONFIG + EXPORT -->
+  <div class="panel right">
+    <div class="ph"><span class="ph-title">Configuration</span></div>
+    <div class="pb">
+
+      <!-- LANGUAGE SETTINGS -->
+      <div class="ctrl-section">
+        <label class="flbl">Language / Topic Name</label>
+        <input class="finp" id="inp-lang" placeholder="e.g. Python, JavaScript, Rust…" oninput="updateLangBadge()">
+      </div>
+      <div class="ctrl-section">
+        <label class="flbl">Creator Handle</label>
+        <input class="finp" id="inp-handle" placeholder="@yourusername" value="@vmsoit">
+      </div>
+      <div class="ctrl-section">
+        <label class="flbl">CTA Text (last slide)</label>
+        <input class="finp" id="inp-cta" placeholder="Follow for more tips!" value="Follow for the full roadmap!">
+      </div>
+
+      <div class="hdiv"></div>
+
+      <!-- JSON DATA -->
+      <div class="ctrl-section">
+        <label class="flbl">Roadmap JSON Data</label>
+        <textarea id="json-ta" spellcheck="false" placeholder='Paste your roadmap JSON here…&#10;&#10;Format: array of slide objects.&#10;Each slide: { "title": "Basics", "nodes": [...] }' oninput="onJsonInput()"></textarea>
+        <div id="json-status"></div>
+      </div>
+
+      <div class="hdiv"></div>
+
+      <!-- GENERATE -->
+      <button class="btn btn-primary" id="gen-btn" onclick="generateSlides()" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Generate Carousel
+      </button>
+
+      <!-- PROGRESS -->
+      <div id="prog-wrap">
+        <div id="prog-bar-outer"><div id="prog-bar"></div></div>
+        <div id="prog-label">Ready</div>
+      </div>
+
+      <div class="hdiv" id="export-div" style="display:none"></div>
+
+      <!-- EXPORT BUTTONS -->
+      <div id="export-section" style="display:none">
+        <div class="ctrl-section">
+          <div class="ctrl-row">
+            <div class="ctrl-stat">
+              <div class="ctrl-stat-n" id="stat-total">0</div>
+              <div class="ctrl-stat-l">Total Slides</div>
+            </div>
+            <div class="ctrl-stat">
+              <div class="ctrl-stat-n" id="stat-tree">0</div>
+              <div class="ctrl-stat-l">Tree Slides</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-info-box" id="slide-info-box" style="margin-top:0">
+          <div class="si-row">
+            <span class="si-lbl">Current Slide</span>
+            <span class="si-val accent" id="si-current">—</span>
+          </div>
+          <div class="si-row">
+            <span class="si-lbl">Type</span>
+            <span class="si-val" id="si-type">—</span>
+          </div>
+          <div class="si-row">
+            <span class="si-lbl">Layout</span>
+            <span class="layout-variant-badge" id="si-layout">—</span>
+          </div>
+          <div class="si-row">
+            <span class="si-lbl">Nodes</span>
+            <span class="si-val" id="si-nodes">—</span>
+          </div>
+        </div>
+
+        <div class="btn-row col2" style="margin-top:6px">
+          <button class="btn btn-ghost btn-sm" onclick="exportCurrent()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            This Slide
+          </button>
+          <button class="btn btn-grn btn-sm" onclick="exportAll()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Export ZIP
+          </button>
+        </div>
+        <button class="btn btn-red btn-sm" id="cancel-btn" onclick="cancelExport()" style="display:none">
+          Cancel Export
+        </button>
+      </div>
+
+    </div><!-- /pb -->
+  </div><!-- /right panel -->
+</div><!-- /layout -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   CORE STATE
+═══════════════════════════════════════════════════════════ */
+let SLIDES = [];
+let IDX = 0;
+let EXPORTING = false;
+let CANCEL = false;
+
+const W = 540, H = 675;
+
+/* ─── HELPERS ─── */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function getLang(){ return document.getElementById('inp-lang').value.trim() || 'Python'; }
+function getHandle(){ return document.getElementById('inp-handle').value.trim() || '@vmsoit'; }
+function getCTA(){ return document.getElementById('inp-cta').value.trim() || 'Follow for the full roadmap!'; }
+function updateLangBadge(){
+  const v = getLang();
+  const b = document.getElementById('tb-lang-badge');
+  b.textContent = v; b.style.display = v ? 'inline-flex' : 'none';
+}
+
+/* ─── JSON VALIDATION ─── */
+const jta = document.getElementById('json-ta');
+function onJsonInput(){
+  const v = jta.value.trim();
+  if(!v){ jta.className=''; hideStatus(); document.getElementById('gen-btn').disabled=true; return; }
+  try{
+    const p = JSON.parse(v);
+    jta.className = 'ok';
+    showStatus('✓ Valid JSON — ' + (Array.isArray(p)?p.length+' slides':'object') + ' detected','ok');
+    document.getElementById('gen-btn').disabled = false;
+  }catch(e){
+    jta.className = 'err';
+    showStatus('✗ '+e.message,'err');
+    document.getElementById('gen-btn').disabled = true;
+  }
+}
+function showStatus(msg,type){
+  const el=document.getElementById('json-status');
+  el.textContent=msg; el.className='show '+type;
+}
+function hideStatus(){ document.getElementById('json-status').className=''; }
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT VARIANT ENGINE
+   Determines the best SVG layout based on total node count
+   per slide. Counts all leaf nodes across all tree groups.
+═══════════════════════════════════════════════════════════ */
+
+// Count total displayable nodes in a slide's groups
+function countNodes(groups){
+  if(!groups || !groups.length) return 0;
+  let n = 0;
+  groups.forEach(g => {
+    if(g.nodes) n += g.nodes.length;
+  });
+  return n;
+}
+
+// Pick layout variant
+// variant A: up to 6 total nodes (standard 3-col)
+// variant B: 7-9 nodes (compact 3-col, smaller font)
+// variant C: 10-13 nodes (4-col dense)
+// variant D: 14+ nodes (2-row dense)
+function pickVariant(totalNodes, groupCount){
+  if(totalNodes <= 6) return 'A';
+  if(totalNodes <= 9) return 'B';
+  if(totalNodes <= 13) return 'C';
+  return 'D';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TREE SVG RENDERER
+   Produces an inline SVG for the tree diagram area.
+   Input: groups = [{ label, nodes: [...], accent? }]
+   The SVG fills the full 540×520 area (below title zone).
+═══════════════════════════════════════════════════════════ */
+function renderTreeSVG(title, groups, variant, totalNodes, accentColor){
+  const sw = 540, sh = 520;
+  const nodeCount = totalNodes;
+  const grpCount = groups.length;
+  const acc = accentColor || '#38bdf8';
+
+  // Typography sizes by variant
+  const sizes = {
+    A: { grpFont:18, grpH:40, nodeFont:15, nodeH:30, nodeW:130, titleToGrp:70, grpToNode:50, nodeGap:12, rootW:200 },
+    B: { grpFont:15, grpH:36, nodeFont:13, nodeH:26, nodeW:118, titleToGrp:60, grpToNode:44, nodeGap:10, rootW:180 },
+    C: { grpFont:13, grpH:32, nodeFont:11.5, nodeH:24, nodeW:108, titleToGrp:55, grpToNode:40, nodeGap:8, rootW:160 },
+    D: { grpFont:12, grpH:30, nodeFont:10.5, nodeH:22, nodeW:100, titleToGrp:50, grpToNode:36, nodeGap:7, rootW:150 },
+  };
+  const s = sizes[variant] || sizes.A;
+
+  // ── COMPUTE COLUMN LAYOUT ──
+  // Each group is a column. We distribute columns across the slide width.
+  const sidePad = 28;
+  const colGap = variant === 'D' ? 10 : 14;
+  const colW = Math.min(s.nodeW + 10, Math.floor((sw - 2*sidePad - colGap*(grpCount-1)) / grpCount));
+
+  // Column X centers
+  const totalColW = colW * grpCount + colGap * (grpCount - 1);
+  const startX = (sw - totalColW) / 2 + colW / 2;
+  const colCenters = Array.from({length:grpCount}, (_,i) => startX + i*(colW+colGap));
+
+  // ── ROOT NODE POSITION ──
+  const rootX = sw / 2;
+  const rootY = 28;
+  const rootW = Math.min(s.rootW, 200);
+  const rootH = 38;
+
+  // ── GROUP ROW Y ──
+  const grpY = rootY + rootH + s.titleToGrp;
+
+  // ── NODE ROWS ──
+  // Variant D uses 2 columns per group stacked; otherwise linear
+  // For now: linear stack per group
+  const nodeStartY = grpY + s.grpH + s.grpToNode;
+
+  // ── COMPUTE MAX NODES IN ANY GROUP for height ──
+  const maxNodes = Math.max(...groups.map(g=>(g.nodes||[]).length));
+  const neededH = nodeStartY + maxNodes * (s.nodeH + s.nodeGap) + 40;
+  const svgH = Math.max(sh, neededH);
+
+  // ── SVG DEFS ──
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${sw} ${svgH}" width="${sw}" height="${svgH}">`;
+  svg += `<defs>
+    <filter id="glow-f" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <radialGradient id="bg-grad" cx="50%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="${acc}" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#070d15" stop-opacity="0"/>
+    </radialGradient>
+  </defs>`;
+
+  // Background glow
+  svg += `<rect width="${sw}" height="${svgH}" fill="url(#bg-grad)"/>`;
+
+  // ── RAIL LINE around title ──
+  // We draw the rail at rootY + rootH/2
+  const railY = rootY + rootH/2;
+  const railPad = 16;
+  const titleHalf = rootW/2 + 10;
+  // Left rail
+  svg += `<line x1="${railPad}" y1="${railY}" x2="${rootX - titleHalf}" y2="${railY}" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>`;
+  svg += `<circle cx="${railPad + 5}" cy="${railY}" r="3" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.2"/>`;
+  // Right rail
+  svg += `<line x1="${rootX + titleHalf}" y1="${railY}" x2="${sw - railPad}" y2="${railY}" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>`;
+  svg += `<circle cx="${sw - railPad - 5}" cy="${railY}" r="3" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.2"/>`;
+
+  // ── ROOT NODE (title box) ──
+  svg += `<rect x="${rootX - rootW/2}" y="${rootY}" width="${rootW}" height="${rootH}" rx="8" fill="rgba(255,255,255,0.0)" stroke="none"/>`;
+  svg += `<text x="${rootX}" y="${rootY + rootH/2}" text-anchor="middle" dominant-baseline="central"
+    font-family="'Syne',sans-serif" font-size="44" font-weight="800" fill="#ffffff" letter-spacing="-1">${esc(title)}</text>`;
+
+  // ── TRUNK LINE (root → horizontal branch bar) ──
+  const trunkBotY = grpY - 8;
+  const branchBarY = grpY - 4;
+  svg += `<line x1="${rootX}" y1="${rootY + rootH}" x2="${rootX}" y2="${trunkBotY}" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"/>`;
+
+  // ── HORIZONTAL BRANCH BAR ──
+  if(grpCount > 1){
+    const barLeft = colCenters[0];
+    const barRight = colCenters[grpCount-1];
+    svg += `<line x1="${barLeft}" y1="${branchBarY}" x2="${barRight}" y2="${branchBarY}" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"/>`;
+  }
+
+  // ── GROUPS & NODES ──
+  groups.forEach((grp, gi) => {
+    const cx = colCenters[gi];
+    const nodes = grp.nodes || [];
+    const isAccented = grp.accent === true;
+
+    // Drop line from branch bar to group label
+    svg += `<line x1="${cx}" y1="${branchBarY}" x2="${cx}" y2="${grpY}" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" marker-end="url(#arr)"/>`;
+
+    // Group label box
+    const glW = Math.min(colW + 4, 140);
+    const glH = s.grpH;
+    const glX = cx - glW/2;
+    const glY = grpY;
+
+    if(isAccented){
+      // Blue filled rounded box (like "Advanced" slide)
+      svg += `<rect x="${glX}" y="${glY}" width="${glW}" height="${glH}" rx="${glH/2}"
+        fill="${acc}" stroke="none"/>`;
+      svg += `<text x="${cx}" y="${glY + glH/2}" text-anchor="middle" dominant-baseline="central"
+        font-family="'Space Grotesk',sans-serif" font-size="${s.grpFont}" font-weight="700"
+        fill="#000">${esc(grp.label)}</text>`;
+    } else {
+      // Plain text label (like "Basics", "Data Structure")
+      svg += `<text x="${cx}" y="${glY + glH/2}" text-anchor="middle" dominant-baseline="central"
+        font-family="'Space Grotesk',sans-serif" font-size="${s.grpFont}" font-weight="600"
+        fill="rgba(255,255,255,0.9)">${esc(grp.label)}</text>`;
+    }
+
+    // Nodes (stacked below group label)
+    const nodeX = cx;
+    let prevNodeBottomY = glY + glH;
+
+    nodes.forEach((nd, ni) => {
+      const ndText = typeof nd === 'string' ? nd : nd.text || nd.label || String(nd);
+      const ndAccent = typeof nd === 'object' && nd.accent;
+      const topY = prevNodeBottomY + s.grpToNode / (ni===0?1:1.2);
+      const nodeCY = (ni === 0) ? prevNodeBottomY + s.grpToNode : prevNodeBottomY + s.nodeGap + s.nodeH;
+
+      // Connector line from previous bottom to this node
+      const connFromY = (ni === 0) ? glY + glH : prevNodeBottomY;
+      const connToY = nodeCY;
+      svg += `<line x1="${nodeX}" y1="${connFromY}" x2="${nodeX}" y2="${connToY - s.nodeH/2 - 2}"
+        stroke="rgba(255,255,255,0.2)" stroke-width="1" marker-end="url(#arr)"/>`;
+
+      // Node text (plain, like reference design)
+      svg += `<text x="${nodeX}" y="${nodeCY}" text-anchor="middle" dominant-baseline="central"
+        font-family="'Space Grotesk',sans-serif" font-size="${s.nodeFont}" font-weight="500"
+        fill="rgba(255,255,255,0.82)">${esc(ndText)}</text>`;
+
+      prevNodeBottomY = nodeCY + s.nodeH/2;
+    });
+
+    // Cross-connect last nodes if cross array specified
+    // (handled after all groups)
+  });
+
+  // ── CROSS CONNECTIONS ──
+  // If a group specifies crossTo: [groupIndex], draw a horizontal arrow at last node row
+  const lastNodeYPerGroup = {};
+  groups.forEach((grp, gi) => {
+    const nodes = grp.nodes || [];
+    const glH = s.grpH;
+    let prevY = grpY + glH;
+    nodes.forEach((nd, ni) => {
+      const cy = (ni===0) ? prevY + s.grpToNode : prevY + s.nodeGap + s.nodeH;
+      prevY = cy + s.nodeH/2;
+    });
+    lastNodeYPerGroup[gi] = prevY - s.nodeH/2;
+  });
+
+  // Check if any groups have a crossTo defined
+  groups.forEach((grp, gi) => {
+    if(!grp.crossTo && !grp.crossFrom) return;
+    const targets = grp.crossTo || [];
+    targets.forEach(ti => {
+      if(ti >= grpCount) return;
+      const fromX = colCenters[gi];
+      const toX = colCenters[ti];
+      const atY = Math.max(lastNodeYPerGroup[gi]||0, lastNodeYPerGroup[ti]||0);
+      // Bidirectional horizontal arrow
+      svg += `<line x1="${fromX + 8}" y1="${atY}" x2="${toX - 8}" y2="${atY}"
+        stroke="rgba(255,255,255,0.3)" stroke-width="1"
+        marker-start="url(#arr-rev)" marker-end="url(#arr)"/>`;
+    });
+  });
+
+  // ── ARROW MARKER DEFS ──
+  svg = svg.replace('</defs>', `
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M2 2L8 5L2 8" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-rev" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M8 2L2 5L8 8" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>`);
+
+  svg += '</svg>';
+  return svg;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SLIDE HTML BUILDERS
+═══════════════════════════════════════════════════════════ */
+
+function mkSlideNum(n, total){
+  return `<div class="sl-numba">${n}/${total}</div>`;
+}
+
+function mkBottomBar(handle, isSwipe=true, ctaText='SWIPE'){
+  return `
+  <div class="sl-bottom-bar">
+    <div class="sl-pill">${esc(handle)}</div>
+    ${isSwipe ? `<div class="sl-pill swipe">${esc(ctaText)}<span>&gt;&gt;&gt;</span></div>` : ''}
+  </div>`;
+}
+
+// COVER SLIDE
+function buildCoverSlide(lang, handle, icon){
+  return `
+<div class="s-cover">
+  <div class="cov-diagonal"></div>
+  <div class="cov-glow"></div>
+  <div class="cov-glow2"></div>
+
+  <div class="cov-logo-area">
+    <div class="cov-logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="8.5" x2="22" y2="8.5"/></svg>
+    </div>
+    <div class="cov-logo-handle">${esc(handle)}</div>
+  </div>
+
+  <div class="cov-save-badge">SAVE IT</div>
+
+  <div class="cov-lang-logo">
+    <div class="cov-lang-icon top">${icon||'🐍'}</div>
+    <div class="cov-lang-icon">${icon||'🐍'}</div>
+  </div>
+
+  <div class="cov-content">
+    <div class="cov-eyebrow">Complete Roadmap</div>
+    <div class="cov-title-lang">${esc(lang)}<span class="cov-car">🚗</span></div>
+    <div class="cov-title-road">roadmap</div>
+    <div class="cov-swipe"><div class="cov-swipe-line"></div>Swipe</div>
+  </div>
+</div>`;
+}
+
+// TREE SLIDE
+function buildTreeSlide(slide, idx, total, lang, handle){
+  const groups = slide.groups || [];
+  const totalNodes = countNodes(groups);
+  const variant = pickVariant(totalNodes, groups.length);
+  const accentColor = slide.accentColor || '#38bdf8';
+  const treeSVG = renderTreeSVG(slide.title || 'Slide', groups, variant, totalNodes, accentColor);
+  const num = idx + 1;
+
+  return {
+    html: `
+<div class="s-tree">
+  <div class="sl-glow"></div>
+  ${mkSlideNum(num, total)}
+  <div class="tree-svg-wrap">
+    ${treeSVG}
+  </div>
+  ${mkBottomBar(handle, idx < total - 1, 'SWIPE')}
+</div>`,
+    variant,
+    totalNodes,
+    groupCount: groups.length,
+  };
+}
+
+// CTA / OUTRO SLIDE
+function buildCTASlide(lang, handle, ctaText, total){
+  return `
+<div class="s-cta">
+  <div class="sl-glow"></div>
+  <div class="cta-grid-line"></div>
+  ${mkSlideNum(total, total)}
+  <div class="cta-content">
+    <div class="cta-icon">👉</div>
+    <div class="cta-headline">Master <em>${esc(lang)}</em> from scratch</div>
+    <div class="cta-sub">${esc(ctaText)}<br>Save this post & share with a friend!</div>
+    <div class="cta-action-btn">Follow Now ↗</div>
+    <div class="cta-follow">FOLLOW · SAVE · SHARE THIS POST</div>
+  </div>
+  ${mkBottomBar(handle, false)}
+</div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GENERATE SLIDES
+═══════════════════════════════════════════════════════════ */
+function generateSlides(){
+  const raw = jta.value.trim();
+  let data;
+  try{ data = JSON.parse(raw); }
+  catch(e){ showStatus('✗ ' + e.message,'err'); return; }
+
+  const lang = getLang();
+  const handle = getHandle();
+  const ctaText = getCTA();
+  const icon = getIcon(lang);
+
+  // Normalize: accept array of slide objects or { slides: [...] }
+  let slides = Array.isArray(data) ? data : (data.slides || []);
+
+  // Clamp to 18 content slides (+ cover + CTA = 20 max)
+  if(slides.length > 18) slides = slides.slice(0, 18);
+
+  const total = slides.length + 2; // cover + content + CTA
+  SLIDES = [];
+
+  // COVER
+  SLIDES.push({
+    type: 'cover',
+    html: buildCoverSlide(lang, handle, icon),
+    label: lang + ' Roadmap',
+    variant: 'cover',
+    nodes: 0,
+  });
+
+  // CONTENT SLIDES
+  slides.forEach((slide, i) => {
+    const result = buildTreeSlide(slide, i + 1, total, lang, handle);
+    SLIDES.push({
+      type: 'tree',
+      html: result.html,
+      label: slide.title || ('Slide ' + (i+2)),
+      variant: result.variant,
+      nodes: result.totalNodes,
+      groups: result.groupCount,
+    });
+  });
+
+  // CTA
+  SLIDES.push({
+    type: 'cta',
+    html: buildCTASlide(lang, handle, ctaText, total),
+    label: 'Call to Action',
+    variant: 'cta',
+    nodes: 0,
+  });
+
+  IDX = 0;
+  renderStrip();
+  showSlide(0);
+  showExportPanel();
+  updateLangBadge();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STRIP & NAVIGATION
+═══════════════════════════════════════════════════════════ */
+function renderStrip(){
+  const strip = document.getElementById('slide-strip');
+  strip.innerHTML = '';
+  SLIDES.forEach((sl, i) => {
+    const badgeClass = sl.type==='cover'?'badge-cover':sl.type==='cta'?'badge-cta':'badge-tree';
+    const badgeText = sl.type==='cover'?'Cover':sl.type==='cta'?'CTA':'Tree '+sl.variant;
+    const item = document.createElement('div');
+    item.className = 'sstrip-item' + (i===IDX?' active':'');
+    item.innerHTML = `
+      <div class="sstrip-thumb-wrap">
+        <div class="sstrip-thumb-inner" style="background:${i===IDX?'rgba(56,189,248,.08)':''}">
+          ${i===0?'🖼':i===SLIDES.length-1?'📣':'🌿'}
+        </div>
+      </div>
+      <div class="sstrip-info">
+        <div class="sstrip-num">Slide ${i+1} / ${SLIDES.length}</div>
+        <div class="sstrip-type">${esc(sl.label)}</div>
+      </div>
+      <span class="sstrip-badge ${badgeClass}">${badgeText}</span>`;
+    item.onclick = () => showSlide(i);
+    strip.appendChild(item);
+  });
+
+  // Update stats
+  const treeCount = SLIDES.filter(s=>s.type==='tree').length;
+  document.getElementById('stat-total').textContent = SLIDES.length;
+  document.getElementById('stat-tree').textContent = treeCount;
+  document.getElementById('slide-count-info').textContent = SLIDES.length + ' slides';
+
+  // Dots
+  const dots = document.getElementById('nav-dots');
+  dots.innerHTML = '';
+  SLIDES.forEach((sl, i) => {
+    const d = document.createElement('div');
+    d.className = 'nav-dot' + (i===IDX?' active':'');
+    d.onclick = () => showSlide(i);
+    dots.appendChild(d);
+  });
+}
+
+function showSlide(i){
+  IDX = Math.max(0, Math.min(i, SLIDES.length-1));
+  const sl = SLIDES[IDX];
+
+  // Show content
+  const frame = document.getElementById('slide-content');
+  const empty = document.getElementById('stage-empty');
+  empty.style.display = 'none';
+  frame.style.display = 'block';
+  frame.innerHTML = sl.html;
+
+  // Nav
+  document.getElementById('nav-prev').disabled = IDX === 0;
+  document.getElementById('nav-next').disabled = IDX === SLIDES.length-1;
+  document.getElementById('nav-label').textContent = (IDX+1) + ' / ' + SLIDES.length;
+
+  // Update dots + strip active
+  document.querySelectorAll('.nav-dot').forEach((d,i) => d.className = 'nav-dot'+(i===IDX?' active':''));
+  document.querySelectorAll('.sstrip-item').forEach((it,i) => it.className = 'sstrip-item'+(i===IDX?' active':''));
+
+  // Scroll strip into view
+  const items = document.querySelectorAll('.sstrip-item');
+  if(items[IDX]) items[IDX].scrollIntoView({block:'nearest',behavior:'smooth'});
+
+  // Info box
+  document.getElementById('si-current').textContent = 'Slide ' + (IDX+1);
+  document.getElementById('si-type').textContent = sl.type.charAt(0).toUpperCase() + sl.type.slice(1);
+  document.getElementById('si-layout').textContent = sl.variant === 'cover'?'Full Cover':sl.variant==='cta'?'CTA Full':('Variant '+sl.variant);
+  document.getElementById('si-nodes').textContent = sl.nodes > 0 ? sl.nodes + ' nodes, '+sl.groups+' groups' : '—';
+}
+
+function navigate(dir){
+  showSlide(IDX + dir);
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight' || e.key==='ArrowDown') navigate(1);
+  if(e.key==='ArrowLeft' || e.key==='ArrowUp') navigate(-1);
+});
+
+function showExportPanel(){
+  document.getElementById('export-section').style.display = 'flex';
+  document.getElementById('export-section').style.flexDirection = 'column';
+  document.getElementById('export-section').style.gap = '8px';
+  document.getElementById('export-div').style.display = 'block';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   EXPORT ENGINE
+═══════════════════════════════════════════════════════════ */
+function setProgress(pct, label){
+  const bar = document.getElementById('prog-bar');
+  const lbl = document.getElementById('prog-label');
+  const wrap = document.getElementById('prog-wrap');
+  bar.style.width = pct + '%';
+  lbl.textContent = label;
+  wrap.className = 'show';
+}
+function hideProgress(){ document.getElementById('prog-wrap').className = ''; }
+
+async function captureSlide(html){
+  return new Promise(resolve => {
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = `
+      position:fixed;left:-9999px;top:-9999px;
+      width:${W}px;height:${H}px;border:none;z-index:9999;
+      background:transparent;
+    `;
+    document.body.appendChild(iframe);
+
+    const iDoc = iframe.contentDocument;
+    iDoc.open();
+    iDoc.write(`<!DOCTYPE html><html><head>
+      <meta charset="UTF-8">
+      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+      <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{
+          --sl-bg:#070d15;--sl-bg2:#0a0f1a;--sl-white:#ffffff;--sl-blue:#38bdf8;
+          --sl-glow:rgba(56,189,248,.18);--sl-pill-bg:rgba(255,255,255,.08);
+          --sl-pill-border:rgba(255,255,255,.15);
+        }
+        body{width:${W}px;height:${H}px;overflow:hidden;background:#070d15;font-family:'Space Grotesk',sans-serif}
+        ${getAllSlideCSS()}
+      </style>
+    </head><body>${html}</body></html>`);
+    iDoc.close();
+
+    setTimeout(() => {
+      html2canvas(iDoc.body, {
+        width:W, height:H, scale:2,
+        useCORS:true, allowTaint:true,
+        backgroundColor:'#070d15',
+        logging:false,
+        onclone: doc => {
+          doc.body.style.cssText = `width:${W}px;height:${H}px;overflow:hidden;margin:0;padding:0;background:#070d15`;
+        }
+      }).then(canvas => {
+        document.body.removeChild(iframe);
+        resolve(canvas);
+      }).catch(() => {
+        document.body.removeChild(iframe);
+        resolve(null);
+      });
+    }, 1200);
+  });
+}
+
+function getAllSlideCSS(){
+  return Array.from(document.styleSheets)
+    .flatMap(ss => {
+      try{ return Array.from(ss.cssRules).map(r=>r.cssText); }
+      catch(e){ return []; }
+    }).join('\n');
+}
+
+async function exportCurrent(){
+  if(!SLIDES.length) return;
+  const sl = SLIDES[IDX];
+  setProgress(10, 'Rendering slide…');
+  const canvas = await captureSlide(sl.html);
+  if(!canvas){ hideProgress(); return; }
+  setProgress(90, 'Encoding PNG…');
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `slide_${String(IDX+1).padStart(2,'0')}_${slugify(sl.label)}.png`;
+    a.click(); URL.revokeObjectURL(url);
+    hideProgress();
+  }, 'image/png');
+}
+
+async function exportAll(){
+  if(!SLIDES.length || EXPORTING) return;
+  EXPORTING = true; CANCEL = false;
+  document.getElementById('cancel-btn').style.display = 'flex';
+  document.getElementById('gen-btn').disabled = true;
+
+  const zip = new JSZip();
+  const lang = getLang();
+
+  for(let i=0; i<SLIDES.length; i++){
+    if(CANCEL) break;
+    const pct = Math.round((i/SLIDES.length)*85);
+    setProgress(pct, `Rendering ${i+1}/${SLIDES.length}…`);
+    const canvas = await captureSlide(SLIDES[i].html);
+    if(canvas){
+      const blob = await new Promise(res => canvas.toBlob(res,'image/png'));
+      zip.file(`slide_${String(i+1).padStart(2,'0')}_${slugify(SLIDES[i].label)}.png`, blob);
+    }
+    await new Promise(r=>setTimeout(r,60));
+  }
+
+  if(!CANCEL){
+    setProgress(95, 'Zipping files…');
+    const zipBlob = await zip.generateAsync({type:'blob'});
+    const url = URL.createObjectURL(zipBlob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${slugify(lang)}_roadmap_carousel.zip`;
+    a.click(); URL.revokeObjectURL(url);
+  }
+
+  setProgress(100, CANCEL ? 'Cancelled.' : 'Done! ✓');
+  setTimeout(hideProgress, 2000);
+  EXPORTING = false; CANCEL = false;
+  document.getElementById('cancel-btn').style.display = 'none';
+  document.getElementById('gen-btn').disabled = false;
+}
+
+function cancelExport(){ CANCEL = true; }
+function slugify(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+
+/* ═══════════════════════════════════════════════════════════
+   LANGUAGE ICON MAP
+═══════════════════════════════════════════════════════════ */
+function getIcon(lang){
+  const map = {
+    python:'🐍',javascript:'⚡',js:'⚡',typescript:'🔷',ts:'🔷',
+    rust:'🦀',go:'🐹',java:'☕',kotlin:'🟣',swift:'🦅',
+    'c++':'⚙️',cpp:'⚙️','c#':'💎',csharp:'💎',ruby:'💎',
+    php:'🐘',r:'📊',scala:'⚗️',dart:'🎯',elixir:'💜',
+    haskell:'λ',lua:'🌙',perl:'🐪',sql:'🗄️',html:'🌐',css:'🎨',
+    bash:'🖥️',shell:'🖥️',react:'⚛️',vue:'🟢',angular:'🔴',
+    node:'🟩',nodejs:'🟩',flutter:'💙',android:'🤖',ios:'🍎',
+  };
+  const key = lang.toLowerCase().replace(/\s+/g,'');
+  return map[key] || '💻';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SAMPLE DATA LOADER
+═══════════════════════════════════════════════════════════ */
+function loadSample(){
+  const sample = [
+    {
+      "title": "Basics",
+      "groups": [
+        { "label": "Syntax", "nodes": ["Variables", "Operators"] },
+        { "label": "Control Flow", "nodes": ["if-else", "Loops"], "crossTo": [0] },
+        { "label": "Data Types", "nodes": ["int / str", "Type Cast"] }
+      ]
+    },
+    {
+      "title": "Data Structures",
+      "groups": [
+        { "label": "List", "nodes": ["Indexing", "Slicing", "Methods"] },
+        { "label": "Tuple", "nodes": ["Immutable", "Packing"] },
+        { "label": "Dict", "nodes": ["Keys", "Values", "Methods"] }
+      ]
+    },
+    {
+      "title": "Functions",
+      "groups": [
+        { "label": "Basics", "nodes": ["def", "Args", "Return", "*args / **kwargs"] },
+        { "label": "Advanced", "nodes": ["Lambda", "Decorators", "Generators", "Closures"], "accent": true }
+      ]
+    },
+    {
+      "title": "OOP",
+      "groups": [
+        { "label": "Class", "nodes": ["Attributes", "Methods"] },
+        { "label": "Inheritance", "nodes": ["super()", "Overriding"] },
+        { "label": "Magic", "nodes": ["__init__", "Dunders", "Abstract"] }
+      ]
+    },
+    {
+      "title": "Modules",
+      "groups": [
+        { "label": "Built-in", "nodes": ["math", "random", "datetime", "os", "sys"] },
+        { "label": "External", "nodes": ["pip", "requests", "numpy", "pandas"], "accent": true },
+        { "label": "Custom", "nodes": ["import", "__init__.py"] }
+      ]
+    },
+    {
+      "title": "File & IO",
+      "groups": [
+        { "label": "Handling", "nodes": ["Read", "Write", "Append"] },
+        { "label": "Formats", "nodes": ["JSON", "CSV", "XML", "YAML", "Binary"] }
+      ]
+    },
+    {
+      "title": "Advanced",
+      "groups": [
+        { "label": "Functions", "nodes": ["map()", "filter()", "zip()"], "accent": true },
+        { "label": "Concepts", "nodes": ["Decorator", "Generator", "Lambda"], "accent": true },
+        { "label": "Extras", "nodes": ["Regex", "Context Mgr", "Typing"], "accent": true }
+      ]
+    },
+    {
+      "title": "Testing",
+      "groups": [
+        { "label": "Unit Tests", "nodes": ["unittest", "pytest", "Assertions"] },
+        { "label": "Mocking", "nodes": ["mock", "patch", "Fixtures"] }
+      ]
+    }
+  ];
+
+  document.getElementById('inp-lang').value = 'Python';
+  jta.value = JSON.stringify(sample, null, 2);
+  onJsonInput();
+  updateLangBadge();
+}
+</script>
+</body>
+</html>

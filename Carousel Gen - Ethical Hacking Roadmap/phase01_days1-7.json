@@ -1,0 +1,901 @@
+[
+  {
+    "day": 1,
+    "cover": {
+      "title": "What is __Networking?__ OSI Model Explained",
+      "hook": "Do you know how your data actually travels across the internet?",
+      "tags": ["#NetworkPlus", "#OSIModel", "#Day1of90"]
+    },
+    "slides": [
+      {
+        "type": "dark",
+        "label": "What is Networking?",
+        "tag": "Definition",
+        "method": "WHAT — What is Networking?",
+        "heading": "The System That __Connects Everything__",
+        "body": [
+          {"type": "para", "text": "Networking is the system of **interconnected devices sharing data** — computers, phones, servers, routers — all communicating over wires, Wi-Fi, or fibre."},
+          {"type": "para", "text": "Think of it as a global postal system: your data is a letter, IP addresses are house numbers, routers are sorting offices, and protocols are the delivery rules."},
+          {"type": "para", "text": "**Every single cyber attack travels over a network.** You cannot hack — or defend — what you do not understand."}
+        ],
+        "pills": [
+          {"text": "Devices", "t": "r"},
+          {"text": "Protocols", "t": "y"},
+          {"text": "Data Sharing", "t": "o"}
+        ],
+        "time": "20 min · Prof. Messer N10-009 Video 1"
+      },
+      {
+        "type": "red",
+        "label": "Why OSI Matters",
+        "tag": "Importance",
+        "method": "WHY — Why Does the OSI Model Matter?",
+        "heading": "Why OSI is Your Hacker's Bible",
+        "body": [
+          {"type": "para", "text": "The OSI model is a **7-layer framework** that describes exactly how data moves from device to device."},
+          {"type": "para", "text": "**For a hacker, each layer = a different attack surface.** Every protocol, exploit, and defence tool maps to a specific OSI layer."},
+          {"type": "para", "text": "When you hear 'Layer 7 DDoS attack' or 'Layer 3 routing issue' — that is the OSI model in real professional use."},
+          {"type": "para", "text": "**Knowing OSI = speaking the language of networking.** Without it you are guessing. With it you know exactly where to attack and defend."}
+        ],
+        "time": "30 min · Prof. Messer N10-009 Playlist 1–3"
+      },
+      {
+        "type": "layers",
+        "label": "OSI Layers 1–3",
+        "tag": "OSI Model",
+        "method": "WHAT — The Hardware World (Layers 1–3)",
+        "heading": "Physical · Data Link · **Network**",
+        "layers": [
+          {"num": "1", "name": "Physical", "example": "Cables, Wi-Fi signals, electrical impulses"},
+          {"num": "2", "name": "Data Link", "example": "MAC addresses · Ethernet frames · ARP"},
+          {"num": "3", "name": "Network", "example": "IP routing · Logical addressing · Packets", "highlight": true}
+        ],
+        "note": "**Layer 2** → target of ARP spoofing (MITM attacks). **Layer 3** → target of IP spoofing and routing attacks."
+      },
+      {
+        "type": "white",
+        "label": "OSI Layers 4–5",
+        "tag": "Transport & Session",
+        "method": "WHAT — Where Most Attacks Live",
+        "heading": "Transport & __Session__ Layers",
+        "body": [
+          {"type": "para", "text": "**Layer 4 — Transport:** TCP vs UDP. Port numbers live here. Nmap port scanning, SYN flood attacks, and TCP handshake exploits all operate at this layer."},
+          {"type": "para", "text": "**TCP** — reliable, ordered, connection-based. Used by HTTP, SSH, FTP. Vulnerable to SYN flood DoS attacks."},
+          {"type": "para", "text": "**UDP** — fast, connectionless. Used by DNS, VoIP. Target of UDP amplification DDoS attacks."},
+          {"type": "para", "text": "**Layer 5 — Session:** Manages connection states. Session hijacking attacks target this layer."}
+        ],
+        "time": "20 min · TryHackMe 'Intro to Networking'"
+      },
+      {
+        "type": "dark",
+        "label": "OSI Layers 6–7",
+        "tag": "Top Layers",
+        "method": "WHAT — Where You Interact Daily",
+        "heading": "Presentation & __Application__",
+        "body": [
+          {"type": "para", "text": "**Layer 6 — Presentation:** Encryption (SSL/TLS), data encoding, and format conversion. HTTPS protects your data here."},
+          {"type": "para", "text": "**Layer 7 — Application:** HTTP, FTP, DNS, SMTP — everything you touch daily. This is where **most attacks happen:** SQL injection, XSS, CSRF, and phishing all live here."},
+          {"type": "para", "text": "Web application hacking (later in this series) operates almost entirely at **Layer 7** — the richest attack surface in cybersecurity."}
+        ],
+        "time": "20 min · Cloudflare OSI Learning Center"
+      },
+      {
+        "type": "yellow",
+        "label": "What to Learn Today",
+        "tag": "What to Learn",
+        "method": "WHAT — Your Day 1 Learning Targets",
+        "heading": "Day 1 Checklist",
+        "steps": [
+          "Name all **7 OSI layers** in order — Physical to Application",
+          "Know which protocols belong to each layer — HTTP=L7, TCP=L4, IP=L3",
+          "Understand **TCP vs UDP** and why it matters for hacking",
+          "Memorise the mnemonic: **Please Do Not Throw Sausage Pizza Away** (layers 1→7)",
+          "Map **one attack type** to each layer — this is how pros think"
+        ],
+        "time": "Total Day 1 Study Time: 90 – 120 minutes"
+      },
+      {
+        "type": "resources_white",
+        "label": "Where to Learn",
+        "tag": "Free Resources",
+        "method": "WHERE — Best Free Resources for Today",
+        "heading": "Learn From The Best — All __Free__",
+        "resources": [
+          {"label": "📺 Primary Video", "name": "Prof. Messer — CompTIA N10-009 Playlist 1–3", "url": "professormesser.com/network-plus/n10-009"},
+          {"label": "🧪 Hands-On Lab", "name": "TryHackMe — 'What is Networking?' Room", "url": "tryhackme.com/room/whatisnetworking"},
+          {"label": "📖 Deep Dive", "name": "Cloudflare Learning Center — OSI Model Guide", "url": "cloudflare.com/learning/ddos/glossary/osi-model"}
+        ]
+      },
+      {
+        "type": "white",
+        "label": "Action Plan",
+        "tag": "How to Learn",
+        "method": "HOW — Step-by-Step for Today",
+        "heading": "Your Hands-On __Task__ for Day 1",
+        "steps": [
+          "**Watch** Prof. Messer N10-009 Playlist 1–3 (60 min) — take notes as you go",
+          "**Draw** the OSI model from memory — 7 layers, without looking",
+          "**Label** each layer with a real protocol: HTTP (L7), TCP (L4), IP (L3), Ethernet (L2)",
+          "**Complete** TryHackMe 'What is Networking?' room — apply everything you just learned"
+        ],
+        "time": "Hands-On Task: 30 – 45 minutes"
+      },
+      {
+        "type": "quote",
+        "label": "Pro Tip",
+        "tag": "Pro Tip · Day 1",
+        "quote": "Master OSI first — every tool, attack, and protocol you will learn for the next 89 days maps directly back to these 7 layers.",
+        "sub": "The OSI model is not just theory — it is the mental map professionals use to diagnose problems in seconds. Network+ and OSCP examiners expect you to think in layers.",
+        "mistake": "Jumping straight to TCP/IP without mastering OSI. TCP/IP is a simplified 4-layer version — skip OSI and you will hit a wall when debugging complex attacks."
+      }
+    ]
+  },
+
+  {
+    "day": 2,
+    "cover": {
+      "title": "TCP/IP Model & __IP Addressing__",
+      "hook": "What's your IP address — and why should every hacker know this?",
+      "tags": ["#NetworkPlus", "#TCPIP", "#Day2of90"]
+    },
+    "slides": [
+      {
+        "type": "dark",
+        "label": "TCP/IP vs OSI",
+        "tag": "Foundation",
+        "method": "WHAT — The Real Internet Model",
+        "heading": "TCP/IP: The Internet's __Real Blueprint__",
+        "body": [
+          {"type": "para", "text": "While OSI has 7 layers, the real internet runs on **TCP/IP — a practical 4-layer model** used by every device on earth."},
+          {"type": "para", "text": "**OSI is conceptual. TCP/IP is operational.** It combines OSI's top 3 into Application, keeps Transport, merges Network+Internet, and collapses Physical+Data Link into Network Access."},
+          {"type": "para", "text": "**For hacking:** Every exploit, payload, and reverse shell travels through TCP/IP. Understanding how packets move is non-negotiable for any penetration tester."}
+        ],
+        "pills": [
+          {"text": "TCP/IP", "t": "r"},
+          {"text": "IPv4", "t": "y"},
+          {"text": "Subnetting", "t": "o"}
+        ],
+        "time": "20 min · Prof. Messer N10-009 Playlist"
+      },
+      {
+        "type": "red",
+        "label": "IPv4 Basics",
+        "tag": "Critical Concept",
+        "method": "WHAT — IPv4 Addressing Explained",
+        "heading": "IPv4: The __Address System__ of the Internet",
+        "body": [
+          {"type": "para", "text": "**IPv4** uses 32-bit addresses written in dotted decimal notation — for example: 192.168.1.1. Each of the 4 octets ranges from 0 to 255."},
+          {"type": "para", "text": "**Public vs Private IPs:** Public IPs are routable on the internet. Private IPs are used inside local networks and never appear on the public internet."},
+          {"type": "para", "text": "**Why IPv4 is running out:** Only ~4.3 billion addresses exist. With billions of devices online, address exhaustion is a real problem — solved by NAT and IPv6."},
+          {"type": "para", "text": "**For pentesters:** Knowing public vs private ranges is essential — private IPs reveal internal network structure during assessments."}
+        ],
+        "time": "25 min · Prof. Messer N10-009 IP Addressing Section"
+      },
+      {
+        "type": "dark",
+        "label": "IPv6 Basics",
+        "tag": "Modern Addressing",
+        "method": "WHAT — IPv6 Explained",
+        "heading": "IPv6: The __Future__ of Addressing",
+        "body": [
+          {"type": "para", "text": "**IPv6** uses 128-bit hex addresses — written as 2001:0db8:85a3::8a2e:0370:7334. Colons separate 8 groups of 4 hex digits."},
+          {"type": "para", "text": "**Why it matters:** IPv6 provides **340 undecillion unique addresses** — solving IPv4 exhaustion permanently. Most modern networks run dual-stack (both IPv4 and IPv6)."},
+          {"type": "para", "text": "**Security implication:** Many firewalls and IDS rules are written for IPv4 only. IPv6 traffic on a network is sometimes **unfiltered** — an attack surface pentesters exploit."}
+        ],
+        "time": "20 min · Prof. Messer N10-009 IPv6 Section"
+      },
+      {
+        "type": "white",
+        "label": "Private IP Ranges",
+        "tag": "Reference",
+        "method": "WHAT — Private IP Ranges to Memorise",
+        "heading": "Private IP __Ranges__ — Memorise These",
+        "body": [
+          {"type": "code", "text": "10.0.0.0    – 10.255.255.255   /8  (Class A)"},
+          {"type": "code", "text": "172.16.0.0  – 172.31.255.255   /12 (Class B)"},
+          {"type": "code", "text": "192.168.0.0 – 192.168.255.255  /16 (Class C)"},
+          {"type": "code", "text": "127.0.0.1   = Loopback (localhost)"},
+          {"type": "code", "text": "169.254.x.x = APIPA (no DHCP assigned)"}
+        ],
+        "note": "These never appear on the public internet. Seeing them in a scan = internal network confirmed.",
+        "time": "15 min · Flashcard drill — memorise all 3 ranges"
+      },
+      {
+        "type": "yellow",
+        "label": "Subnetting Intro",
+        "tag": "What to Learn",
+        "method": "WHAT — Day 2 Learning Targets",
+        "heading": "Day 2 Checklist",
+        "steps": [
+          "Understand the **4-layer TCP/IP model** and how it maps to OSI",
+          "Memorise **IPv4 dotted decimal notation** and the 3 private ranges",
+          "Understand **CIDR notation** — /24 = 256 addresses, /16 = 65,536 addresses",
+          "Run `ipconfig` (Windows) or `ip a` (Linux) — identify your IP, subnet, gateway",
+          "Understand **why subnetting matters** for network segmentation and pentest scoping"
+        ],
+        "time": "Total Day 2 Study Time: 90 – 120 minutes"
+      },
+      {
+        "type": "resources_white",
+        "label": "Where to Learn",
+        "tag": "Free Resources",
+        "method": "WHERE — Best Resources for Day 2",
+        "heading": "Free Resources for __Today__",
+        "resources": [
+          {"label": "📺 Video", "name": "Prof. Messer N10-009 — IP Addressing Section", "url": "professormesser.com/network-plus/n10-009"},
+          {"label": "🧪 Practice", "name": "SubnettingPractice.com — Free Subnetting Drills", "url": "subnettingpractice.com"},
+          {"label": "🧪 Lab", "name": "TryHackMe — 'What is Networking?' Room", "url": "tryhackme.com/room/whatisnetworking"},
+          {"label": "📖 Visual", "name": "Practical Networking — Subnetting Mastery Guide", "url": "practicalnetworking.net/stand-alone/subnetting-mastery"}
+        ]
+      },
+      {
+        "type": "white",
+        "label": "Action Plan",
+        "tag": "How to Learn",
+        "method": "HOW — Step-by-Step for Day 2",
+        "heading": "Your Hands-On __Task__ for Day 2",
+        "steps": [
+          "**Open** terminal — run `ipconfig` (Windows) or `ip a` (Linux) — document your IP and subnet",
+          "**Identify** whether each IP is public or private using the 3 private ranges",
+          "**Practice** 10 subnetting questions at subnettingpractice.com — use binary, not shortcuts",
+          "**Write** a cheat sheet: 5 private ranges, loopback, APIPA — with descriptions"
+        ],
+        "time": "Hands-On Task: 45 – 60 minutes"
+      },
+      {
+        "type": "stats",
+        "label": "By The Numbers",
+        "tag": "Why This Matters",
+        "method": "WHY — Why IP Knowledge Pays",
+        "heading": "Why __IP Addressing__ Matters",
+        "stats": [
+          {"value": "4.3B", "label": "Total IPv4 addresses — nearly exhausted"},
+          {"value": "3", "label": "Private IP ranges every hacker must know"},
+          {"value": "340T+", "label": "Undecillion IPv6 addresses available"},
+          {"value": "Day 2", "label": "Of your 90-day journey"}
+        ]
+      },
+      {
+        "type": "quote",
+        "label": "Pro Tip",
+        "tag": "Pro Tip · Day 2",
+        "quote": "Learn subnetting with binary — not just formulas. When you understand the binary math, subnetting becomes instant and permanent.",
+        "sub": "Every Network+ exam has subnetting questions. Every pentest scope document uses CIDR notation. Every internal network runs on private ranges. This is foundational knowledge with zero expiry.",
+        "mistake": "Memorising IP ranges without understanding binary math behind them. Formulas break under pressure. Binary understanding never does — and it transfers directly to real-world network analysis."
+      }
+    ]
+  },
+
+  {
+    "day": 3,
+    "cover": {
+      "title": "DNS, DHCP & __Core Protocols__",
+      "hook": "DNS is the phonebook of the internet — and hackers exploit it daily.",
+      "tags": ["#NetworkPlus", "#DNS", "#Day3of90"]
+    },
+    "slides": [
+      {
+        "type": "dark",
+        "label": "DNS Explained",
+        "tag": "Foundation",
+        "method": "WHAT — What is DNS?",
+        "heading": "DNS: The Internet's __Phonebook__",
+        "body": [
+          {"type": "para", "text": "**DNS (Domain Name System)** translates human-readable names like google.com into IP addresses machines understand — for example: 142.250.80.46."},
+          {"type": "para", "text": "**4 types of DNS servers:** Recursive Resolver (your ISP) → Root Server → TLD Server (.com/.org) → Authoritative Server (the actual answer)."},
+          {"type": "para", "text": "**Without DNS, the internet breaks.** Every website visit, every email sent, every API call starts with a DNS lookup. Compromising DNS = redirecting all traffic."}
+        ],
+        "pills": [
+          {"text": "DNS", "t": "r"},
+          {"text": "DHCP", "t": "y"},
+          {"text": "Protocols", "t": "o"}
+        ],
+        "time": "20 min · Prof. Messer N10-009 DNS Section"
+      },
+      {
+        "type": "red",
+        "label": "DNS Attack Types",
+        "tag": "Attack Surface",
+        "method": "WHY — DNS is a Hacker's Target",
+        "heading": "DNS Attacks: __3 You Must Know__",
+        "body": [
+          {"type": "bullet", "text": "**DNS Spoofing:** Attacker injects fake DNS records — your query for bank.com returns the attacker's IP. You visit a fake site without knowing."},
+          {"type": "bullet", "text": "**DNS Cache Poisoning:** Corrupt the resolver's cache so ALL users on that server get redirected — not just you. Affects thousands simultaneously."},
+          {"type": "bullet", "text": "**DNS Hijacking:** Attacker changes your router's DNS server setting — all your DNS queries now go through the attacker's controlled server."},
+          {"type": "para", "text": "**Defence:** DNSSEC digitally signs DNS records. HTTPS ensures you're on the real site even if DNS is poisoned."}
+        ],
+        "time": "25 min · TryHackMe 'DNS in Detail' Room"
+      },
+      {
+        "type": "dark",
+        "label": "DHCP Explained",
+        "tag": "Protocol",
+        "method": "WHAT — What is DHCP?",
+        "heading": "DHCP: Automatic __IP Assignment__",
+        "body": [
+          {"type": "para", "text": "**DHCP (Dynamic Host Configuration Protocol)** automatically assigns IP address, subnet mask, default gateway, and DNS server to every device that connects to a network."},
+          {"type": "para", "text": "**DORA Process:** Discover → Offer → Request → Acknowledge. Your device broadcasts, the server responds, you request it, server confirms."},
+          {"type": "para", "text": "**Attack angle — Rogue DHCP:** An attacker sets up a fake DHCP server on the network. All new devices get assigned the attacker's machine as their **default gateway** — full traffic interception."}
+        ],
+        "time": "20 min · Prof. Messer N10-009 DHCP Section"
+      },
+      {
+        "type": "white",
+        "label": "Critical Ports Reference",
+        "tag": "Must Memorise",
+        "method": "WHAT — Core Protocol Ports",
+        "heading": "Critical __Ports__ Every Hacker Knows",
+        "body": [
+          {"type": "code", "text": "21  — FTP   (File Transfer — plaintext, insecure)"},
+          {"type": "code", "text": "22  — SSH   (Secure Shell — encrypted remote access)"},
+          {"type": "code", "text": "25  — SMTP  (Email sending — often abused for spam)"},
+          {"type": "code", "text": "53  — DNS   (Domain resolution — UDP + TCP)"},
+          {"type": "code", "text": "80  — HTTP  (Web — plaintext, interceptable)"},
+          {"type": "code", "text": "443 — HTTPS (Web — TLS encrypted)"},
+          {"type": "code", "text": "3389— RDP   (Remote Desktop — common attack target)"}
+        ],
+        "time": "30 min · Flashcard drill — all 20 top ports"
+      },
+      {
+        "type": "yellow",
+        "label": "What to Learn Today",
+        "tag": "What to Learn",
+        "method": "WHAT — Day 3 Learning Targets",
+        "heading": "Day 3 Checklist",
+        "steps": [
+          "Explain **how DNS works** end-to-end — the full 4-server lookup chain",
+          "Understand **DNS spoofing vs cache poisoning** — the difference and impact",
+          "Know the **DORA process** for DHCP — and how a rogue DHCP attack works",
+          "Memorise **top 20 protocol ports** — they appear in every CTF and pentest",
+          "Run `nslookup google.com` and `nslookup google.com 8.8.8.8` — compare results"
+        ],
+        "time": "Total Day 3 Study Time: 90 – 120 minutes"
+      },
+      {
+        "type": "resources_white",
+        "label": "Where to Learn",
+        "tag": "Free Resources",
+        "method": "WHERE — Best Resources for Day 3",
+        "heading": "Free Resources for __Today__",
+        "resources": [
+          {"label": "🧪 Lab", "name": "TryHackMe — 'DNS in Detail' Room (free)", "url": "tryhackme.com/room/dnsindetail"},
+          {"label": "📺 Video", "name": "Prof. Messer N10-009 — DNS & DHCP Section", "url": "professormesser.com/network-plus/n10-009"},
+          {"label": "🛠️ Tool", "name": "Cisco Packet Tracer — Free Network Simulator", "url": "netacad.com"},
+          {"label": "📖 Reference", "name": "ExamCompass — Free Protocol Port Quiz", "url": "examcompass.com"}
+        ]
+      },
+      {
+        "type": "white",
+        "label": "Action Plan",
+        "tag": "How to Learn",
+        "method": "HOW — Step-by-Step for Day 3",
+        "heading": "Your Hands-On __Task__ for Day 3",
+        "steps": [
+          "**Run** `nslookup google.com` — see which DNS server resolved the query",
+          "**Try** `nslookup facebook.com 8.8.8.8` — use Google's public DNS instead",
+          "**Run** `ipconfig /all` (Windows) or `cat /etc/resolv.conf` (Linux) — find your DHCP server",
+          "**Complete** TryHackMe 'DNS in Detail' room — apply everything learned today"
+        ],
+        "time": "Hands-On Task: 45 – 60 minutes"
+      },
+      {
+        "type": "quote",
+        "label": "Pro Tip",
+        "tag": "Pro Tip · Day 3",
+        "quote": "Memorise the top 20 port numbers cold. They appear in 80% of exam questions and every single professional port scan output you will ever read.",
+        "sub": "Build a physical cheat sheet — write each port and protocol by hand, not just typed. Handwriting encodes memory differently. Review it every morning for one week. You will never forget them.",
+        "mistake": "Confusing IMAP (143) with POP3 (110) — both receive email but differently. IMAP keeps email on server and syncs. POP3 downloads and deletes. This distinction appears in both exams and phishing attack analysis."
+      }
+    ]
+  },
+
+  {
+    "day": 4,
+    "cover": {
+      "title": "Network Topologies & __Hardware__",
+      "hook": "The shape of your network determines how easy it is to hack.",
+      "tags": ["#NetworkPlus", "#NetworkHardware", "#Day4of90"]
+    },
+    "slides": [
+      {
+        "type": "dark",
+        "label": "Network Topologies",
+        "tag": "Foundation",
+        "method": "WHAT — Types of Network Topologies",
+        "heading": "Network __Topology__: Shape = Attack Surface",
+        "body": [
+          {"type": "para", "text": "A **network topology** defines how devices are physically and logically connected. Different shapes create different security vulnerabilities and failure points."},
+          {"type": "bullet", "text": "**Star** — all devices connect to a central switch. Most common. Single point of failure = the switch."},
+          {"type": "bullet", "text": "**Bus** — all devices on one cable. Legacy. One break = entire network down."},
+          {"type": "bullet", "text": "**Ring** — data travels in a loop. Token Ring (legacy). Predictable but fragile."},
+          {"type": "bullet", "text": "**Mesh** — every device connects to every other. Redundant, resilient. Used in critical infrastructure."},
+          {"type": "bullet", "text": "**Hybrid** — combination of topologies. Used in all real enterprise environments."}
+        ],
+        "pills": [
+          {"text": "Topology", "t": "r"},
+          {"text": "Hardware", "t": "y"},
+          {"text": "Security", "t": "o"}
+        ],
+        "time": "20 min · Prof. Messer N10-009 Topology Section"
+      },
+      {
+        "type": "red",
+        "label": "Routers vs Switches",
+        "tag": "Critical Concept",
+        "method": "WHAT — Key Hardware Differences",
+        "heading": "Routers vs Switches: __Critical Difference__",
+        "body": [
+          {"type": "para", "text": "**Switches (Layer 2):** Connect devices within the same network. Forward frames based on MAC addresses. A compromised switch enables ARP spoofing and VLAN hopping attacks."},
+          {"type": "para", "text": "**Routers (Layer 3):** Connect different networks together. Forward packets based on IP addresses. A misconfigured router leaks routing tables and enables man-in-the-middle attacks."},
+          {"type": "para", "text": "**Hubs (Legacy — Layer 1):** Broadcast every packet to every port. No intelligence. Any device connected can capture all traffic with Wireshark — attackers love finding them."}
+        ],
+        "time": "25 min · Prof. Messer N10-009 Hardware Section"
+      },
+      {
+        "type": "dark",
+        "label": "Firewalls & VLANs",
+        "tag": "Security Controls",
+        "method": "WHAT — Firewalls and Network Segmentation",
+        "heading": "Firewalls & __VLANs__: Defence in Depth",
+        "body": [
+          {"type": "para", "text": "**Firewall Types:** Packet-filtering (Layer 3/4 rules only), Stateful Inspection (tracks connection state), NGFW/Next-Gen (deep packet inspection, application-aware)."},
+          {"type": "para", "text": "**VLANs (Virtual LANs):** Logically segment a network without physical separation. Finance, HR, and IT can share the same switches but never see each other's traffic."},
+          {"type": "para", "text": "**VLAN Hopping Attack:** If a switch port is misconfigured as a trunk, an attacker can tag frames to jump between VLANs — bypassing all logical segmentation."}
+        ],
+        "time": "20 min · Prof. Messer N10-009 Firewall Section"
+      },
+      {
+        "type": "white",
+        "label": "Wireless Basics",
+        "tag": "Wi-Fi Security",
+        "method": "WHAT — Wireless Standards and Security",
+        "heading": "Wireless __Standards__ and Attacks",
+        "body": [
+          {"type": "code", "text": "WEP  — Broken. Never use. Cracked in minutes with aircrack-ng."},
+          {"type": "code", "text": "WPA  — Weak. TKIP encryption. Vulnerable to dictionary attacks."},
+          {"type": "code", "text": "WPA2 — Standard. AES encryption. Vulnerable to PMKID/handshake capture."},
+          {"type": "code", "text": "WPA3 — Current best. SAE (dragonfly handshake). Resists offline cracking."},
+          {"type": "code", "text": "802.11ax (Wi-Fi 6) — Fastest current standard. WPA3 mandatory."}
+        ],
+        "note": "**Evil Twin Attack:** Create a fake AP with the same SSID. Victims connect automatically. Full traffic interception — no cracking needed.",
+        "time": "20 min · Prof. Messer N10-009 Wireless Section"
+      },
+      {
+        "type": "yellow",
+        "label": "What to Learn Today",
+        "tag": "What to Learn",
+        "method": "WHAT — Day 4 Learning Targets",
+        "heading": "Day 4 Checklist",
+        "steps": [
+          "Draw and label **all 5 network topologies** — identify failure points of each",
+          "Explain the difference between **router, switch, and hub** at OSI layer level",
+          "Understand **VLAN segmentation** and how VLAN hopping attacks bypass it",
+          "Know **WEP, WPA, WPA2, WPA3** — why WEP is broken and WPA3 is secure",
+          "Build a simple **star topology** in Cisco Packet Tracer — assign IPs, ping between PCs"
+        ],
+        "time": "Total Day 4 Study Time: 90 – 120 minutes"
+      },
+      {
+        "type": "resources_white",
+        "label": "Where to Learn",
+        "tag": "Free Resources",
+        "method": "WHERE — Best Resources for Day 4",
+        "heading": "Free Resources for __Today__",
+        "resources": [
+          {"label": "📺 Video", "name": "Prof. Messer N10-009 — Topology & Hardware", "url": "professormesser.com/network-plus/n10-009"},
+          {"label": "🛠️ Lab", "name": "Cisco Packet Tracer — Free Network Simulation", "url": "netacad.com"},
+          {"label": "🛠️ Lab", "name": "GNS3 — Advanced Free Network Emulator", "url": "gns3.com"},
+          {"label": "🧪 Practice", "name": "TryHackMe — 'Pre-Security' Path (Network section)", "url": "tryhackme.com/path/outline/presecurity"}
+        ]
+      },
+      {
+        "type": "white",
+        "label": "Action Plan",
+        "tag": "How to Learn",
+        "method": "HOW — Step-by-Step for Day 4",
+        "heading": "Your Hands-On __Task__ for Day 4",
+        "steps": [
+          "**Download** Cisco Packet Tracer (free at netacad.com) — install it today",
+          "**Build** a star topology: 1 router, 1 switch, 3 PCs — assign IPs and ping between all PCs",
+          "**Draw** each topology type from memory — label failure points in red",
+          "**Research** your home router — is it also a switch? What SSID security does it use?"
+        ],
+        "time": "Hands-On Task: 60 – 75 minutes"
+      },
+      {
+        "type": "quote",
+        "label": "Pro Tip",
+        "tag": "Pro Tip · Day 4",
+        "quote": "Real enterprise networks are always hybrid topologies. Learn each type individually — only then can you understand and attack a combined real-world network.",
+        "sub": "In a pentest, topology knowledge directly impacts your lateral movement strategy. Star networks have one critical choke point — the core switch. Compromise it and you own the segment. Know the shape, own the network.",
+        "mistake": "Confusing router and switch roles. Routers separate networks. Switches connect devices within a network. Getting this wrong in an exam or client report is an immediate credibility killer."
+      }
+    ]
+  },
+
+  {
+    "day": 5,
+    "cover": {
+      "title": "Ports, Protocols & __Firewall Rules__",
+      "hook": "65,535 ports. Hackers know them all. Do you?",
+      "tags": ["#NetworkPlus", "#Ports", "#Day5of90"]
+    },
+    "slides": [
+      {
+        "type": "dark",
+        "label": "What Are Ports?",
+        "tag": "Foundation",
+        "method": "WHAT — Understanding Network Ports",
+        "heading": "Ports: Virtual __Doors__ Into Every System",
+        "body": [
+          {"type": "para", "text": "**Ports** are virtual endpoints that allow a single IP address to run multiple services simultaneously. Your computer can serve web pages on port 80, SSH on port 22, and email on port 25 — all at once."},
+          {"type": "para", "text": "**Three port ranges:** 0–1023 (Well-known, reserved for standard services) · 1024–49151 (Registered, assigned to applications) · 49152–65535 (Dynamic/ephemeral, temporary connections)."},
+          {"type": "para", "text": "**For hackers:** Open ports = attack surface. Every open port is a potential entry point. Nmap reveals them all in seconds."}
+        ],
+        "pills": [
+          {"text": "Ports", "t": "r"},
+          {"text": "TCP/UDP", "t": "y"},
+          {"text": "Firewall", "t": "o"}
+        ],
+        "time": "20 min · Prof. Messer N10-009 Ports Section"
+      },
+      {
+        "type": "red",
+        "label": "Top Ports to Memorise",
+        "tag": "Must Know",
+        "method": "WHAT — Critical Port Numbers",
+        "heading": "Ports Every __Hacker__ Memorises",
+        "body": [
+          {"type": "code", "text": "21   — FTP      · 22  — SSH      · 23  — Telnet"},
+          {"type": "code", "text": "25   — SMTP     · 53  — DNS      · 80  — HTTP"},
+          {"type": "code", "text": "110  — POP3     · 143 — IMAP     · 443 — HTTPS"},
+          {"type": "code", "text": "445  — SMB      · 3306— MySQL    · 3389— RDP"},
+          {"type": "code", "text": "8080 — Alt HTTP · 8443— Alt HTTPS· 27017— MongoDB"}
+        ],
+        "note": "**Telnet (23) is never acceptable** — transmits credentials in plaintext. Always replaced by SSH. Finding Telnet open = instant critical finding in a pentest report.",
+        "time": "30 min · Flashcard drill — all ports + protocols"
+      },
+      {
+        "type": "dark",
+        "label": "TCP vs UDP",
+        "tag": "Protocol Comparison",
+        "method": "WHAT — TCP vs UDP Deep Dive",
+        "heading": "TCP vs UDP: __Know the Difference__",
+        "body": [
+          {"type": "para", "text": "**TCP (Transmission Control Protocol):** Connection-based. Uses 3-way handshake (SYN/SYN-ACK/ACK). Guaranteed delivery. Used by: HTTP, HTTPS, SSH, FTP, SMTP."},
+          {"type": "para", "text": "**UDP (User Datagram Protocol):** Connectionless. Fire-and-forget. No delivery confirmation. Used by: DNS, VoIP, DHCP, TFTP, video streaming."},
+          {"type": "para", "text": "**Attack implications:** TCP's handshake enables SYN flood DoS. UDP's lack of authentication enables amplification DDoS attacks using DNS or NTP servers as reflectors."}
+        ],
+        "time": "20 min · Prof. Messer N10-009 Transport Layer"
+      },
+      {
+        "type": "white",
+        "label": "Firewall ACLs",
+        "tag": "Security Control",
+        "method": "WHAT — How Firewalls Use Port Rules",
+        "heading": "Firewall __ACLs__ and Port Filtering",
+        "body": [
+          {"type": "para", "text": "**ACLs (Access Control Lists)** define which traffic is allowed or denied based on source IP, destination IP, port, and protocol."},
+          {"type": "code", "text": "ALLOW  TCP  any → 10.0.0.1:443   (HTTPS in)"},
+          {"type": "code", "text": "ALLOW  TCP  any → 10.0.0.1:80    (HTTP in)"},
+          {"type": "code", "text": "DENY   TCP  any → 10.0.0.1:3389  (Block RDP)"},
+          {"type": "code", "text": "DENY   ALL  any → any             (Implicit deny)"},
+          {"type": "para", "text": "**Implicit deny at the end** is critical — anything not explicitly allowed is blocked. A missing rule is NOT a permission grant."}
+        ],
+        "time": "20 min · Prof. Messer N10-009 Firewall Section"
+      },
+      {
+        "type": "yellow",
+        "label": "What to Learn Today",
+        "tag": "What to Learn",
+        "method": "WHAT — Day 5 Learning Targets",
+        "heading": "Day 5 Checklist",
+        "steps": [
+          "Memorise **top 15 port numbers** cold — without referencing a cheat sheet",
+          "Explain **TCP 3-way handshake** and exactly why SYN floods exploit it",
+          "Understand **firewall ACL implicit deny** — what happens to unlisted traffic",
+          "Run `nmap -sV localhost` — identify every open port on your own machine",
+          "Build a **port number cheat sheet** — review it daily for one week"
+        ],
+        "time": "Total Day 5 Study Time: 90 – 120 minutes"
+      },
+      {
+        "type": "resources_white",
+        "label": "Where to Learn",
+        "tag": "Free Resources",
+        "method": "WHERE — Best Resources for Day 5",
+        "heading": "Free Resources for __Today__",
+        "resources": [
+          {"label": "📺 Video", "name": "Prof. Messer N10-009 — Ports & Protocols", "url": "professormesser.com/network-plus/n10-009"},
+          {"label": "🧪 Lab", "name": "TryHackMe — 'Nmap' Room (free)", "url": "tryhackme.com/room/furthernmap"},
+          {"label": "📖 Quiz", "name": "ExamCompass — Free Port Number Practice Quiz", "url": "examcompass.com"},
+          {"label": "🛠️ Tool", "name": "Nmap — Official Download and Documentation", "url": "nmap.org"}
+        ]
+      },
+      {
+        "type": "white",
+        "label": "Action Plan",
+        "tag": "How to Learn",
+        "method": "HOW — Step-by-Step for Day 5",
+        "heading": "Your Hands-On __Task__ for Day 5",
+        "steps": [
+          "**Install** Nmap (nmap.org) — run `nmap -sV localhost` and document every open port",
+          "**Identify** what service is running on each open port — is any unexpected port open?",
+          "**Take** ExamCompass port quiz — score yourself and note every wrong answer",
+          "**Write** a firewall ACL from scratch — allow HTTPS, block Telnet, implicit deny all"
+        ],
+        "time": "Hands-On Task: 45 – 60 minutes"
+      },
+      {
+        "type": "quote",
+        "label": "Pro Tip",
+        "tag": "Pro Tip · Day 5",
+        "quote": "Build a cheat sheet of the top 30 ports with protocol and service name. Review it every morning for one week. After that you will never need to look them up again.",
+        "sub": "In a real pentest, the first Nmap scan result you read will have 20+ open ports. You must recognise each one instantly — what service it is, what version matters, and what attacks target it. Speed of recognition is the skill.",
+        "mistake": "Scanning any network you do not own or have written permission to scan. Practice only on TryHackMe, HackTheBox, your own VM lab, or localhost. Unauthorised scanning is illegal in most countries — even from your own home."
+      }
+    ]
+  },
+
+  {
+    "day": 6,
+    "cover": {
+      "title": "VPNs, NAT & __Network Security__",
+      "hook": "VPNs hide your traffic — but do you actually know HOW?",
+      "tags": ["#NetworkPlus", "#VPN", "#Day6of90"]
+    },
+    "slides": [
+      {
+        "type": "dark",
+        "label": "VPN Types",
+        "tag": "Foundation",
+        "method": "WHAT — VPN Types and Protocols",
+        "heading": "VPN: __Encrypted Tunnels__ Explained",
+        "body": [
+          {"type": "para", "text": "A **VPN (Virtual Private Network)** creates an encrypted tunnel between your device and a remote server — making your traffic appear to originate from the VPN server, not your real IP."},
+          {"type": "bullet", "text": "**Remote Access VPN:** Individual user → corporate network. Work from home securely."},
+          {"type": "bullet", "text": "**Site-to-Site VPN:** Office A ↔ Office B. Both LANs appear as one seamless network."},
+          {"type": "bullet", "text": "**SSL VPN:** Browser-based. No client software needed. Common for contractor access."},
+          {"type": "para", "text": "**VPN Protocols:** IPSec (fastest, most secure), OpenVPN (open source, reliable), WireGuard (modern, ultra-fast), L2TP/IPSec (legacy, widely supported)."}
+        ],
+        "pills": [
+          {"text": "VPN", "t": "r"},
+          {"text": "NAT", "t": "y"},
+          {"text": "Zero Trust", "t": "o"}
+        ],
+        "time": "20 min · Prof. Messer N10-009 VPN Section"
+      },
+      {
+        "type": "red",
+        "label": "NAT Explained",
+        "tag": "Critical Concept",
+        "method": "WHAT — How NAT Works",
+        "heading": "NAT: How Your Router __Shares One IP__",
+        "body": [
+          {"type": "para", "text": "**NAT (Network Address Translation)** maps your private IP addresses to a single public IP address. Your router does this for every device on your home network."},
+          {"type": "bullet", "text": "**Static NAT:** One private IP → one public IP. 1:1 mapping. Used for servers needing a fixed public address."},
+          {"type": "bullet", "text": "**Dynamic NAT:** Pool of public IPs shared across private addresses. Assigned on demand."},
+          {"type": "bullet", "text": "**PAT (Port Address Translation):** Many private IPs → one public IP using unique port numbers. What your home router actually does."},
+          {"type": "para", "text": "**Security benefit of NAT:** Internal hosts are not directly reachable from the internet — providing implicit protection (though not a replacement for a firewall)."}
+        ],
+        "time": "25 min · Prof. Messer N10-009 NAT Section"
+      },
+      {
+        "type": "dark",
+        "label": "IDS vs IPS",
+        "tag": "Security Tools",
+        "method": "WHAT — IDS and IPS Compared",
+        "heading": "IDS vs IPS: __Detect vs Prevent__",
+        "body": [
+          {"type": "para", "text": "**IDS (Intrusion Detection System):** Monitors network traffic, detects suspicious patterns, and **alerts** security teams. It does NOT block traffic. Think of it as a burglar alarm."},
+          {"type": "para", "text": "**IPS (Intrusion Prevention System):** Everything an IDS does, plus it actively **blocks and drops** malicious traffic in real-time. Think of it as a security guard with a lock."},
+          {"type": "para", "text": "**Placement matters:** IDS is typically placed after the firewall (out-of-band monitoring). IPS must be inline — between the internet and your network — to block traffic before it arrives."}
+        ],
+        "time": "20 min · Prof. Messer N10-009 IDS/IPS Section"
+      },
+      {
+        "type": "white",
+        "label": "DMZ & Zero Trust",
+        "tag": "Architecture",
+        "method": "WHAT — Modern Security Architectures",
+        "heading": "DMZ & __Zero Trust__ Architecture",
+        "body": [
+          {"type": "para", "text": "**DMZ (Demilitarized Zone):** A network segment that sits between the public internet and the internal LAN. Web servers, email servers, and DNS servers live here — publicly accessible but isolated from internal systems."},
+          {"type": "para", "text": "**Architecture:** Internet → Firewall → DMZ (Web/Email/DNS Server) → Internal Firewall → Internal LAN. Two firewalls = two barriers an attacker must breach."},
+          {"type": "para", "text": "**Zero Trust Model:** 'Never trust, always verify.' Every user, every device, every request must authenticate — even inside the network. No implicit trust based on network location."}
+        ],
+        "time": "20 min · NIST Zero Trust Architecture Guide"
+      },
+      {
+        "type": "yellow",
+        "label": "What to Learn Today",
+        "tag": "What to Learn",
+        "method": "WHAT — Day 6 Learning Targets",
+        "heading": "Day 6 Checklist",
+        "steps": [
+          "Explain the difference between **Remote Access and Site-to-Site VPN**",
+          "Understand **PAT vs Static NAT** — how your home router uses PAT daily",
+          "Know the difference between **IDS and IPS** — placement and function",
+          "Draw a **DMZ network diagram** — Internet → Firewall → DMZ → Internal Firewall → LAN",
+          "Explain **Zero Trust** in 2 sentences — this appears in every senior security interview"
+        ],
+        "time": "Total Day 6 Study Time: 90 – 120 minutes"
+      },
+      {
+        "type": "resources_white",
+        "label": "Where to Learn",
+        "tag": "Free Resources",
+        "method": "WHERE — Best Resources for Day 6",
+        "heading": "Free Resources for __Today__",
+        "resources": [
+          {"label": "📺 Video", "name": "Prof. Messer N10-009 — VPN, NAT & Security", "url": "professormesser.com/network-plus/n10-009"},
+          {"label": "🧪 Lab", "name": "TryHackMe — 'Pre-Security' Path (free)", "url": "tryhackme.com/path/outline/presecurity"},
+          {"label": "📖 Guide", "name": "NIST Zero Trust Architecture (SP 800-207)", "url": "nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-207.pdf"},
+          {"label": "📺 Video", "name": "NetworkChuck — VPN Explained (YouTube)", "url": "youtube.com/c/NetworkChuck"}
+        ]
+      },
+      {
+        "type": "white",
+        "label": "Action Plan",
+        "tag": "How to Learn",
+        "method": "HOW — Step-by-Step for Day 6",
+        "heading": "Your Hands-On __Task__ for Day 6",
+        "steps": [
+          "**Draw** a full network diagram: Internet → Firewall → DMZ (Web Server) → Internal Firewall → LAN",
+          "**Label** each zone: public, DMZ, internal — and which services belong in each",
+          "**Research** your home router's NAT settings — what type of NAT is it using?",
+          "**Explain** Zero Trust to someone (or write it down) in your own words — no notes"
+        ],
+        "time": "Hands-On Task: 45 – 60 minutes"
+      },
+      {
+        "type": "quote",
+        "label": "Pro Tip",
+        "tag": "Pro Tip · Day 6",
+        "quote": "In every job interview for any security role, expect to explain DMZ and IDS vs IPS. These two concepts are asked constantly — get them cold.",
+        "sub": "Zero Trust is not just a buzzword — it is the current direction of enterprise security architecture. Every major cloud provider (AWS, Azure, GCP) builds Zero Trust products. Understanding the model now puts you ahead of 90% of candidates.",
+        "mistake": "Thinking VPN = full anonymity. A VPN hides your traffic from your ISP and shifts trust to the VPN provider. It does NOT make you anonymous, does not protect against malware, and does not hide you from determined nation-state adversaries."
+      }
+    ]
+  },
+
+  {
+    "day": 7,
+    "cover": {
+      "title": "Network+ Week __Recap__ & Exam Tips",
+      "hook": "7 Days of Networking done. Here's everything you need to PASS Network+.",
+      "tags": ["#NetworkPlus", "#ExamPrep", "#Day7of90"]
+    },
+    "slides": [
+      {
+        "type": "dark",
+        "label": "Week 1 Recap",
+        "tag": "Summary",
+        "method": "WHAT — Everything Covered This Week",
+        "heading": "Week 1: __Everything You Learned__",
+        "body": [
+          {"type": "bullet", "text": "**Day 1:** OSI 7-Layer Model — physical to application, attack surface per layer"},
+          {"type": "bullet", "text": "**Day 2:** TCP/IP 4-Layer Model — IPv4/IPv6, subnetting, CIDR notation"},
+          {"type": "bullet", "text": "**Day 3:** DNS, DHCP, Core Protocols — top 20 ports, DORA process, DNS attacks"},
+          {"type": "bullet", "text": "**Day 4:** Topologies & Hardware — routers, switches, firewalls, VLANs, wireless security"},
+          {"type": "bullet", "text": "**Day 5:** Ports, Protocols, Firewall ACLs — TCP vs UDP, implicit deny, Nmap scanning"},
+          {"type": "bullet", "text": "**Day 6:** VPN, NAT, IDS/IPS, DMZ, Zero Trust — modern security architecture"}
+        ],
+        "pills": [
+          {"text": "Recap", "t": "r"},
+          {"text": "Exam Tips", "t": "y"},
+          {"text": "N10-009", "t": "o"}
+        ],
+        "time": "30 min · Review all 6 days of notes"
+      },
+      {
+        "type": "red",
+        "label": "N10-009 Exam Format",
+        "tag": "Exam Info",
+        "method": "WHAT — CompTIA Network+ Exam Details",
+        "heading": "CompTIA Network+ __N10-009__ Exam",
+        "body": [
+          {"type": "bullet", "text": "**Questions:** Up to 90 questions — multiple choice + performance-based simulations"},
+          {"type": "bullet", "text": "**Time limit:** 90 minutes — approximately 1 minute per question"},
+          {"type": "bullet", "text": "**Passing score:** 720 out of 900 — approximately 80%"},
+          {"type": "bullet", "text": "**Key domains:** Networking Concepts (23%) · Network Implementation (20%) · Network Operations (17%) · Network Security (20%) · Network Troubleshooting (20%)"},
+          {"type": "para", "text": "**Performance-based questions (PBQs)** simulate real-world tasks — configuring firewalls, subnetting, troubleshooting connectivity. Do NOT skip them — they are worth more points."}
+        ],
+        "time": "15 min · Read CompTIA official exam objectives"
+      },
+      {
+        "type": "dark",
+        "label": "Top Exam Topics",
+        "tag": "Must Study",
+        "method": "WHAT — Highest-Value Exam Topics",
+        "heading": "Top __Exam Topics__ You Must Master",
+        "body": [
+          {"type": "bullet", "text": "**Subnetting calculations** — CIDR notation, usable hosts, network/broadcast addresses. Always on the exam."},
+          {"type": "bullet", "text": "**Port numbers** — top 20 ports cold. TCP vs UDP per protocol. Appears in 3–5 questions minimum."},
+          {"type": "bullet", "text": "**Cable types** — Cat5e vs Cat6 vs Cat6a. Max length: 100m (Ethernet). Fiber types: single-mode vs multi-mode."},
+          {"type": "bullet", "text": "**Wireless standards** — 802.11a/b/g/n/ac/ax speeds, frequencies, WPA2 vs WPA3."},
+          {"type": "bullet", "text": "**Troubleshooting methodology** — Top-down (L7→L1) vs Bottom-up (L1→L7). Know both approaches."}
+        ],
+        "time": "45 min · Review CompTIA N10-009 Exam Objectives PDF"
+      },
+      {
+        "type": "white",
+        "label": "Study Resources",
+        "tag": "Free Study Tools",
+        "method": "WHERE — Best Free Exam Prep Resources",
+        "heading": "Best __Free__ Network+ Prep Resources",
+        "steps": [
+          "**Professor Messer** — Free N10-009 video course + study guide PDF at professormesser.com",
+          "**ExamCompass** — Free practice quizzes by domain topic at examcompass.com",
+          "**Jason Dion** — Udemy course (frequently on sale for $15) — best paid option",
+          "**Mike Meyers** — All-in-One Network+ textbook — comprehensive physical reference",
+          "**TryHackMe Pre-Security Path** — free hands-on lab practice for networking fundamentals"
+        ],
+        "time": "Take a full practice exam today — 90 questions, timed"
+      },
+      {
+        "type": "yellow",
+        "label": "Exam Study Strategy",
+        "tag": "Study Plan",
+        "method": "HOW — How to Pass Network+ First Try",
+        "heading": "Day 7 Checklist",
+        "steps": [
+          "Take a **full 90-question practice test** at ExamCompass — timed, no cheating",
+          "Write down **every wrong answer topic** — that becomes your targeted study list",
+          "**Review your notes** from Days 1–6 — fill any gaps identified by the practice test",
+          "Understand the **troubleshooting methodology** — top-down vs bottom-up OSI approach",
+          "**Schedule your exam** if you feel ready — commit to a date, it drives urgency"
+        ],
+        "time": "Total Day 7 Study Time: 120 – 150 minutes"
+      },
+      {
+        "type": "resources_white",
+        "label": "Where to Learn",
+        "tag": "Free Resources",
+        "method": "WHERE — Best Resources for Day 7",
+        "heading": "Free Resources for __Today__",
+        "resources": [
+          {"label": "📺 Full Course", "name": "Prof. Messer — Free N10-009 Study Guide PDF", "url": "professormesser.com/network-plus/n10-009"},
+          {"label": "📖 Practice", "name": "ExamCompass — Free N10-009 Practice Tests", "url": "examcompass.com"},
+          {"label": "🧪 Lab", "name": "TryHackMe — Pre-Security Path (Networking)", "url": "tryhackme.com/path/outline/presecurity"},
+          {"label": "🎯 Objectives", "name": "CompTIA N10-009 Official Exam Objectives PDF", "url": "comptia.org/certifications/network"}
+        ]
+      },
+      {
+        "type": "white",
+        "label": "Action Plan",
+        "tag": "How to Learn",
+        "method": "HOW — Step-by-Step for Day 7",
+        "heading": "Your Hands-On __Task__ for Day 7",
+        "steps": [
+          "**Take** a full ExamCompass N10-009 practice test — 90 questions, 90 minutes, no notes",
+          "**Score** yourself honestly — anything below 75% means a topic needs more attention",
+          "**Review** all 6 days of notes — create a single one-page master reference sheet",
+          "**Post** your progress online with #Day7of90 — accountability accelerates learning"
+        ],
+        "time": "Hands-On Task: 90 – 120 minutes"
+      },
+      {
+        "type": "stats",
+        "label": "Week 1 Achievement",
+        "tag": "Progress Stats",
+        "method": "WHY — The Value of Week 1",
+        "heading": "Week 1 __Complete__ — Your Progress",
+        "stats": [
+          {"value": "7", "label": "Days of consistent learning completed"},
+          {"value": "6", "label": "Core networking topics mastered"},
+          {"value": "20+", "label": "Port numbers in your memory"},
+          {"value": "83", "label": "Days remaining on your journey"}
+        ]
+      },
+      {
+        "type": "quote",
+        "label": "Pro Tip",
+        "tag": "Pro Tip · Day 7",
+        "quote": "Network+ is the foundation for EVERYTHING in cybersecurity. Do not rush it. Every advanced topic — pentesting, cloud security, threat hunting — builds on what you learned this week.",
+        "sub": "The study method that works: Watch video → Take notes by hand → Practice questions → Review wrong answers → Repeat. Do NOT just watch. Active recall through practice questions is what makes knowledge stick permanently.",
+        "mistake": "Skipping subnetting practice because it seems hard. Subnetting questions appear on every Network+ exam. Students who skip it fail — without exception. Do 20 subnetting problems a day until it feels automatic."
+      }
+    ]
+  }
+]

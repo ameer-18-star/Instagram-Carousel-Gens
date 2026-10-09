@@ -1,0 +1,29 @@
+There are exactly two places purple shows up:
+
+1. **Line 277** — the soft purple glow behind every slide (`.sl-bg-overlay`)
+2. **Line 345** — the solid purple subtitle bar on the cover slide (`.cv-sub-line1`, the "You don't need any" pill)
+
+Here's how to change both to red yourself, or I can do it for you right now — just say the word. To do it manually:## Manual edit (open the HTML in any text editor)
+
+**1. Cover slide's purple bar** — find `.cv-sub-line1` and change:
+```css
+background:#7b52e8;
+```
+to:
+```css
+background:var(--red);   /* or #e8222a directly */
+```
+
+**2. Background glow behind every slide** — find `.sl-bg-overlay` and change:
+```css
+rgba(80,0,120,.55)
+```
+to something like:
+```css
+rgba(160,20,20,.45)
+```
+(red glows look better slightly less saturated/intense than purple did, so I lowered the alpha a touch — but `rgba(180,0,0,.55)` works too if you want it punchier.)
+
+---
+
+Want me to just make this change directly in the file and hand you back the updated version? It's a 2-line edit either way.
