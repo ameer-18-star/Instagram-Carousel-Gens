@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carousel Generators: Index</title>
+<meta name="description" content="One place to open every Instagram carousel generator, with its data files, prompts and finished slide designs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060608;--surf:#0e0f12;--surf2:#161820;--surf3:#1e2028;
+  --border:#252830;--border2:#2d3240;
+  --txt:#e8eaf0;--txt2:#8a90a3;--txt3:#5b6175;
+  --acc:#F5C518;--acc2:#d4a800;--acc3:rgba(245,197,24,0.12);
+  --red-ui:#C0392B;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'DM Sans',system-ui,sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:4px}
+ul{list-style:none}
+
+/* TOPBAR */
+#topbar{height:52px;display:flex;align-items:center;gap:14px;padding:0 22px;background:var(--surf);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+#topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--red-ui),var(--acc),transparent);opacity:.4}
+.tb-logo{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:.08em;color:var(--acc);white-space:nowrap}
+.tb-logo em{color:var(--txt);font-style:normal}
+.tb-pipe{width:1px;height:20px;background:var(--border2)}
+.tb-meta{font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase}
+.tb-right{margin-left:auto;display:flex;gap:8px}
+.badge{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:var(--surf2);border:1px solid var(--border2);color:var(--txt2);padding:4px 10px;border-radius:20px;white-space:nowrap}
+.badge.hl{color:var(--acc);border-color:rgba(245,197,24,.25);background:var(--acc3)}
+
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* HERO */
+.hero{padding:72px 0 40px}
+.eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:16px}
+.hero h1{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:clamp(2.3rem,6vw,4rem);line-height:1.05;letter-spacing:-.01em;max-width:16ch}
+.hero h1 em{color:var(--acc);font-style:italic}
+.hero p{margin-top:20px;max-width:62ch;color:var(--txt2);font-size:16px}
+.stats{display:flex;gap:28px;flex-wrap:wrap;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)}
+.stat b{display:block;font-family:'Space Mono',monospace;font-size:26px;color:var(--txt)}
+.stat span{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--txt3)}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0 8px}
+.toolbar input{flex:1 1 280px;background:var(--surf);border:1.5px solid var(--border2);color:var(--txt);font-family:'Space Mono',monospace;font-size:12px;padding:11px 14px;border-radius:8px}
+.toolbar input::placeholder{color:var(--txt3)}
+.toolbar input:focus{outline:none;border-color:var(--acc)}
+#count{font-family:'Space Mono',monospace;font-size:11px;color:var(--txt2)}
+
+/* SECTIONS */
+section{margin-top:48px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.sec-head h2{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--txt2)}
+.sec-head span{font-size:13px;color:var(--txt3)}
+
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:12px}
+.quick{display:flex;flex-direction:column;gap:4px;background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:16px 18px;transition:border-color .15s,background .15s}
+.quick:hover{border-color:var(--acc);background:var(--surf2)}
+.q-title{font-weight:700;font-size:15px}
+.q-sub{font-size:12.5px;color:var(--txt2)}
+.q-file{margin-top:8px;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--acc)}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s}
+.card:hover{border-color:var(--border2)}
+.card.hidden,.quick.hidden{display:none}
+.card-top{display:flex;justify-content:space-between;align-items:center}
+.idx{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--acc)}
+.card h3{font-family:'Playfair Display',Georgia,serif;font-size:21px;font-weight:700;line-height:1.25}
+.card p{color:var(--txt2);font-size:14px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:8px;font-size:12.5px;font-weight:700;transition:all .15s;align-self:flex-start}
+.btn-primary{background:var(--acc);color:#000}
+.btn-primary:hover{background:var(--acc2)}
+
+.files{display:flex;flex-direction:column;border-top:1px solid var(--border);margin-top:4px}
+.files li{border-bottom:1px solid var(--border)}
+.files a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:7px 2px}
+.files a:hover .fname{color:var(--acc)}
+.fname{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--txt);word-break:break-all}
+.tag{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:var(--surf2);border:1px solid var(--border2);color:var(--txt2);padding:2px 8px;border-radius:20px;white-space:nowrap}
+
+details{border:1px solid var(--border);border-radius:8px;background:var(--surf2)}
+summary{cursor:pointer;padding:9px 12px;font-size:12px;font-weight:700;color:var(--txt2);list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::before{content:'+';font-family:'Space Mono',monospace;color:var(--acc);margin-right:10px}
+details[open] summary::before{content:'\2212'}
+summary{justify-content:flex-start}
+summary .n{margin-left:auto;font-family:'Space Mono',monospace;font-size:11px;color:var(--txt3)}
+details .files{border-top:1px solid var(--border);margin:0;padding:0 12px;max-height:260px;overflow:auto}
+details .files li:last-child{border-bottom:none}
+
+.empty{display:none;color:var(--txt2);font-family:'Space Mono',monospace;font-size:12px;padding:24px 0}
+.empty.show{display:block}
+footer{margin-top:72px;border-top:1px solid var(--border);padding:24px 0 48px;color:var(--txt3);font-size:12px}
+
+@media (max-width:760px){
+  .grid{grid-template-columns:1fr}
+  .tb-meta,.tb-pipe,.badge.pal{display:none}
+  .hero{padding:48px 0 28px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="tb-logo">Carousel<em>Gens</em></div>
+  <div class="tb-pipe"></div>
+  <div class="tb-meta">Carousel &amp; Reel Generator</div>
+  <div class="tb-right"><div class="badge hl">10 projects</div></div>
+</div>
+
+<main class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Index · Instagram carousel toolkit</div>
+    <h1>Every carousel generator, <em>one page.</em></h1>
+    <p>Open any generator, its data files, prompts and finished slide designs from a single place. Each generator runs in the browser: load its JSON, adjust the content, and export the slides.</p>
+    <div class="stats">
+      <div class="stat"><b>10</b><span>Projects</span></div>
+      <div class="stat"><b>10</b><span>Generators</span></div>
+      <div class="stat"><b>76</b><span>Linked files</span></div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <input id="filter" type="search" placeholder="Filter, e.g. python, ethical, json, roadmap" aria-label="Filter generators">
+    <span id="count" aria-live="polite"></span>
+  </div>
+
+  <section id="quick-sec" aria-labelledby="h-quick">
+    <div class="sec-head"><h2 id="h-quick">Quick launch</h2><span>The four main generators, ready to open</span></div>
+    <div class="quick-grid">
+<a class="quick" href="brain-fact-carousel-gen.html" data-search="brain fact carousel carouselgen: instagram slide maker brain-fact-carousel-gen.html">
+  <span class="q-title">Brain Fact Carousel</span><span class="q-sub">CarouselGen: Instagram slide maker</span><span class="q-file">brain-fact-carousel-gen.html</span></a>
+<a class="quick" href="ethical_hacking_carousel_gen.html" data-search="ethical hacking carousel eh carouselgen: 90 days of ethical hacking ethical_hacking_carousel_gen.html">
+  <span class="q-title">Ethical Hacking Carousel</span><span class="q-sub">EH CarouselGen: 90 Days of Ethical Hacking</span><span class="q-file">ethical_hacking_carousel_gen.html</span></a>
+<a class="quick" href="tech-ebook-carousel-gen.html" data-search="tech e-book carousel instagram carousel generator, 2:3 vertical tech-ebook-carousel-gen.html">
+  <span class="q-title">Tech E-book Carousel</span><span class="q-sub">Instagram Carousel Generator, 2:3 vertical</span><span class="q-file">tech-ebook-carousel-gen.html</span></a>
+<a class="quick" href="ultralearning_carousel_gen.html" data-search="ultralearning carousel ultralearninggen: brain hacks, 4:5 ultralearning_carousel_gen.html">
+  <span class="q-title">Ultralearning Carousel</span><span class="q-sub">UltraLearningGen: Brain Hacks, 4:5</span><span class="q-file">ultralearning_carousel_gen.html</span></a>
+    </div>
+  </section>
+
+  <section id="proj-sec" aria-labelledby="h-proj">
+    <div class="sec-head"><h2 id="h-proj">All projects</h2><span>Generator, data files and design assets for each folder</span></div>
+    <div class="grid">
+<article class="card" data-search="ethical hacking roadmap carousel generator for the 90 days of ethical hacking series, with the full 90-day challenge carousel page and phase 1 content for days 1 to 7. ethical_hacking_carousel_gen.html cybersecurity_90_days_mastery_challenge_carousels.html phase01_days1-7.json">
+  <div class="card-top"><span class="idx">01</span><span class="tag">3 files</span></div>
+  <h3>Ethical Hacking Roadmap</h3>
+  <p>Carousel generator for the 90 Days of Ethical Hacking series, with the full 90-day challenge carousel page and phase 1 content for days 1 to 7.</p>
+  <a class="btn btn-primary" href="Carousel%20Gen%20-%20Ethical%20Hacking%20Roadmap/ethical_hacking_carousel_gen.html">Open generator <span aria-hidden="true">&rarr;</span></a>
+  <ul class="files">
+<li><a href="Carousel%20Gen%20-%20Ethical%20Hacking%20Roadmap/Cybersecurity_90_Days_Mastery_Challenge_Carousels.html"><span class="fname">Cybersecurity_90_Days_Mastery_Challenge_Carousels.html</span><span class="tag">HTML</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ethical%20Hacking%20Roadmap/phase01_days1-7.json"><span class="fname">phase01_days1-7.json</span><span class="tag">JSON</span></a></li>
+</ul>
+  
+</article>
+<article class="card" data-search="art of ultralearning posts instagram slide maker for brain-fact and focus posts, packaged with its background, brain icon and arrow artwork. brain-fact-carousel-gen.html boost-focus-carousel.json artwork and assets">
+  <div class="card-top"><span class="idx">02</span><span class="tag">20 files</span></div>
+  <h3>Art of UltraLearning Posts</h3>
+  <p>Instagram slide maker for brain-fact and focus posts, packaged with its background, brain icon and arrow artwork.</p>
+  <a class="btn btn-primary" href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/brain-fact-carousel-gen.html">Open generator <span aria-hidden="true">&rarr;</span></a>
+  <ul class="files">
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/boost-focus-carousel.json"><span class="fname">boost-focus-carousel.json</span><span class="tag">JSON</span></a></li>
+</ul>
+  <details><summary>Artwork and assets <span class="n">18</span></summary><ul class="files">
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/1.png"><span class="fname">1.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/2.png"><span class="fname">2.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/3.png"><span class="fname">3.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/4.png"><span class="fname">4.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/5.png"><span class="fname">5.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/6.png"><span class="fname">6.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/7.png"><span class="fname">7.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/8.png"><span class="fname">8.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/Background%202%202-3.png"><span class="fname">Background 2 2-3.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/Background.png"><span class="fname">Background.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/Brain%20Icon.png"><span class="fname">Brain Icon.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/Brain%20Icons%20%281%29.png"><span class="fname">Brain Icons (1).png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/Brain%20Icons%20%282%29.png"><span class="fname">Brain Icons (2).png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/Brain%20Icons%20%283%29.png"><span class="fname">Brain Icons (3).png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/Brain%20Icons%20%284%29.png"><span class="fname">Brain Icons (4).png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/Brain%20Icons%20%285%29.png"><span class="fname">Brain Icons (5).png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/arrow%20left.png"><span class="fname">arrow left.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20For%20Art%20Of%20UltraLearning%20Posts/arrow%20right.png"><span class="fname">arrow right.png</span><span class="tag">PNG</span></a></li>
+</ul></details>
+
+</article>
+<article class="card" data-search="python complete introduction vertical 2:3 tech e-book carousel generator, with the template file and the seven finished python intro slides. tech-ebook-carousel-gen.html template-v2.json design previews">
+  <div class="card-top"><span class="idx">03</span><span class="tag">9 files</span></div>
+  <h3>Python Complete Introduction</h3>
+  <p>Vertical 2:3 tech e-book carousel generator, with the template file and the seven finished Python intro slides.</p>
+  <a class="btn btn-primary" href="Carousel%20Gen%20-%20Python%20Complete%20Introduction/tech-ebook-carousel-gen.html">Open generator <span aria-hidden="true">&rarr;</span></a>
+  <ul class="files">
+<li><a href="Carousel%20Gen%20-%20Python%20Complete%20Introduction/template-v2.json"><span class="fname">template-v2.json</span><span class="tag">JSON</span></a></li>
+</ul>
+  <details><summary>Design previews <span class="n">7</span></summary><ul class="files">
+<li><a href="Carousel%20Gen%20-%20Python%20Complete%20Introduction/Design/01-python-cover.png"><span class="fname">01-python-cover.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Python%20Complete%20Introduction/Design/02-python-table-of-contents.png"><span class="fname">02-python-table-of-contents.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Python%20Complete%20Introduction/Design/03-python-what-is-python-features.png"><span class="fname">03-python-what-is-python-features.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Python%20Complete%20Introduction/Design/04-python-applications-of-python.png"><span class="fname">04-python-applications-of-python.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Python%20Complete%20Introduction/Design/05-python-first-python-program.png"><span class="fname">05-python-first-python-program.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Python%20Complete%20Introduction/Design/06-python-python-vs-code-setup.png"><span class="fname">06-python-python-vs-code-setup.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Python%20Complete%20Introduction/Design/07-python-cta-closing.png"><span class="fname">07-python-cta-closing.png</span><span class="tag">PNG</span></a></li>
+</ul></details>
+
+</article>
+<article class="card" data-search="ultralearning carousel generator brain hacks carousel generator in 4:5 format. includes the brain hacks page, the content json, the prompt used to write the content, and 15 finished slides. ultralearning_carousel_gen.html brain_hacks_carousel.html ultralearning_brain_hacks.json ultralearning_carousel_prompt.md design previews">
+  <div class="card-top"><span class="idx">04</span><span class="tag">19 files</span></div>
+  <h3>Ultralearning Carousel Generator</h3>
+  <p>Brain hacks carousel generator in 4:5 format. Includes the brain hacks page, the content JSON, the prompt used to write the content, and 15 finished slides.</p>
+  <a class="btn btn-primary" href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/ultralearning_carousel_gen.html">Open generator <span aria-hidden="true">&rarr;</span></a>
+  <ul class="files">
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/brain_hacks_carousel.html"><span class="fname">brain_hacks_carousel.html</span><span class="tag">HTML</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/ultralearning_brain_hacks.json"><span class="fname">ultralearning_brain_hacks.json</span><span class="tag">JSON</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/ultralearning_carousel_prompt.md"><span class="fname">ultralearning_carousel_prompt.md</span><span class="tag">MD</span></a></li>
+</ul>
+  <details><summary>Design previews <span class="n">15</span></summary><ul class="files">
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/01-cover.png"><span class="fname">01-cover.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/02-why-this-matters.png"><span class="fname">02-why-this-matters.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/03-active-recall-protocol.png"><span class="fname">03-active-recall-protocol.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/04-spaced-repetition-data.png"><span class="fname">04-spaced-repetition-data.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/05-learning-retention-rates.png"><span class="fname">05-learning-retention-rates.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/06-brain-time-allocation.png"><span class="fname">06-brain-time-allocation.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/07-flow-state-protocol.png"><span class="fname">07-flow-state-protocol.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/08-neuroplasticity-gains.png"><span class="fname">08-neuroplasticity-gains.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/09-cognitive-load-hacks.png"><span class="fname">09-cognitive-load-hacks.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/10-sleep-memory-installation.png"><span class="fname">10-sleep-memory-installation.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/11-dopamine-learning-hacks.png"><span class="fname">11-dopamine-learning-hacks.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/12-study-methods-that-work.png"><span class="fname">12-study-methods-that-work.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/13-5-more-power-moves.png"><span class="fname">13-5-more-power-moves.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/14-full-summary.png"><span class="fname">14-full-summary.png</span><span class="tag">PNG</span></a></li>
+<li><a href="Carousel%20Gen%20-%20Ultralearning%20Carousel%20Generator/Design/15-follow-cta.png"><span class="fname">15-follow-cta.png</span><span class="tag">PNG</span></a></li>
+</ul></details>
+
+</article>
+<article class="card" data-search="list carousel generator generator for list-style carousel posts, with its sample json data. listings-carousel-gen.html json.json">
+  <div class="card-top"><span class="idx">05</span><span class="tag">2 files</span></div>
+  <h3>List Carousel Generator</h3>
+  <p>Generator for list-style carousel posts, with its sample JSON data.</p>
+  <a class="btn btn-primary" href="List%20Carousel%20Gen/listings-carousel-gen.html">Open generator <span aria-hidden="true">&rarr;</span></a>
+  <ul class="files">
+<li><a href="List%20Carousel%20Gen/JSON.json"><span class="fname">JSON.json</span><span class="tag">JSON</span></a></li>
+</ul>
+  
+</article>
+<article class="card" data-search="network ports post carousel generator and data file for the network ports post. network_ports_carousel_gen.html network_ports_carousel_data.json">
+  <div class="card-top"><span class="idx">06</span><span class="tag">2 files</span></div>
+  <h3>Network Ports Post</h3>
+  <p>Carousel generator and data file for the network ports post.</p>
+  <a class="btn btn-primary" href="Network%20Ports%20Post/network_ports_carousel_gen.html">Open generator <span aria-hidden="true">&rarr;</span></a>
+  <ul class="files">
+<li><a href="Network%20Ports%20Post/network_ports_carousel_data.json"><span class="fname">network_ports_carousel_data.json</span><span class="tag">JSON</span></a></li>
+</ul>
+  
+</article>
+<article class="card" data-search="programming language roadmap roadmap carousel generator for programming languages, with the python roadmap data and seven vmsoit reference images. prog_roadmap_carousel_gen.html python_roadmap.json vmsoit images">
+  <div class="card-top"><span class="idx">07</span><span class="tag">9 files</span></div>
+  <h3>Programming Language Roadmap</h3>
+  <p>Roadmap carousel generator for programming languages, with the Python roadmap data and seven VMSOIT reference images.</p>
+  <a class="btn btn-primary" href="Programming%20Langauge%20Roadmap%20Carousel%20Design/prog_roadmap_carousel_gen.html">Open generator <span aria-hidden="true">&rarr;</span></a>
+  <ul class="files">
+<li><a href="Programming%20Langauge%20Roadmap%20Carousel%20Design/python_roadmap.json"><span class="fname">python_roadmap.json</span><span class="tag">JSON</span></a></li>
+</ul>
+  <details><summary>VMSOIT images <span class="n">7</span></summary><ul class="files">
+<li><a href="Programming%20Langauge%20Roadmap%20Carousel%20Design/vmsoit/1.jpg"><span class="fname">1.jpg</span><span class="tag">JPG</span></a></li>
+<li><a href="Programming%20Langauge%20Roadmap%20Carousel%20Design/vmsoit/2.jpg"><span class="fname">2.jpg</span><span class="tag">JPG</span></a></li>
+<li><a href="Programming%20Langauge%20Roadmap%20Carousel%20Design/vmsoit/3.jpg"><span class="fname">3.jpg</span><span class="tag">JPG</span></a></li>
+<li><a href="Programming%20Langauge%20Roadmap%20Carousel%20Design/vmsoit/4.jpg"><span class="fname">4.jpg</span><span class="tag">JPG</span></a></li>
+<li><a href="Programming%20Langauge%20Roadmap%20Carousel%20Design/vmsoit/5.jpg"><span class="fname">5.jpg</span><span class="tag">JPG</span></a></li>
+<li><a href="Programming%20Langauge%20Roadmap%20Carousel%20Design/vmsoit/6.jpg"><span class="fname">6.jpg</span><span class="tag">JPG</span></a></li>
+<li><a href="Programming%20Langauge%20Roadmap%20Carousel%20Design/vmsoit/7.jpg"><span class="fname">7.jpg</span><span class="tag">JPG</span></a></li>
+</ul></details>
+
+</article>
+<article class="card" data-search="vm carousel generator vm carousel generator together with a guide to its json schema. vm_carousel_generator.html vm_carousel_schema_guide.md">
+  <div class="card-top"><span class="idx">08</span><span class="tag">2 files</span></div>
+  <h3>VM Carousel Generator</h3>
+  <p>VM carousel generator together with a guide to its JSON schema.</p>
+  <a class="btn btn-primary" href="VM-Carousel-Gen/vm_carousel_generator.html">Open generator <span aria-hidden="true">&rarr;</span></a>
+  <ul class="files">
+<li><a href="VM-Carousel-Gen/vm_carousel_schema_guide.md"><span class="fname">vm_carousel_schema_guide.md</span><span class="tag">MD</span></a></li>
+</ul>
+  
+</article>
+<article class="card" data-search="art of ultralearning: 15 habits carousel generator for the art of ultralearning 15 habits post, with its content json. art-of-ultralearning-carousel-gen (1).html art-of-ultralearning-15-habits.json">
+  <div class="card-top"><span class="idx">09</span><span class="tag">2 files</span></div>
+  <h3>Art of UltraLearning: 15 Habits</h3>
+  <p>Carousel generator for the Art of UltraLearning 15 habits post, with its content JSON.</p>
+  <a class="btn btn-primary" href="art-of-ultralearning-carousel-gen/art-of-ultralearning-carousel-gen%20%281%29.html">Open generator <span aria-hidden="true">&rarr;</span></a>
+  <ul class="files">
+<li><a href="art-of-ultralearning-carousel-gen/art-of-ultralearning-15-habits.json"><span class="fname">art-of-ultralearning-15-habits.json</span><span class="tag">JSON</span></a></li>
+</ul>
+  
+</article>
+<article class="card" data-search="codehype courses carousel codehype course carousel generator in two versions, the course data json, and a short working note. codehype-carousel-gen.html codehype-carousel-gen (2).html codehype-courses-carousel.json note.txt">
+  <div class="card-top"><span class="idx">10</span><span class="tag">4 files</span></div>
+  <h3>CodeHype Courses Carousel</h3>
+  <p>CodeHype course carousel generator in two versions, the course data JSON, and a short working note.</p>
+  <a class="btn btn-primary" href="carousel%20gen%202/codehype-carousel-gen.html">Open generator <span aria-hidden="true">&rarr;</span></a>
+  <ul class="files">
+<li><a href="carousel%20gen%202/codehype-carousel-gen%20%282%29.html"><span class="fname">codehype-carousel-gen (2).html</span><span class="tag">HTML</span></a></li>
+<li><a href="carousel%20gen%202/codehype-courses-carousel.json"><span class="fname">codehype-courses-carousel.json</span><span class="tag">JSON</span></a></li>
+<li><a href="carousel%20gen%202/note.txt"><span class="fname">note.txt</span><span class="tag">TXT</span></a></li>
+</ul>
+  
+</article>
+    </div>
+  </section>
+
+  <p class="empty" id="empty">No matches. Clear the filter to see everything.</p>
+</main>
+
+<footer><div class="wrap">Carousel Gens · Open generators in a modern browser. Keep this index in the same folder as the project folders so every link resolves.</div></footer>
+
+<script>
+(function(){
+  var input=document.getElementById('filter'),count=document.getElementById('count'),empty=document.getElementById('empty');
+  var items=[].slice.call(document.querySelectorAll('.card,.quick'));
+  var secs=[].slice.call(document.querySelectorAll('section'));
+  function update(){
+    var q=input.value.trim().toLowerCase(),shown=0;
+    items.forEach(function(el){
+      var ok=!q||el.getAttribute('data-search').indexOf(q)!==-1;
+      el.classList.toggle('hidden',!ok);
+      if(ok&&el.classList.contains('card'))shown++;
+    });
+    secs.forEach(function(s){
+      var any=s.querySelector('.card:not(.hidden),.quick:not(.hidden)');
+      s.style.display=any?'':'none';
+    });
+    var anyAll=items.some(function(el){return !el.classList.contains('hidden')});
+    count.textContent=shown+' of 10 projects';
+    empty.classList.toggle('show',!anyAll);
+  }
+  input.addEventListener('input',update);update();
+})();
+</script>
+</body>
+</html>
